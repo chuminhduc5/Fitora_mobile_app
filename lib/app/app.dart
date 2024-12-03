@@ -1,4 +1,4 @@
-import 'package:fitora_mobile_app/feature/home/presentation/screens/home_screen.dart';
+import 'package:fitora_mobile_app/app/app_view.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -9,8 +9,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-      theme: ThemeData.light(),
-      home: const HomeScreen(),
+      theme: ThemeData.dark(),
+      home: const AppView(),
     );
   }
 }
