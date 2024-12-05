@@ -76,7 +76,10 @@ class _AppViewState extends State<AppView> {
           iconTheme: const IconThemeData(color: Colors.white),
         ),
         drawer: Drawer(
-          //backgroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+            side: BorderSide.none,
+          ),
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
@@ -84,6 +87,14 @@ class _AppViewState extends State<AppView> {
                 height: 40,
               ),
               ExpansionTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0),
+                  side: BorderSide.none,
+                ),
+                // collapsedShape: RoundedRectangleBorder(
+                //   borderRadius: BorderRadius.circular(0),
+                //   side: BorderSide.none,
+                // ),
                 title: const Text('Cộng đồng của bạn', style: TextStyle(fontSize: 15),),
                 minTileHeight: 20,
                 initiallyExpanded: true,
@@ -116,7 +127,11 @@ class _AppViewState extends State<AppView> {
                   ),
                 ],
               ),
-              const ExpansionTile(
+              ExpansionTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0),
+                  side: BorderSide.none,
+                ),
                 title: const Text('Tất cả', style: TextStyle(fontSize: 15),),
                 minTileHeight: 20,
                 children: <Widget>[],
@@ -125,9 +140,16 @@ class _AppViewState extends State<AppView> {
           ),
         ),
         endDrawer: Drawer(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+            side: BorderSide.none,
+          ),
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
+              Container(
+                height: 40,
+              ),
               ListTile(
                 title: const Text('Mục 1'),
                 onTap: () {},

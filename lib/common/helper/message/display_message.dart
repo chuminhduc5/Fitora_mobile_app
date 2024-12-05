@@ -37,5 +37,19 @@ class DisplayMessage {
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.orangeAccent,
     );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
+
+  static void infoMessage(BuildContext context, String message) {
+    var snackbar = SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(color: Colors.white),
+      ),
+      duration: const Duration(seconds: 1),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.blueAccent,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 }
