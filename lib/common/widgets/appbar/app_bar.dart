@@ -1,14 +1,14 @@
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class BasicAppbar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final Widget ? title;
   final Widget ? action;
   final Widget ? leading;
   final Color ? backgroundColor;
   final bool hideBack;
   final double ? height;
-  const BasicAppbar({
+  const CustomAppbar({
     this.title,
     this.hideBack = false,
     this.action,
