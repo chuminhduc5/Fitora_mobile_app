@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 Widget achievements() {
   return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 15),
     padding: const EdgeInsets.all(10.0),
     decoration: BoxDecoration(
       color: Colors.grey[850],

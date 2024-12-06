@@ -27,6 +27,7 @@ dependencies:
   flutter_svg: ^2.0.16
   video_player: ^2.9.2
   image_picker: ^1.1.2
+  youtube_player_flutter: ^9.1.1
 
 dev_dependencies:
   flutter_test:
