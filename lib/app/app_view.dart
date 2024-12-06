@@ -1,6 +1,7 @@
 import 'package:fitora_mobile_app/common/widgets/appbar/app_bar.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/left_drawer/left_drawer.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawer.dart';
+import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:fitora_mobile_app/feature/chat/presentation/screens/chat_screen.dart';
 import 'package:fitora_mobile_app/feature/communities/presentation/screens/community_screen.dart';
 import 'package:fitora_mobile_app/feature/home/presentation/screens/home_screen.dart';
@@ -8,6 +9,7 @@ import 'package:fitora_mobile_app/feature/notification/presentation/screens/noti
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AppView extends StatefulWidget {
   const AppView({super.key});
@@ -94,25 +96,25 @@ class _AppViewState extends State<AppView> {
             selectedItemColor: Colors.white,
             selectedFontSize: 12,
             unselectedFontSize: 10,
-            items: const [
-              BottomNavigationBarItem(
+            items: [
+              const BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Trang chủ',
               ),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                 icon: Icon(Icons.group),
                 label: 'Cộng đồng',
               ),
-              BottomNavigationBarItem(
+              const BottomNavigationBarItem(
                 icon: Icon(Icons.add),
                 label: 'Thêm',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.chat_bubble),
+                icon: SvgPicture.asset(AppSvg.chatSvg, color: Colors.white,),
                 label: 'Trò chuyện',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
+                icon: SvgPicture.asset(AppSvg.notificationSvg, height: 25, width: 25, color: Colors.white,),
                 label: 'Thông báo',
               ),
             ],

@@ -1,5 +1,8 @@
 class AppSvg {
-  static const basePath = 'assets/svg';
+  static const basePath = 'assets/svg/';
 
-  static const personSvg = '${basePath}person.svg';
+  static const shareSvg = '${basePath}share.svg';
+  static const commentSvg = '${basePath}comment.svg';
+  static const chatSvg = '${basePath}chat.svg';
+  static const notificationSvg = '${basePath}notification.svg';
 }
