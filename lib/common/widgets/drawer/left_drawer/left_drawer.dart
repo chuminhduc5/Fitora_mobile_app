@@ -1,4 +1,12 @@
+import 'package:fitora_mobile_app/common/widgets/drawer/left_drawer/left_drawer_option.dart';
 import 'package:flutter/material.dart';
+
+final List<Map<String, dynamic>> _option = [
+  {"title": "Tất cả", "icon": Icons.star_border},
+  {"title": "Tất cả", "icon": Icons.star_border},
+  {"title": "Tất cả", "icon": Icons.star_border},
+  {"title": "Tất cả", "icon": Icons.star_border},
+];
 
 Widget leftDrawer() {
   return Drawer(
@@ -24,26 +32,7 @@ Widget leftDrawer() {
               title: const Text('Tạo mới', style: TextStyle(fontSize: 14),),
               onTap: () {},
             ),
-            ListTile(
-              contentPadding: const EdgeInsets.only(left: 15),
-              leading: const CircleAvatar(
-                radius: 12,
-                child: Text('H', style: TextStyle(fontSize: 13),),
-              ),
-              title: const Text('Tất cả', style: TextStyle(fontSize: 14),),
-              trailing: IconButton(onPressed: () {}, icon: const Icon(Icons.star_border, size: 20,),),
-              onTap: () {},
-            ),
-            ListTile(
-              contentPadding: const EdgeInsets.only(left: 15),
-              leading: const CircleAvatar(
-                radius: 12,
-                child: Text('H', style: TextStyle(fontSize: 13),),
-              ),
-              title: const Text('Tất cả', style: TextStyle(fontSize: 14),),
-              trailing: IconButton(onPressed: () {}, icon: const Icon(Icons.star_border, size: 20,),),
-              onTap: () {},
-            ),
+            ..._option.map((i) => leftDrawerOption(i["icon"], i["title"], (){})),
           ],
         ),
         ExpansionTile(
