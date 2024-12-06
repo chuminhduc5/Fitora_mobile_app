@@ -1,6 +1,8 @@
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/achievements.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/active_status.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawer_option.dart';
+import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/style_avatar.dart';
+import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:flutter/material.dart';
 
 final List<Map<String, dynamic>> _option = [
@@ -53,8 +55,22 @@ Widget rightDrawer() {
       side: BorderSide.none,
     ),
     child: ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
       children: [
+        Stack(
+          children: [
+            Center(
+              child: Container(
+                height: 250, width: 220,
+                child: Image.asset(AppImages.avatar, fit: BoxFit.cover,),
+              ),
+            ),
+            Positioned(
+              top: 10,
+              left: 10,
+              child: styleAvatar(),
+            ),
+          ],
+        ),
         Row(
           children: [
             Expanded(child: rightDrawerOption(Icons.ac_unit_outlined, "1", "Karma")),

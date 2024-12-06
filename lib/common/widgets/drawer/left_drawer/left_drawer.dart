@@ -2,10 +2,10 @@ import 'package:fitora_mobile_app/common/widgets/drawer/left_drawer/left_drawer_
 import 'package:flutter/material.dart';
 
 final List<Map<String, dynamic>> _option = [
-  {"title": "Tất cả", "icon": Icons.star_border},
-  {"title": "Tất cả", "icon": Icons.star_border},
-  {"title": "Tất cả", "icon": Icons.star_border},
-  {"title": "Tất cả", "icon": Icons.star_border},
+  {"avatar": "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg", "title": "Tất cả", "icon": Icons.star_border},
+  {"avatar": "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg", "title": "Tất cả", "icon": Icons.star_border},
+  {"avatar": "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg", "title": "Tất cả", "icon": Icons.star_border},
+  {"avatar": "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg", "title": "Tất cả", "icon": Icons.star_border},
 ];
 
 Widget leftDrawer() {
@@ -28,11 +28,13 @@ Widget leftDrawer() {
           children: <Widget>[
             ListTile(
               contentPadding: const EdgeInsets.only(left: 15),
+              dense: true,
+              //visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
               leading: const Icon(Icons.add, size: 20,),
               title: const Text('Tạo mới', style: TextStyle(fontSize: 14),),
               onTap: () {},
             ),
-            ..._option.map((i) => leftDrawerOption(i["icon"], i["title"], (){})),
+            ..._option.map((i) => leftDrawerOption(i['avatar'], i["icon"], i["title"], (){})),
           ],
         ),
         ExpansionTile(

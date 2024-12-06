@@ -56,12 +56,11 @@ class _AppViewState extends State<AppView> {
                     onTap: () {
                       Scaffold.of(context).openEndDrawer();
                     },
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundColor: Colors.orangeAccent,
-                        child: Text('F'),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network("https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg", height: 33, fit: BoxFit.cover,),
                       ),
                     ),
                   );

@@ -5,4 +5,5 @@ class AppSvg {
   static const commentSvg = '${basePath}comment.svg';
   static const chatSvg = '${basePath}chat.svg';
   static const notificationSvg = '${basePath}notification.svg';
+  static const starSvg = '${basePath}starSvg';
 }
