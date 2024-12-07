@@ -71,4 +71,24 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  void _showBottomSheet(BuildContext context) {
+    showBottomSheet(
+      context: context, 
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(15))
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          padding: const EdgeInsets.symmetric(horizontal: 15,  vertical: 15),
+          child: Column(
+            children: <Widget>[
+              
+            ],
+          ),
+        );
+      }
+    );
+  }
 }

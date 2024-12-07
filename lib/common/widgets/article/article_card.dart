@@ -13,6 +13,7 @@ class ArticleCard extends StatefulWidget {
   final int? favourite;
   final int? comment;
   final int? share;
+  final Function()? onPressed;
 
   const ArticleCard({
     super.key,
@@ -26,6 +27,7 @@ class ArticleCard extends StatefulWidget {
     this.favourite,
     this.comment,
     this.share,
+    this.onPressed,
   });
 
   @override
@@ -57,7 +59,7 @@ class _ArticleCardState extends State<ArticleCard> {
               const SizedBox(width: 8,),
               Text(widget.time!, style: const TextStyle(fontSize: 11, color: Colors.grey),),
               const Spacer(),
-              IconButton(onPressed: (){}, icon: const Icon(Icons.more_vert), padding: EdgeInsets.zero, constraints: const BoxConstraints(),)
+              IconButton(onPressed: widget.onPressed, icon: const Icon(Icons.more_vert), padding: EdgeInsets.zero, constraints: const BoxConstraints(),)
             ],
           ),
           Text(widget.title!, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),),
