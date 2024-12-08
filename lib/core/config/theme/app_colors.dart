@@ -13,7 +13,7 @@ class AppColors {
 
   // Background Color
   static const Color bgAppbar = Color(0xFFFF5147);
-  static Color? bgColor = Colors.grey[100];
+  static Color bgColor = Colors.grey[100]!;
   static const Color bgWhite = Colors.white;
   static const Color bgGreen = Color(0xFF22BB22);
   static const Color bgBlue = Color(0xFF079DD9);
