@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       theme: ThemeData.dark(),
-      home: const SignInScreen(),
+      home: const AppView(),
     );
   }
 }
