@@ -1,5 +1,10 @@
+import 'package:fitora_mobile_app/app/app_view.dart';
+import 'package:fitora_mobile_app/common/helper/navigation/app_navigation.dart';
+import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
+import 'package:fitora_mobile_app/feature/auth/presentation/screens/register_screen.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/widgets/button_auth_widget.dart';
+import 'package:fitora_mobile_app/feature/auth/presentation/widgets/icon_auth_widget.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/widgets/text_field_auth_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +16,7 @@ class SignInScreen extends StatefulWidget {
   State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen>
-    with WidgetsBindingObserver {
+class _SignInScreenState extends State<SignInScreen> with WidgetsBindingObserver {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -51,16 +55,6 @@ class _SignInScreenState extends State<SignInScreen>
           child: isLandscape
               ? Row(
                   children: [
-                    // Expanded(
-                    //   child: Container(
-                    //     padding: EdgeInsets.only(top: maxScreenHeight * 0.1),
-                    //     child: Image.asset(
-                    //       'assets/images/hacom-logo.png',
-                    //       width: 400,
-                    //       height: 400,
-                    //     ),
-                    //   ),
-                    // ),
                     Expanded(
                       child: SingleChildScrollView(
                         child: buildForm(),
@@ -68,16 +62,11 @@ class _SignInScreenState extends State<SignInScreen>
                     ),
                   ],
                 )
-              : SingleChildScrollView(
+              : Container(
+                  height: MediaQuery.of(context).size.height,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      // Container(
-                      //   child: Image.asset(
-                      //     'assets/images/hacom-logo.png',
-                      //     width: 250,
-                      //     height: 250,
-                      //   ),
-                      // ),
                       buildForm(),
                     ],
                   ),
@@ -120,7 +109,7 @@ class _SignInScreenState extends State<SignInScreen>
                   children: [
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      child: textFieldAuthWidget(
+                      child: TextFieldAuthWidget(
                         controller: _usernameController,
                         hinText: 'Tài khoản',
                         obscureText: false,
@@ -138,7 +127,7 @@ class _SignInScreenState extends State<SignInScreen>
                     const SizedBox(height: 25),
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      child: textFieldAuthWidget(
+                      child: TextFieldAuthWidget(
                         controller: _passwordController,
                         hinText: 'Mật khẩu',
                         obscureText: obscurePassword,
@@ -164,21 +153,20 @@ class _SignInScreenState extends State<SignInScreen>
                         ),
                       ),
                     ),
-                    if (isCheckAccountPassword) ...[
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      const Text(
-                        'Tài khoản hoặc mật khẩu của bạn chưa chính xác!',
-                        style: TextStyle(color: AppColors.textRed),
-                      ),
-                    ],
-                    const SizedBox(height: 25),
-                    buttonAuthWidget(
-                      context,
+                    const SizedBox(height: 15),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                          Text('Quên mật khẩu!', style: TextStyle(decoration: TextDecoration.underline),),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    ButtonAuthWidget(
                       title: 'Đăng nhập',
                       bgColor: Colors.orangeAccent,
-                      onPressed: () {},
+                      onPressed: () {
+                        AppNavigation.push(context, const AppView());
+                      },
                     ),
                     const SizedBox(height: 20),
                     const Row(
@@ -192,38 +180,40 @@ class _SignInScreenState extends State<SignInScreen>
                       ],
                     ),
                     const SizedBox(height: 20),
-
-                    // Social login buttons
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.facebook,
-                            color: Colors.blue,
-                            size: 30,
-                          ),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(width: 20),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.mail,
-                            color: Colors.red,
-                            size: 30,
-                          ),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(width: 20),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.apple,
-                            color: Colors.black,
-                            size: 30,
-                          ),
-                          onPressed: () {},
-                        ),
+                        IconAuthWidget(icon: AppSvg.facebookSvg),
+                        SizedBox(width: 25),
+                        IconAuthWidget(icon: AppSvg.googleSvg),
+                        SizedBox(width: 25),
+                        IconAuthWidget(icon: AppSvg.appleWhiteSvg),
                       ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 25),
+              Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Bạn chưa có tài khoản?',
+                      style: TextStyle(color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        AppNavigation.push(context, const RegisterScreen());
+                      },
+                      child: const Text(
+                        'Đăng ký ngay!',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ],
                 ),

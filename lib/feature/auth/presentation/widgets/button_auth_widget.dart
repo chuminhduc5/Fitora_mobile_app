@@ -1,19 +1,37 @@
+import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
-Widget buttonAuthWidget(BuildContext context, {Function()? onPressed, required String title, required Color bgColor}) {
-  return Container(
-    height: 45,
-    width: MediaQuery.of(context).size.width,
-    child: ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: bgColor,
-          padding: const EdgeInsets.all(5.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          )),
-      child: Text(title, style: const TextStyle(fontSize: 20)),
-    ),
-  );
+class ButtonAuthWidget extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String title;
+  final Color bgColor;
+
+  const ButtonAuthWidget({
+    super.key,
+    required this.onPressed,
+    required this.title,
+    required this.bgColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 45,
+      width: MediaQuery.of(context).size.width,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: bgColor,
+            padding: const EdgeInsets.all(5.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            )),
+        child: Text(
+          title,
+          style: const TextStyle(fontSize: 20),
+        ),
+      ),
+    );
+  }
 }

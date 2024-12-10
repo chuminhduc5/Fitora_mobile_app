@@ -93,10 +93,11 @@ class _HomeScreenState extends State<HomeScreen> {
           return Container(
             height: MediaQuery.of(context).size.height * 0.5,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            child: Column(
+            child: const Column(
               children: <Widget>[],
             ),
           );
-        });
+        },
+      );
   }
 }
