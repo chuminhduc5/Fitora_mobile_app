@@ -193,27 +193,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () {},
                     ),
                     const SizedBox(height: 20),
-                    const Row(
-                      children: [
-                        Expanded(child: Divider()),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text('Or'),
-                        ),
-                        Expanded(child: Divider()),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconAuthWidget(icon: AppSvg.facebookSvg),
-                        SizedBox(width: 25),
-                        IconAuthWidget(icon: AppSvg.googleSvg),
-                        SizedBox(width: 25),
-                        IconAuthWidget(icon: AppSvg.appleWhiteSvg),
-                      ],
-                    ),
+                    // const Row(
+                    //   children: [
+                    //     Expanded(child: Divider()),
+                    //     Padding(
+                    //       padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    //       child: Text('Or'),
+                    //     ),
+                    //     Expanded(child: Divider()),
+                    //   ],
+                    // ),
+                    // const SizedBox(height: 20),
+                    // const Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     IconAuthWidget(icon: AppSvg.facebookSvg),
+                    //     SizedBox(width: 25),
+                    //     IconAuthWidget(icon: AppSvg.googleSvg),
+                    //     SizedBox(width: 25),
+                    //     IconAuthWidget(icon: AppSvg.appleWhiteSvg),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
