@@ -8,6 +8,7 @@ import 'package:fitora_mobile_app/feature/auth/presentation/widgets/icon_auth_wi
 import 'package:fitora_mobile_app/feature/auth/presentation/widgets/text_field_auth_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -26,6 +27,7 @@ class _SignInScreenState extends State<SignInScreen> with WidgetsBindingObserver
   String fullName = '';
   int idEmp = 0;
   String username = '';
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   void initState() {
@@ -37,6 +39,22 @@ class _SignInScreenState extends State<SignInScreen> with WidgetsBindingObserver
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+  
+  Future<void> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser != null) {
+        print("Logged in as: ${googleUser.displayName}");
+        print("Email: ${googleUser.email}");
+        print("Photo: ${googleUser.photoUrl}");
+      } else {
+        print("Sign-in aborted by user.");
+      }
+    } catch (error) {
+      print("Error during Google sign-in: $error");
+    }
   }
 
   @override
@@ -180,14 +198,14 @@ class _SignInScreenState extends State<SignInScreen> with WidgetsBindingObserver
                       ],
                     ),
                     const SizedBox(height: 20),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IconAuthWidget(icon: AppSvg.facebookSvg),
-                        SizedBox(width: 25),
-                        IconAuthWidget(icon: AppSvg.googleSvg),
-                        SizedBox(width: 25),
-                        IconAuthWidget(icon: AppSvg.appleWhiteSvg),
+                        IconAuthWidget(onPressed: () {}, icon: AppSvg.facebookSvg),
+                        const SizedBox(width: 25),
+                        IconAuthWidget(onPressed: signInWithGoogle, icon: AppSvg.googleSvg),
+                        const SizedBox(width: 25),
+                        IconAuthWidget(onPressed: () {}, icon: AppSvg.appleWhiteSvg),
                       ],
                     ),
                   ],
