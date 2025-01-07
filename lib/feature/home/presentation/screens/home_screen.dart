@@ -1,4 +1,5 @@
 import 'package:fitora_mobile_app/common/widgets/article/article_card.dart';
+import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -57,6 +58,43 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.bgOrange,
+        title: const Text(
+          'Fitora',
+          style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: Colors.white),
+        ),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.search_outlined),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications),
+          ),
+          Builder(
+              builder: (context) {
+                return InkWell(
+                  onTap: () {
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.network("https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg", height: 33, fit: BoxFit.cover,),
+                    ),
+                  ),
+                );
+              }
+          )
+        ],
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: CustomScrollView(
         slivers: [
           SliverList(
