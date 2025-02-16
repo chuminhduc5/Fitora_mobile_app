@@ -5,7 +5,8 @@ Widget achievements() {
     margin: const EdgeInsets.symmetric(horizontal: 15),
     padding: const EdgeInsets.all(10.0),
     decoration: BoxDecoration(
-      color: Colors.grey[850],
+      //color: Colors.grey[850],
+      color: Colors.white,
       borderRadius: BorderRadius.circular(8.0),
     ),
     child: const Row(
@@ -13,6 +14,7 @@ Widget achievements() {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Expanded(
+          flex: 2,
           child: Stack(
             children: <Widget>[
               CircleAvatar(
@@ -39,13 +41,12 @@ Widget achievements() {
             ],
           ),
         ),
-        SizedBox(width: 10.0),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "5 Achievements",
-              style: TextStyle(color: Colors.white, fontSize: 16.0),
+              style: TextStyle(color: Colors.black, fontSize: 16.0),
             ),
             Text(
               "View details",

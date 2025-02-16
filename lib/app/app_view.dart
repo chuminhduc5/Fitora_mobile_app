@@ -28,14 +28,13 @@ class _AppViewState extends State<AppView> {
     const NotificationScreen(),
   ];
   int _currentIndex = 0;
-  //SnackBarBehavior? _snackBarBehavior = SnackBarBehavior.floating;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          drawer: leftDrawer(),
-          endDrawer: rightDrawer(),
+          // drawer: leftDrawer(),
+          // endDrawer: rightDrawer(),
           body: PageTransitionSwitcher(
             duration: const Duration(milliseconds: 300),
             transitionBuilder: (child, animation, secondAnimation) {

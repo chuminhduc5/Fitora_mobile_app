@@ -15,7 +15,7 @@ class IconAuthWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Colors.white,
+            color: Colors.black,
             width: 1,
           )
         ),

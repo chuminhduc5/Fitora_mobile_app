@@ -59,7 +59,7 @@ Widget rightDrawer() {
         Stack(
           children: [
             Center(
-              child: Container(
+              child: SizedBox(
                 height: 250, width: 220,
                 child: Image.asset(AppImages.avatar, fit: BoxFit.cover,),
               ),

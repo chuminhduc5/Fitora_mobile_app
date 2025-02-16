@@ -34,7 +34,14 @@ Widget leftDrawer() {
               title: const Text('Tạo mới', style: TextStyle(fontSize: 14),),
               onTap: () {},
             ),
-            ..._option.map((i) => leftDrawerOption(i['avatar'], i["icon"], i["title"], (){})),
+            //..._option.map((i) => leftDrawerOption(i['avatar'], i["icon"], i["title"], (){})),
+            ListView.builder(
+              itemCount: _option.length,
+              itemBuilder: (BuildContext context, int index){
+                final option = _option[index];
+                return leftDrawerOption(option['avatar'], option['icon'], option['title'], (){});
+              },
+            )
           ],
         ),
         ExpansionTile(
@@ -44,7 +51,7 @@ Widget leftDrawer() {
           ),
           title: const Text('Tất cả', style: TextStyle(fontSize: 15),),
           minTileHeight: 20,
-          children: <Widget>[],
+          children: const <Widget>[],
         ),
       ],
     ),

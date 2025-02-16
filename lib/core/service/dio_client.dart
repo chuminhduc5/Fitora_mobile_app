@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fitora_mobile_app/core/constants/api_constant.dart';
-import 'package:fitora_mobile_app/core/network/interceptors.dart';
+import 'package:fitora_mobile_app/core/service/interceptors.dart';
 
 class DioClient {
   late final Dio _dio;
@@ -42,6 +42,7 @@ class DioClient {
   // TODO: POST METHOD
   Future<Response> post(
     String url, {
+    data,
     Map<String, dynamic>? queryParameters,
     Options? options,
     ProgressCallback? onSendProgress,
