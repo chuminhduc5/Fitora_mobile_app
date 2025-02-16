@@ -1,4 +1,6 @@
 import 'package:fitora_mobile_app/common/widgets/article/article_card.dart';
+import 'package:fitora_mobile_app/common/widgets/drawer/left_drawer/left_drawer.dart';
+import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawer.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -58,6 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: leftDrawer(),
+      endDrawer: rightDrawer(),
       appBar: AppBar(
         backgroundColor: AppColors.bgOrange,
         title: const Text(

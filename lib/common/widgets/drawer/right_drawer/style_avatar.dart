@@ -7,7 +7,8 @@ Widget styleAvatar() {
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(
-          color: Colors.grey[850],
+          //color: Colors.grey[850],
+          color: Colors.white,
           borderRadius: BorderRadius.circular(15),
         ),
         child: const Row(

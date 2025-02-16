@@ -64,7 +64,8 @@ class _SignInScreenState extends State<SignInScreen> with WidgetsBindingObserver
     final isLandscape = maxScreenWidth > maxScreenHeight;
 
     return Scaffold(
-      backgroundColor: ThemeData.dark().scaffoldBackgroundColor,
+      //backgroundColor: ThemeData.light().scaffoldBackgroundColor,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
           height: double.infinity,
@@ -181,9 +182,9 @@ class _SignInScreenState extends State<SignInScreen> with WidgetsBindingObserver
                     const SizedBox(height: 15),
                     ButtonAuthWidget(
                       title: 'Đăng nhập',
-                      bgColor: Colors.orangeAccent,
+                      bgColor: AppColors.bgPink,
                       onPressed: () {
-                        AppNavigation.push(context, const AppView());
+                        AppNavigation.pushAndRemove(context, const AppView());
                       },
                     ),
                     const SizedBox(height: 20),
@@ -205,7 +206,7 @@ class _SignInScreenState extends State<SignInScreen> with WidgetsBindingObserver
                         const SizedBox(width: 25),
                         IconAuthWidget(onPressed: signInWithGoogle, icon: AppSvg.googleSvg),
                         const SizedBox(width: 25),
-                        IconAuthWidget(onPressed: () {}, icon: AppSvg.appleWhiteSvg),
+                        IconAuthWidget(onPressed: () {}, icon: AppSvg.appleSvg),
                       ],
                     ),
                   ],
@@ -229,7 +230,7 @@ class _SignInScreenState extends State<SignInScreen> with WidgetsBindingObserver
                       child: const Text(
                         'Đăng ký ngay!',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                       ),
                     ),

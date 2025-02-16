@@ -40,8 +40,8 @@ class TextFieldAuthWidget extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.grey[100]!,
-            width: 0,
+            color: Colors.black,
+            width: 1,
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -50,7 +50,7 @@ class TextFieldAuthWidget extends StatelessWidget {
           const BorderSide(color: AppColors.bgOutlineFieldFocus, width: 1),
         ),
         //fillColor: Colors.grey[100],
-        fillColor: Colors.black,
+        fillColor: Colors.white,
         filled: true,
         hintText: hinText,
         hintStyle: TextStyle(color: Colors.grey[500]),
