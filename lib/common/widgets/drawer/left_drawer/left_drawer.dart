@@ -1,11 +1,12 @@
 import 'package:fitora_mobile_app/common/widgets/drawer/left_drawer/left_drawer_option.dart';
+import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:flutter/material.dart';
 
 final List<Map<String, dynamic>> _option = [
-  {"avatar": "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg", "title": "Tất cả", "icon": Icons.star_border},
-  {"avatar": "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg", "title": "Tất cả", "icon": Icons.star_border},
-  {"avatar": "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg", "title": "Tất cả", "icon": Icons.star_border},
-  {"avatar": "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg", "title": "Tất cả", "icon": Icons.star_border},
+  {"avatar": AppImages.avatar, "title": "Tất cả", "icon": Icons.star_border},
+  {"avatar": AppImages.avatar, "title": "Tất cả", "icon": Icons.star_border},
+  {"avatar": AppImages.avatar, "title": "Tất cả", "icon": Icons.star_border},
+  {"avatar": AppImages.avatar, "title": "Tất cả", "icon": Icons.star_border},
 ];
 
 Widget leftDrawer() {
@@ -34,14 +35,14 @@ Widget leftDrawer() {
               title: const Text('Tạo mới', style: TextStyle(fontSize: 14),),
               onTap: () {},
             ),
-            //..._option.map((i) => leftDrawerOption(i['avatar'], i["icon"], i["title"], (){})),
-            ListView.builder(
-              itemCount: _option.length,
-              itemBuilder: (BuildContext context, int index){
-                final option = _option[index];
-                return leftDrawerOption(option['avatar'], option['icon'], option['title'], (){});
-              },
-            )
+            ..._option.map((i) => leftDrawerOption(i['avatar'], i["icon"], i["title"], (){})),
+            // ListView.builder(
+            //   itemCount: _option.length,
+            //   itemBuilder: (BuildContext context, int index){
+            //     final option = _option[index];
+            //     return leftDrawerOption(option['avatar'], option['icon'], option['title'], (){});
+            //   },
+            // )
           ],
         ),
         ExpansionTile(

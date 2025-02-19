@@ -33,8 +33,7 @@ class _AppViewState extends State<AppView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          // drawer: leftDrawer(),
-          // endDrawer: rightDrawer(),
+        backgroundColor: AppColors.bgWhite,
           body: PageTransitionSwitcher(
             duration: const Duration(milliseconds: 300),
             transitionBuilder: (child, animation, secondAnimation) {
@@ -56,8 +55,8 @@ class _AppViewState extends State<AppView> {
               }
             },
             type: BottomNavigationBarType.fixed,
-            selectedItemColor: AppColors.bgOrange,
-            unselectedItemColor: AppColors.bgOrange,
+            selectedItemColor: AppColors.bgPink,
+            unselectedItemColor: AppColors.bgPink,
             selectedFontSize: 12,
             unselectedFontSize: 10,
             items: [

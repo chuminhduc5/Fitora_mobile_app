@@ -1,8 +1,11 @@
 import 'package:fitora_mobile_app/core/service/dio_client.dart';
+import 'package:fitora_mobile_app/feature/auth/di/auth_dependency.dart';
 import 'package:get_it/get_it.dart';
 
-final sl = GetIt.instance;
+final getIt = GetIt.instance;
 
 void configureDependencies() {
-  sl.registerSingleton<DioClient>(DioClient());
+  AuthDependency.init();
+
+  getIt.registerSingleton<DioClient>(DioClient());
 }

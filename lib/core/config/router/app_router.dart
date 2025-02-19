@@ -1,4 +1,5 @@
-import 'package:fitora_mobile_app/feature/auth/presentation/screens/register_screen.dart';
+import 'package:fitora_mobile_app/app/app_view.dart';
+import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_up_screen.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_in_screen.dart';
 import 'package:fitora_mobile_app/feature/chat/presentation/screens/chat_screen.dart';
 import 'package:fitora_mobile_app/feature/home/presentation/screens/home_screen.dart';
@@ -12,15 +13,23 @@ final GoRouter appRouter = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const SplashScreen(),
+      builder: (context, state) => const SignInScreen(),
       routes: [
+        GoRoute(
+          path: 'splash',
+          builder: (context, state) => const SplashScreen(),
+        ),
         GoRoute(
           path: 'sign-in',
           builder: (context, state) => const SignInScreen(),
         ),
         GoRoute(
           path: 'sign-up',
-          builder: (context, state) => const RegisterScreen(),
+          builder: (context, state) => const SignUpScreen(),
+        ),
+        GoRoute(
+          path: 'app-view',
+          builder: (context, state) => const AppView(),
         ),
         GoRoute(
           path: 'home',

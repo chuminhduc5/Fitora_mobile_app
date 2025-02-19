@@ -1,12 +1,15 @@
 import 'package:dartz/dartz.dart';
-import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/core/extensions/string_validator_extension.dart';
 import 'package:fitora_mobile_app/core/usecase/usecase.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/params/sign_up_req_params.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/repositories/auth_repository.dart';
 
-class AuthSignUp extends UseCase<void, SignUpReqParams> {
+class AuthSignUpUseCase extends UseCase<void, SignUpReqParams> {
+  final AuthRepository _authRepository;
+
+  AuthSignUpUseCase(this._authRepository);
+
   @override
   Future<Either<Failure, void>> call(SignUpReqParams params) async {
     if (!params.email.isEmailValid) {
@@ -18,10 +21,11 @@ class AuthSignUp extends UseCase<void, SignUpReqParams> {
     }
 
     if (params.password != params.confirmPassword) {
-      return const Left(PasswordNotMatchFailure(message: 'Mật khẩu không khớp'));
+      return const Left(
+          PasswordNotMatchFailure(message: 'Mật khẩu không khớp'));
     }
 
-    final result = await sl<AuthRepository>().signUp(params);
+    final result = await _authRepository.signUp(params);
     return result;
   }
 }

@@ -63,10 +63,12 @@ class _ArticleCardState extends State<ArticleCard> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(50),
-                  child: Image.network(
-                    widget.avatar!,
+                  child: SizedBox(
                     height: 25,
-                    fit: BoxFit.cover,
+                    child: Image.asset(
+                      widget.avatar!,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 5),
@@ -100,19 +102,21 @@ class _ArticleCardState extends State<ArticleCard> {
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: _isCheckNetwork
-                ? Image.network(
-                    widget.image!,
-                    width: MediaQuery.of(context).size.width,
-                    height: 300,
-                    fit: BoxFit.cover,
-                  )
+                ? (widget.image == null || widget.image!.isEmpty)
+                ? const SizedBox.shrink()
+                : Image.network(
+              widget.image!,
+              width: MediaQuery.of(context).size.width,
+              height: 300,
+              fit: BoxFit.cover,
+            )
                 : SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 300,
-                    child: const Center(
-                      child: Text('Error'),
-                    ),
-                  ),
+              width: MediaQuery.of(context).size.width,
+              height: 300,
+              child: const Center(
+                child: Text('Error'),
+              ),
+            ),
           ),
 
           // // Trường hợp bài đăng chỉ có video

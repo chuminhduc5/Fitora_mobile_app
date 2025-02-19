@@ -5,21 +5,23 @@ import 'package:fitora_mobile_app/core/service/interceptors.dart';
 class DioClient {
   late final Dio _dio;
 
-  // DioClient(): _dio = Dio(
-  //   BaseOptions(
-  //     baseUrl: ApiConstant.baseUrl,
-  //     headers: {
-  //       'Content-Type': 'application/json; charset=UTF-8'
-  //     },
-  //     responseType: ResponseType.json,
-  //     sendTimeout: const Duration(seconds: 10),
-  //     receiveTimeout: const Duration(seconds: 10),
-  //   ),
-  // )..interceptors.addAll([AuthorizationInterceptor(), LoggerInterceptor()]);
+  DioClient()
+      : _dio = Dio(
+    BaseOptions(
+      baseUrl: ApiConstant.baseUrl,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      responseType: ResponseType.json,
+      sendTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+    ),
+  )
+    ..interceptors
+        .addAll([AuthorizationInterceptor(), LoggerInterceptor(),],);
 
   // TODO: GET METHOD
-  Future<Response> get(
-    String url, {
+  Future<Response> get(String url, {
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
@@ -40,8 +42,7 @@ class DioClient {
   }
 
   // TODO: POST METHOD
-  Future<Response> post(
-    String url, {
+  Future<Response> post(String url, {
     data,
     Map<String, dynamic>? queryParameters,
     Options? options,
@@ -51,7 +52,7 @@ class DioClient {
     try {
       final Response response = await _dio.post(
         url,
-        queryParameters: queryParameters,
+        data: data,
         options: options,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
@@ -63,8 +64,7 @@ class DioClient {
   }
 
   // TODO: PUT METHOD
-  Future<Response> put(
-    String url, {
+  Future<Response> put(String url, {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     Options? options,
@@ -89,8 +89,7 @@ class DioClient {
   }
 
   // TODO: DELETE METHOD
-  Future<Response> delete(
-    String url, {
+  Future<Response> delete(String url, {
     data,
     Map<String, dynamic>? queryParameters,
     Options? options,
