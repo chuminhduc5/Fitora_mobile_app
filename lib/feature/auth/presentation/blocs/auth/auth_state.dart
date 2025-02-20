@@ -35,7 +35,7 @@ class AuthSignUpFailureState extends AuthState {
 class AuthSignInLoadingState extends AuthState {}
 
 class AuthSignInSuccessState extends AuthState {
-  final UserEntity data;
+  final AuthEntity data;
 
   const AuthSignInSuccessState({required this.data});
 
@@ -77,7 +77,7 @@ class AuthSignOutFailureState extends AuthState {
 class AuthCheckSignInStatusLoadingState extends AuthState {}
 
 class AuthCheckSignInStatusSuccessState extends AuthState {
-  final UserEntity data;
+  final AuthEntity data;
 
   const AuthCheckSignInStatusSuccessState({required this.data});
 

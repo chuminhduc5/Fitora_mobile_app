@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-class LoginFormData extends Equatable {
+class SignInFormData extends Equatable {
   final String email;
   final String password;
   final bool isValid;
 
-  const LoginFormData({
+  const SignInFormData({
     required this.email,
     required this.password,
     required this.isValid,
@@ -14,12 +14,12 @@ class LoginFormData extends Equatable {
   @override
   List<Object?> get props => [email, password, isValid];
 
-  LoginFormData copyWith({
+  SignInFormData copyWith({
     String? email,
     String? password,
     bool? isValid,
   }) {
-    return LoginFormData(
+    return SignInFormData(
       email: email ?? this.email,
       password: password ?? this.password,
       isValid: isValid ?? this.isValid,

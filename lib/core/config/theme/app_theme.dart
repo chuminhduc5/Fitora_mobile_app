@@ -81,7 +81,7 @@ class AppTheme {
 
   static final lightMode = ThemeData(
     primaryColor: AppColors.primary,
-    scaffoldBackgroundColor: AppColors.bgColor,
+    scaffoldBackgroundColor: AppColors.bgWhite,
     brightness: Brightness.light,
     snackBarTheme: SnackBarThemeData(
       backgroundColor: AppColors.bgColor,
@@ -89,7 +89,7 @@ class AppTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.white,
+      fillColor: AppColors.white,
       hintStyle: const TextStyle(
         color: Color(0xff7A7A7A),
         fontWeight: FontWeight.w400,

@@ -1,6 +1,7 @@
 import 'package:fitora_mobile_app/common/widgets/article/article_card.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/left_drawer/left_drawer.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawer.dart';
+import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -14,13 +15,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final List<Map<String, dynamic>> _articleList = [
     {
-      "avatar":
-          "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg",
+      "avatar": AppImages.avatar,
       "author": "Chử Minh Đức",
       "title": "Chử minh đức đã cập nhật ảnh đại diện mới",
       "content": "",
-      "image":
-          "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg",
+      "image": "",
       "description": "",
       "time": "2 giờ trước",
       "favourite": 120,
@@ -28,13 +27,11 @@ class _HomeScreenState extends State<HomeScreen> {
       "share": 0,
     },
     {
-      "avatar":
-          "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg",
+      "avatar": AppImages.avatar,
       "author": "Chử Minh Đức",
       "title": "Chử minh đức đã cập nhật ảnh đại diện mới",
       "content": "",
-      "image":
-          "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg",
+      "image": AppImages.avatar,
       "description": "",
       "time": "2 giờ trước",
       "favourite": 120,
@@ -42,13 +39,11 @@ class _HomeScreenState extends State<HomeScreen> {
       "share": 0,
     },
     {
-      "avatar":
-          "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg",
+      "avatar": AppImages.avatar,
       "author": "Chử Minh Đức",
       "title": "Chử minh đức đã cập nhật ảnh đại diện mới",
       "content": "",
-      "image":
-          "https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg",
+      "image": AppImages.avatar,
       "description": "",
       "time": "2 giờ trước",
       "favourite": 120,
@@ -62,14 +57,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: leftDrawer(),
       endDrawer: rightDrawer(),
+      backgroundColor: AppColors.bgWhite,
       appBar: AppBar(
-        backgroundColor: AppColors.bgOrange,
+        backgroundColor: AppColors.bgPink,
         title: const Text(
           'Fitora',
           style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.white),
+              fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
         ),
         actions: <Widget>[
           IconButton(
@@ -80,22 +74,25 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {},
             icon: const Icon(Icons.notifications),
           ),
-          Builder(
-              builder: (context) {
-                return InkWell(
-                  onTap: () {
-                    Scaffold.of(context).openEndDrawer();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.network("https://cdn-media.sforum.vn/storage/app/media/THANHAN/avartar-anime-89.jpg", height: 33, fit: BoxFit.cover,),
-                    ),
+          Builder(builder: (context) {
+            return InkWell(
+              onTap: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Image.asset(
+                    AppImages.avatar,
+                    height: 33,
+                    width: 33,
+                    fit: BoxFit.cover,
                   ),
-                );
-              }
-          )
+                ),
+              ),
+            );
+          })
         ],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -128,18 +125,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showBottomSheet(BuildContext context) {
     showBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
-        builder: (BuildContext context) {
-          return Container(
-            height: MediaQuery.of(context).size.height * 0.5,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            child: const Column(
-              children: <Widget>[],
-            ),
-          );
-        },
-      );
+      context: context,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          child: const Column(
+            children: <Widget>[],
+          ),
+        );
+      },
+    );
   }
 }

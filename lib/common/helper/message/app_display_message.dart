@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class DisplayMessage {
+class AppDisplayMessage {
   static void errorMessage(BuildContext context, String message) {
     var snackbar = SnackBar(
       content: Text(

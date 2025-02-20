@@ -39,7 +39,7 @@ class TextFieldAuthWidget extends StatelessWidget {
         prefixIcon: prefixIcon,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Colors.black,
             width: 1,
           ),
@@ -47,7 +47,7 @@ class TextFieldAuthWidget extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide:
-          const BorderSide(color: AppColors.bgOutlineFieldFocus, width: 1),
+          const BorderSide(color: AppColors.pink, width: 1),
         ),
         //fillColor: Colors.grey[100],
         fillColor: Colors.white,

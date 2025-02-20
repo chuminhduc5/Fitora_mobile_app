@@ -2,7 +2,7 @@ import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ButtonAuthWidget extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String title;
   final Color bgColor;
 
@@ -25,11 +25,11 @@ class ButtonAuthWidget extends StatelessWidget {
             backgroundColor: bgColor,
             padding: const EdgeInsets.all(5.0),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(5),
             )),
         child: Text(
           title,
-          style: const TextStyle(fontSize: 20),
+          style: const TextStyle(fontSize: 18),
         ),
       ),
     );

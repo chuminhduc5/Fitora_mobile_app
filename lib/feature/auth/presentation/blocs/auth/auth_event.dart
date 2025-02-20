@@ -10,7 +10,7 @@ abstract class AuthEvent extends Equatable {
 
 // Sự kện người dùng đăng nhập
 class AuthSignInEvent extends AuthEvent {
-  final SignInReqParams params;
+  final AuthSignInFormData params;
 
   const AuthSignInEvent({required this.params});
 
@@ -20,7 +20,7 @@ class AuthSignInEvent extends AuthEvent {
 
 // Sự kiện người dùng đăng ký
 class AuthSignUpEvent extends AuthEvent {
-  final SignUpReqParams params;
+  final AuthSignUpFormData params;
 
   const AuthSignUpEvent({required this.params});
 

@@ -49,3 +49,9 @@ class ErrorHandler {
     return errors.containsKey(error) ? errors[error] : error;
   }
 }
+
+class AuthException implements Exception {}
+
+class EmptyException implements Exception {}
+
+class DuplicateEmailException implements Exception {}
