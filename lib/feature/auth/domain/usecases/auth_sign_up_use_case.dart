@@ -13,16 +13,15 @@ class AuthSignUpUseCase extends UseCase<void, SignUpReqParams> {
   @override
   Future<Either<Failure, void>> call(SignUpReqParams params) async {
     if (!params.email.isEmailValid) {
-      return const Left(InvalidEmailFailure(message: 'Email không đúng'));
+      return Left(InvalidEmailFailure());
     }
 
     if (!params.password.isPasswordValid) {
-      return const Left(InvalidPasswordFailure(message: 'Mật khẩu không đúng'));
+      return Left(InvalidPasswordFailure());
     }
 
     if (params.password != params.confirmPassword) {
-      return const Left(
-          PasswordNotMatchFailure(message: 'Mật khẩu không khớp'));
+      return Left(PasswordNotMatchFailure());
     }
 
     final result = await _authRepository.signUp(params);

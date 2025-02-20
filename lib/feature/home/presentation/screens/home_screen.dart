@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
     {
       "avatar": AppImages.avatar,
       "author": "Chử Minh Đức",
-      "title": "Chử minh đức đã cập nhật ảnh đại diện mới",
+      "title": "Bài viêt mới",
       "content": "",
       "image": "",
       "description": "",

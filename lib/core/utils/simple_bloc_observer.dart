@@ -19,10 +19,8 @@ class SimpleBlocObserver extends BlocObserver {
   // In ra những thay đổi Bloc
   @override
   void onChange(BlocBase bloc, Change change) {
-    // super.onChange(bloc, change);
-    // log('onChange -- bloc: ${bloc.runtimeType}, Change: $change');
-    logger.e('Current State: ${change.currentState}');
-    logger.e('Next State: ${change.nextState}');
+    logger.i('Current State: ${change.currentState}');
+    logger.i('Next State: ${change.nextState}');
     super.onChange(bloc, change);
   }
 
@@ -36,9 +34,7 @@ class SimpleBlocObserver extends BlocObserver {
   // In ra các lỗi
   @override
   void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
-    // super.onError(bloc, error, stackTrace);
-    // log('onError -- bloc: ${bloc.runtimeType}, error: $error');
-    logger.e('Error: $error');
+    logger.i('Error: $error');
     super.onError(bloc, error, stackTrace);
   }
 

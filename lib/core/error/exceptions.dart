@@ -9,21 +9,6 @@
 import 'failure.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class ServerException {
-  final String? message;
-  ServerException({this.message});
-}
-
-class NetWorkException {
-  final NetworkFailure failure;
-  NetWorkException(this.failure);
-}
-
-class CacheException {
-  final String message;
-  CacheException(this.message);
-}
-
 class ErrorHandler {
   static final errors = {
     "Email or password is incorrect": 'email_or_pass_incorrect'.tr(),
@@ -49,6 +34,12 @@ class ErrorHandler {
     return errors.containsKey(error) ? errors[error] : error;
   }
 }
+
+class NetWorkException implements Exception{}
+
+class ServerException implements Exception{}
+
+class CacheException implements Exception{}
 
 class AuthException implements Exception {}
 

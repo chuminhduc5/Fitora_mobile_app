@@ -11,3 +11,10 @@ var logger = Logger(
     printEmojis: true,
   ),
 );
+
+/*
+* logger.d("Đây là log debug");  // ℹ️ Debug message - Màu trắng
+  logger.i("Đây là log info");   // ℹ️ Info message - Màu xanh
+  logger.w("Đây là cảnh báo");   // ⚠️ Warning message - Màu vàng
+  logger.e("Đây là lỗi");        // Error message - Màu đỏ
+* */

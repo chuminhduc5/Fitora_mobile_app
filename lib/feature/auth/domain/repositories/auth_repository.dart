@@ -1,10 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
-import 'package:fitora_mobile_app/feature/auth/data/models/auth_model.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/auth_entity.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/params/sign_in_req_params.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/params/sign_up_req_params.dart';
-import 'package:fitora_mobile_app/feature/auth/domain/entities/user_entity.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, AuthEntity>> signIn(SignInReqParams params);
