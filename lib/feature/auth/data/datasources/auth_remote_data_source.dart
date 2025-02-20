@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:fitora_mobile_app/core/constants/api_constant.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
-import 'package:fitora_mobile_app/core/service/dio_client.dart';
+import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
 import 'package:fitora_mobile_app/feature/auth/data/models/auth_model.dart';
 import 'package:fitora_mobile_app/feature/auth/data/models/user_model.dart';
 

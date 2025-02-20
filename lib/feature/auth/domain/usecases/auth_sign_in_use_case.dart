@@ -14,14 +14,11 @@ class AuthSignInUseCase extends UseCase<AuthEntity, SignInReqParams> {
   @override
   Future<Either<Failure, AuthEntity>> call(SignInReqParams params) async {
     if (!params.email.isEmailValid) {
-      return const Left(InvalidEmailFailure(message: 'Email không đúng'));
+      return Left(InvalidEmailFailure());
     }
 
     if (!params.password.isPasswordValid) {
-      print("--------------${params.toString()}-----------------------");
-      print("--------------${params.password}-----------------------");
-      print("Password Valid: ${params.password.isPasswordValid}");
-      return const Left(InvalidPasswordFailure(message: 'Mật khẩu không đúng'));
+      return Left(InvalidPasswordFailure());
     }
 
     final result = await _authRepository.signIn(params);

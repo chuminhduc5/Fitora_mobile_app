@@ -23,7 +23,8 @@ class LoggerInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     final requestPath = '${options.baseUrl}${options.path}';
-    logger.i('${options.method} request ==> $requestPath');
+    logger.i('[REQUEST] ${options.method} request ==> $requestPath');
+    logger.d('Header: ${options.headers}');
     handler.next(options);
   }
 
@@ -34,15 +35,5 @@ class LoggerInterceptor extends Interceptor {
         'HEADERS: ${response.headers} \n'
         'DATA: ${response.data}');
     handler.next(response);
-  }
-}
-
-class AuthorizationInterceptor extends Interceptor {
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    final token = sharedPreferences.getString('token');
-    options.headers['Authorization'] = "Bearer $token";
-    handler.next(options);
   }
 }

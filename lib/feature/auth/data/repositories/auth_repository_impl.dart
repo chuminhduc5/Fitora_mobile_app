@@ -28,23 +28,10 @@ class AuthRepositoryImpl implements AuthRepository {
         email: params.email,
         password: params.password,
       );
-      print('=======${params.email}=======');
-      print('=======${params.password}=======');
-      print('=======${model.email}=======');
-      print('=======${model.password}=======');
-      // final result = await _authRemoteDataSource.signIn(model);
-      // print('🛑 result: $result');
-      // return Right(AuthMapper.toEntity(result));
       final result = await _authRemoteDataSource.signIn(model);
-      print('✅ Result before mapping: $result');
-
       final entity = AuthMapper.toEntity(result);
-      print('✅ Entity: $entity');
-
       return Right(entity);
     } catch (e, stacktrace) {
-      print('🔥 ERROR in signIn: $e');
-      print(stacktrace);
       return Left(ServerFailure());
     }
   }
