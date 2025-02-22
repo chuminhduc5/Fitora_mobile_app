@@ -1,9 +1,14 @@
+import 'dart:math';
+
 import 'package:fitora_mobile_app/common/widgets/article/article_card.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/left_drawer/left_drawer.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawer.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
+import 'package:fitora_mobile_app/core/utils/logger.dart';
+import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
       "author": "Chử Minh Đức",
       "title": "Bài viêt mới",
       "content": "",
-      "image": "",
+      "image": [],
       "description": "",
       "time": "2 giờ trước",
       "favourite": 120,
@@ -31,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
       "author": "Chử Minh Đức",
       "title": "Chử minh đức đã cập nhật ảnh đại diện mới",
       "content": "",
-      "image": AppImages.avatar,
+      "image": [AppImages.avatar],
       "description": "",
       "time": "2 giờ trước",
       "favourite": 120,
@@ -43,7 +48,31 @@ class _HomeScreenState extends State<HomeScreen> {
       "author": "Chử Minh Đức",
       "title": "Chử minh đức đã cập nhật ảnh đại diện mới",
       "content": "",
-      "image": AppImages.avatar,
+      "image": [AppImages.avatar, AppImages.avatar],
+      "description": "",
+      "time": "2 giờ trước",
+      "favourite": 120,
+      "comment": 50,
+      "share": 0,
+    },
+    {
+      "avatar": AppImages.avatar,
+      "author": "Chử Minh Đức",
+      "title": "Chử minh đức đã cập nhật ảnh đại diện mới",
+      "content": "",
+      "image": [AppImages.avatar, AppImages.avatar, AppImages.avatar],
+      "description": "",
+      "time": "2 giờ trước",
+      "favourite": 120,
+      "comment": 50,
+      "share": 0,
+    },
+    {
+      "avatar": AppImages.avatar,
+      "author": "Chử Minh Đức",
+      "title": "Chử minh đức đã cập nhật ảnh đại diện mới",
+      "content": "",
+      "image": [AppImages.avatar, AppImages.avatar, AppImages.avatar, AppImages.avatar],
       "description": "",
       "time": "2 giờ trước",
       "favourite": 120,
@@ -52,11 +81,38 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
+  // static const _pageSize = 10;
+  // final PagingController<String?, PostEntity> _pagingController = PagingController(firstPageKey: null);
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _pagingController.addPageRequestListener((lastPostId) {
+  //     _fetchPage(lastPostId);
+  //   });
+  // }
+  //
+  // Future<void> _fetchPage(String? lastPostId) async {
+  //   try {
+  //     final newPosts = await fetchPostsFromApi(lastPostId, _pageSize);
+  //     final isLastPage = newPosts.length < _pageSize;
+  //
+  //     if (isLastPage) {
+  //       _pagingController.appendLastPage(newPosts);
+  //     } else {
+  //       final nextPageKey = newPosts.last.id; // Cursor (ID bài viết cuối cùng)
+  //       _pagingController.appendPage(newPosts, nextPageKey);
+  //     }
+  //   } catch (error) {
+  //     _pagingController.error = error;
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: leftDrawer(),
-      endDrawer: rightDrawer(),
+      endDrawer: rightDrawer(context),
       backgroundColor: AppColors.bgWhite,
       appBar: AppBar(
         backgroundColor: AppColors.bgPink,
@@ -102,12 +158,13 @@ class _HomeScreenState extends State<HomeScreen> {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final article = _articleList[index];
+                //logger.i(article['image']);
                 return ArticleCard(
                   avatar: article['avatar'],
                   author: article['author'],
                   title: article['title'],
                   content: article['content'],
-                  image: article['image'],
+                  images: List<String>.from(article['image']) ?? [],
                   description: article['description'],
                   time: article['time'],
                   favourite: article['favourite'],

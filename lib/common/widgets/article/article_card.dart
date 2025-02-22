@@ -9,7 +9,7 @@ class ArticleCard extends StatefulWidget {
   final String? title;
   final String? content;
   final String? image;
-  final List<String>? images;
+  final List<String> images;
   final String? video;
   final String? description;
   final String? time;
@@ -26,7 +26,7 @@ class ArticleCard extends StatefulWidget {
     this.content,
     this.image,
     this.video,
-    this.images,
+    required this.images,
     this.description,
     this.time,
     this.favourite,
@@ -99,25 +99,26 @@ class _ArticleCardState extends State<ArticleCard> {
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 5),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: _isCheckNetwork
-                ? (widget.image == null || widget.image!.isEmpty)
-                ? const SizedBox.shrink()
-                : Image.network(
-              widget.image!,
-              width: MediaQuery.of(context).size.width,
-              height: 300,
-              fit: BoxFit.cover,
-            )
-                : SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 300,
-              child: const Center(
-                child: Text('Error'),
-              ),
-            ),
-          ),
+          _buildImageLayout(context, widget.images),
+          // ClipRRect(
+          //   borderRadius: BorderRadius.circular(10),
+          //   child: _isCheckNetwork
+          //       ? (widget.image == null || widget.image!.isEmpty)
+          //           ? const SizedBox.shrink()
+          //           : Image.network(
+          //               widget.image!,
+          //               width: MediaQuery.of(context).size.width,
+          //               height: 300,
+          //               fit: BoxFit.cover,
+          //             )
+          //       : SizedBox(
+          //           width: MediaQuery.of(context).size.width,
+          //           height: 300,
+          //           child: const Center(
+          //             child: Text('Error'),
+          //           ),
+          //         ),
+          // ),
 
           // // Trường hợp bài đăng chỉ có video
           // if (widget.video != null && (widget.images == null || widget.images!.isEmpty))...[
@@ -152,6 +153,75 @@ class _ArticleCardState extends State<ArticleCard> {
         ],
       ),
     );
+  }
+}
+
+Widget _buildImageLayout(BuildContext context, List<String> images) {
+  if (images.isEmpty) return const SizedBox.shrink();
+
+  switch (images.length) {
+    case 1:
+      return Image.network(
+        images[0],
+        height: 300,
+        width: MediaQuery.of(context).size.width,
+        fit: BoxFit.cover,
+      );
+    case 2:
+      return SizedBox(
+        height: 300,
+        child: Row(
+          children: images
+              .map((img) =>
+                  Expanded(child: Image.network(img, fit: BoxFit.cover)))
+              .toList(),
+        ),
+      );
+    case 3:
+      return SizedBox(
+        height: 300,
+        child: Row(
+          children: [
+            Expanded(child: Image.network(images[0], fit: BoxFit.cover)),
+            Column(
+              children: images
+                  .sublist(1)
+                  .map((img) =>
+                      Expanded(child: Image.network(img, fit: BoxFit.cover)))
+                  .toList(),
+            ),
+          ],
+        ),
+      );
+    case 4:
+      return SizedBox(
+        height: 300,
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 4,
+            mainAxisSpacing: 4,
+            childAspectRatio: 1.5,
+          ),
+          itemCount: images.length,
+          itemBuilder: (context, index) =>
+              Image.network(images[index], fit: BoxFit.cover),
+        ),
+      );
+    default:
+      return SizedBox(
+        height: 300,
+        child: Column(
+          children: images
+              .map((img) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: Image.network(img, fit: BoxFit.cover),
+                  ))
+              .toList(),
+        ),
+      );
   }
 }
 
@@ -231,8 +301,8 @@ Widget _buildPremiumBadge() {
       borderRadius: BorderRadius.circular(10),
     ),
     child: IconButton(
-        onPressed: () {},
-        icon: const Icon(Icons.workspace_premium, size: 20),
+      onPressed: () {},
+      icon: const Icon(Icons.workspace_premium, size: 20),
     ),
   );
 }
