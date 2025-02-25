@@ -15,7 +15,7 @@ final GoRouter appRouter = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const AppView(),
+      builder: (context, state) => const PersonalScreen(),
       routes: [
         GoRoute(
           path: 'splash',

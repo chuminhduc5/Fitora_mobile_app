@@ -8,7 +8,6 @@ class ArticleCard extends StatefulWidget {
   final String? author;
   final String? title;
   final String? content;
-  final String? image;
   final List<String> images;
   final String? video;
   final String? description;
@@ -24,7 +23,6 @@ class ArticleCard extends StatefulWidget {
     this.author,
     this.title,
     this.content,
-    this.image,
     this.video,
     required this.images,
     this.description,
