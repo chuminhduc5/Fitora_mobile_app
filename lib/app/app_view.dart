@@ -55,6 +55,7 @@ class _AppViewState extends State<AppView> {
               }
             },
             type: BottomNavigationBarType.fixed,
+            backgroundColor: AppColors.bgWhite,
             selectedItemColor: AppColors.bgPink,
             unselectedItemColor: AppColors.bgPink,
             selectedFontSize: 12,
@@ -73,11 +74,11 @@ class _AppViewState extends State<AppView> {
                 label: 'Thêm',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(AppSvg.chatSvg, color: AppColors.bgOrange),
+                icon: SvgPicture.asset(AppSvg.chatSvg, color: AppColors.bgPink),
                 label: 'Trò chuyện',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(AppSvg.notificationSvg, height: 25, width: 25, color: AppColors.bgOrange),
+                icon: SvgPicture.asset(AppSvg.notificationSvg, height: 25, width: 25, color: AppColors.bgPink),
                 label: 'Thông báo',
               ),
             ],

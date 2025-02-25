@@ -159,7 +159,7 @@ Widget _buildImageLayout(BuildContext context, List<String> images) {
 
   switch (images.length) {
     case 1:
-      return Image.network(
+      return Image.asset(
         images[0],
         height: 300,
         width: MediaQuery.of(context).size.width,
@@ -171,7 +171,7 @@ Widget _buildImageLayout(BuildContext context, List<String> images) {
         child: Row(
           children: images
               .map((img) =>
-                  Expanded(child: Image.network(img, fit: BoxFit.cover)))
+                  Expanded(child: Image.asset(img, fit: BoxFit.cover, height: 300,)))
               .toList(),
         ),
       );
@@ -180,12 +180,12 @@ Widget _buildImageLayout(BuildContext context, List<String> images) {
         height: 300,
         child: Row(
           children: [
-            Expanded(child: Image.network(images[0], fit: BoxFit.cover)),
+            Expanded(child: Image.asset(images[0], fit: BoxFit.cover, height: 300,)),
             Column(
               children: images
                   .sublist(1)
                   .map((img) =>
-                      Expanded(child: Image.network(img, fit: BoxFit.cover)))
+                      Expanded(child: Image.asset(img, fit: BoxFit.cover)))
                   .toList(),
             ),
           ],
@@ -201,11 +201,11 @@ Widget _buildImageLayout(BuildContext context, List<String> images) {
             crossAxisCount: 2,
             crossAxisSpacing: 4,
             mainAxisSpacing: 4,
-            childAspectRatio: 1.5,
+            childAspectRatio: 1.2,
           ),
           itemCount: images.length,
           itemBuilder: (context, index) =>
-              Image.network(images[index], fit: BoxFit.cover),
+              Image.asset(images[index], fit: BoxFit.cover),
         ),
       );
     default:
@@ -215,7 +215,7 @@ Widget _buildImageLayout(BuildContext context, List<String> images) {
           children: images
               .map((img) => Padding(
                     padding: const EdgeInsets.symmetric(vertical: 2),
-                    child: Image.network(img, fit: BoxFit.cover),
+                    child: Image.asset(img, fit: BoxFit.cover),
                   ))
               .toList(),
         ),

@@ -11,6 +11,8 @@ class ApiConstant {
   static const signUp = '${api}auth/register';
   static const signOut = '${api}auth/logout';
 
-  static const postArticle = '${api}';
-  static const newsFeed = '${api}';
+  static const profile = '${api}user/profile';
+
+  static const postArticle = '${api}post/create-post';
+  static const newsFeed = '${api}post/newfeed';
 }
