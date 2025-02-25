@@ -2,6 +2,7 @@ import 'package:fitora_mobile_app/app/app_view.dart';
 import 'package:fitora_mobile_app/common/helper/message/app_display_message.dart';
 import 'package:fitora_mobile_app/common/helper/navigation/app_navigation.dart';
 import 'package:fitora_mobile_app/common/widgets/loading/app_loading_widget.dart';
+import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/router/app_router.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/extensions/integer_sizebox_extension.dart';
@@ -48,6 +49,13 @@ class SignInScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Center(
+                    child: SizedBox(
+                      height: 250, width: 250,
+                      child: Image.asset(AppImages.logoLogin, fit: BoxFit.cover,),
+                    ),
+                  ),
+                  20.hS,
                   const Text(
                     'Chào mừng trở lại!',
                     style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),

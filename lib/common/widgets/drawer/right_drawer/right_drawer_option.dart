@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget rightDrawerOption(IconData icon, String title, String? description) {
+Widget rightDrawerOption(IconData icon, String title, String? description, VoidCallback onTap) {
   return ListTile(
     contentPadding: const EdgeInsets.only(left: 15),
     dense: true,
@@ -9,6 +9,6 @@ Widget rightDrawerOption(IconData icon, String title, String? description) {
     subtitle: description != null
         ? Text(description, style: const TextStyle(fontSize: 13),)
         : null,
-    onTap: () {},
+    onTap: onTap,
   );
 }

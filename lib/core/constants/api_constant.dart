@@ -10,4 +10,7 @@ class ApiConstant {
   static const signIn = '${api}auth/login';
   static const signUp = '${api}auth/register';
   static const signOut = '${api}auth/logout';
+
+  static const postArticle = '${api}';
+  static const newsFeed = '${api}';
 }

@@ -4,6 +4,8 @@ import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_in_scre
 import 'package:fitora_mobile_app/feature/chat/presentation/screens/chat_screen.dart';
 import 'package:fitora_mobile_app/feature/home/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
+import 'package:fitora_mobile_app/feature/profile/presentation/screens/personal_screen.dart';
+import 'package:fitora_mobile_app/feature/profile/presentation/screens/profile_screen.dart';
 import 'package:fitora_mobile_app/feature/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -13,7 +15,7 @@ final GoRouter appRouter = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const SignInScreen(),
+      builder: (context, state) => const PersonalScreen(),
       routes: [
         GoRoute(
           path: 'splash',
@@ -27,10 +29,10 @@ final GoRouter appRouter = GoRouter(
           path: 'sign-up',
           builder: (context, state) => const SignUpScreen(),
         ),
-        GoRoute(
-          path: 'app-view',
-          builder: (context, state) => const AppView(),
-        ),
+        // GoRoute(
+        //   path: 'app-view',
+        //   builder: (context, state) => const AppView(),
+        // ),
         GoRoute(
           path: 'home',
           builder: (context, state) => const HomeScreen(),
@@ -45,6 +47,14 @@ final GoRouter appRouter = GoRouter(
             fullscreenDialog: true,
             child: ChatScreen(),
           ),
+        ),
+        GoRoute(
+          path: 'profile',
+          builder: (context, state) => const ProfileScreen(),
+        ),
+        GoRoute(
+          path: 'personal',
+          builder: (context, state) => const PersonalScreen(),
         ),
       ],
     )
