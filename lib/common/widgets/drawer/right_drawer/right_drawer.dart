@@ -107,7 +107,7 @@ Widget rightDrawer(BuildContext context) {
             () {
               if (i["route"] != null) {
                 logger.i('Đã bấm vào: ${i["title"]}');
-                Navigator.pop(context); // Đóng drawer trước
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => i["route"]),

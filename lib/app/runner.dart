@@ -4,9 +4,8 @@ import 'package:fitora_mobile_app/core/utils/simple_bloc_observer.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:hive/hive.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:path_provider/path_provider.dart';
+
 import 'app.dart';
 
 Future<void> runnerApp() async {

@@ -1,29 +1,72 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/config/theme/app_colors.dart';
+
 class AppButtonWidget extends StatelessWidget {
-  final double? paddingHorizontal;
-  final double? paddingVertical;
-  final String label;
-  final VoidCallback? callback;
+  final Function()? onPressed;
+  final String title;
+  final Color color;
+  final double? fontSize;
+  final FontWeight fontWeight;
+  final Color bgColor;
+  final double paddingTop;
+  final double paddingBottom;
+  final double paddingRight;
+  final double paddingLeft;
+  final int? borderRadius;
+  final bool isLoading;
   const AppButtonWidget({
     super.key,
-    this.paddingHorizontal,
-    this.paddingVertical,
-    required this.label,
-    required this.callback,
+    required this.onPressed,
+    required this.title,
+    this.color = AppColors.bgWhite,
+    this.fontSize = 13,
+    this.fontWeight = FontWeight.normal,
+    this.bgColor = AppColors.bgBlue,
+    this.paddingTop = 0,
+    this.paddingBottom = 0,
+    this.paddingRight = 0,
+    this.paddingLeft = 0,
+    this.borderRadius = 10,
+    this.isLoading = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: callback,
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(
-          horizontal: paddingHorizontal ?? 0,
-          vertical: paddingVertical ?? 0,
+    return SizedBox(
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          foregroundColor: color,
+          backgroundColor: bgColor,
+          padding: EdgeInsets.fromLTRB(
+            paddingLeft,
+            paddingTop,
+            paddingRight,
+            paddingBottom,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: isLoading
+            ? const SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(
+            strokeWidth: 2.0,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        )
+            : Text(
+          title,
+          style: TextStyle(
+            fontSize: fontSize,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
-      child: Text(label),
     );
   }
 }
