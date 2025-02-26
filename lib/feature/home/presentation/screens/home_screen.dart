@@ -1,15 +1,9 @@
-import 'dart:math';
-
-import 'package:fitora_mobile_app/common/widgets/article/article_card.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/left_drawer/left_drawer.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawer.dart';
+import 'package:fitora_mobile_app/common/widgets/newsfeed/newsfeed_post_widget.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
-import 'package:fitora_mobile_app/core/utils/logger.dart';
-import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
-import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -73,7 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
       "author": "Chử Minh Đức",
       "title": "Chử minh đức đã cập nhật ảnh đại diện mới",
       "content": "",
-      "image": [AppImages.avatar, AppImages.avatar, AppImages.avatar, AppImages.avatar],
+      "image": [
+        AppImages.avatar,
+        AppImages.avatar,
+        AppImages.avatar,
+        AppImages.avatar
+      ],
       "description": "",
       "time": "2 giờ trước",
       "favourite": 120,
@@ -160,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
               (context, index) {
                 final article = _articleList[index];
                 //logger.i(article['image']);
-                return ArticleCard(
+                return NewsfeedPostWidget(
                   avatar: article['avatar'],
                   author: article['author'],
                   title: article['title'],

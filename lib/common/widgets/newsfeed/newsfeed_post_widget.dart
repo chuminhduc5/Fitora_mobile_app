@@ -1,9 +1,9 @@
-import 'package:fitora_mobile_app/common/widgets/article/video_player_widget.dart';
+import 'package:fitora_mobile_app/common/widgets/newsfeed/video_player_widget.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class ArticleCard extends StatefulWidget {
+class NewsfeedPostWidget extends StatefulWidget {
   final String? avatar;
   final String? author;
   final String? title;
@@ -17,7 +17,7 @@ class ArticleCard extends StatefulWidget {
   final int? share;
   final Function()? onPressed;
 
-  const ArticleCard({
+  const NewsfeedPostWidget({
     super.key,
     this.avatar,
     this.author,
@@ -34,10 +34,10 @@ class ArticleCard extends StatefulWidget {
   });
 
   @override
-  State<ArticleCard> createState() => _ArticleCardState();
+  State<NewsfeedPostWidget> createState() => _NewsfeedPostWidgetState();
 }
 
-class _ArticleCardState extends State<ArticleCard> {
+class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget> {
   bool _isLiked = false;
   bool _isCheckNetwork = true;
 
