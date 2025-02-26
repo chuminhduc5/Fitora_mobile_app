@@ -1,15 +1,14 @@
 import 'package:fitora_mobile_app/app/app_view.dart';
-import 'package:fitora_mobile_app/common/blocs/theme/theme_bloc.dart';
-import 'package:fitora_mobile_app/common/blocs/translate/translate_bloc.dart';
-import 'package:fitora_mobile_app/core/config/router/app_router.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_theme.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import '../core/blocs/theme/theme_bloc.dart';
+import '../core/blocs/translate/translate_bloc.dart';
 import '../core/di/injection.dart';
+import '../core/navigation/router/app_router.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

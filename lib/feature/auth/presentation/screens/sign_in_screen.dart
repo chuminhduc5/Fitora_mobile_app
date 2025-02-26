@@ -1,9 +1,6 @@
 import 'package:fitora_mobile_app/app/app_view.dart';
-import 'package:fitora_mobile_app/common/helper/message/app_display_message.dart';
-import 'package:fitora_mobile_app/common/helper/navigation/app_navigation.dart';
-import 'package:fitora_mobile_app/common/widgets/loading/app_loading_widget.dart';
+import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
-import 'package:fitora_mobile_app/core/config/router/app_router.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/extensions/integer_sizebox_extension.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/forms/auth_sign_in_form_data.dart';
@@ -13,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/config/assets/app_svg.dart';
 import '../../../../core/config/theme/app_colors.dart';
+import '../../../../common/dialog/app_display_message.dart';
+import '../../../../core/navigation/app_navigation.dart';
+import '../../../../core/navigation/router/app_router.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/auth_sign_in_form/auth_sign_in_form_bloc.dart';
 import '../widgets/button_auth_widget.dart';
@@ -73,7 +73,7 @@ class SignInScreen extends StatelessWidget {
                   BlocConsumer<AuthBloc, AuthState>(
                     listener: (_, state) {
                       if (state is AuthSignInFailureState) {
-                        AppDisplayMessage.errorMessage(context, state.message);
+                        AppDisplayMessage.error(context, state.message);
                       } else if (state is AuthSignInSuccessState) {
                         final user = state.data;
                         appRouter.go('/app-view');

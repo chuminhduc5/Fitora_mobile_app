@@ -1,6 +1,4 @@
-import 'package:fitora_mobile_app/common/helper/message/app_display_message.dart';
-import 'package:fitora_mobile_app/common/widgets/loading/app_loading_widget.dart';
-import 'package:fitora_mobile_app/core/config/router/app_router.dart';
+import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
 import 'package:fitora_mobile_app/core/extensions/integer_sizebox_extension.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/blocs/auth_sign_up_form/auth_sign_up_form_bloc.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/forms/auth_sign_up_form_data.dart';
@@ -10,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/config/theme/app_colors.dart';
 import '../../../../core/di/injection.dart';
+import '../../../../common/dialog/app_display_message.dart';
+import '../../../../core/navigation/router/app_router.dart';
 import '../blocs/auth/auth_bloc.dart';
 import '../widgets/button_auth_widget.dart';
 
@@ -63,10 +63,10 @@ class SignUpScreen extends StatelessWidget {
                     BlocConsumer<AuthBloc, AuthState>(
                       listener: (_, state) {
                         if (state is AuthSignUpSuccessState) {
-                          AppDisplayMessage.successMessage(context, 'Đăng ký thành công');
+                          AppDisplayMessage.success(context, 'Đăng ký thành công');
                           appRouter.go('/sign-in');
                         } else if (state is AuthSignUpFailureState) {
-                          AppDisplayMessage.errorMessage(context, 'Đăng ký thất bại');
+                          AppDisplayMessage.error(context, 'Đăng ký thất bại');
                         }
                       },
                       builder: (context, state) {

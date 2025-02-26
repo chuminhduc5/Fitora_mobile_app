@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:fitora_mobile_app/common/helper/mapper/auth/auth_mapper.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/feature/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:fitora_mobile_app/feature/auth/data/models/request/sign_in_req_model.dart';
@@ -7,7 +6,7 @@ import 'package:fitora_mobile_app/feature/auth/domain/entities/auth_entity.dart'
 import 'package:fitora_mobile_app/feature/auth/domain/entities/params/sign_in_req_params.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/params/sign_up_req_params.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/repositories/auth_repository.dart';
-
+import '../../../../core/helper/mapper/auth/auth_mapper.dart';
 import '../models/request/sign_up_req_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -17,7 +16,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, AuthEntity>> checkSignInStatus() {
-    // TODO: implement checkSignInStatus
     throw UnimplementedError();
   }
 
