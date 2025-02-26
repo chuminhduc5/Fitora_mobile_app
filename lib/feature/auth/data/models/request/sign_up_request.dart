@@ -1,9 +1,9 @@
-class SignUpReqModel {
+class SignUpRequest {
   final String email;
   final String password;
   final String fullName;
 
-  const SignUpReqModel({
+  const SignUpRequest({
     required this.email,
     required this.password,
     required this.fullName,
