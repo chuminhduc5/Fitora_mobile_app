@@ -9,20 +9,18 @@ import 'package:fitora_mobile_app/feature/auth/data/models/user_model.dart';
 
 import '../../../../core/utils/logger.dart';
 import '../models/auth_token_model.dart';
-import '../models/request/sign_in_req_model.dart';
-import '../models/request/sign_up_req_model.dart';
+import '../models/request/sign_in_request.dart';
+import '../models/request/sign_up_request.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<AuthModel> signIn(SignInReqModel model);
-
-  Future<void> signUp(SignUpReqModel model);
-
+  Future<AuthModel> signIn(SignInRequest model);
+  Future<void> signUp(SignUpRequest model);
   Future<void> signOut();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
-  Future<AuthModel> signIn(SignInReqModel model) async {
+  Future<AuthModel> signIn(SignInRequest model) async {
     try {
       var response = await getIt<DioClient>().post(
         ApiConstant.signIn,
@@ -43,7 +41,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> signUp(SignUpReqModel model) async {
+  Future<void> signUp(SignUpRequest model) async {
     try {
       await getIt<DioClient>().post(
         ApiConstant.signUp,

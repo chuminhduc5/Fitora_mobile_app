@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/feature/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:fitora_mobile_app/feature/auth/data/models/request/sign_in_req_model.dart';
+import 'package:fitora_mobile_app/feature/auth/data/models/request/sign_in_request.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/auth_entity.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/params/sign_in_req_params.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/params/sign_up_req_params.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/repositories/auth_repository.dart';
 import '../../../../core/helper/mapper/auth/auth_mapper.dart';
-import '../models/request/sign_up_req_model.dart';
+import '../models/request/sign_up_request.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _authRemoteDataSource;
@@ -22,7 +22,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, AuthEntity>> signIn(SignInReqParams params) async {
     try {
-      final model = SignInReqModel(
+      final model = SignInRequest(
         email: params.email,
         password: params.password,
       );
@@ -47,7 +47,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, void>> signUp(SignUpReqParams params) async {
     try {
-      final model = SignUpReqModel(
+      final model = SignUpRequest(
         email: params.email,
         password: params.password,
         fullName: params.username,
