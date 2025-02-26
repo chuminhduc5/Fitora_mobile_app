@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
-import 'package:fitora_mobile_app/core/config/router/app_router.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/widgets/select_community_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../../../core/navigation/router/app_router.dart';
 
 // class PostArticlesScreen extends StatelessWidget {
 //   const PostArticlesScreen({super.key});

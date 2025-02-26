@@ -1,4 +1,3 @@
-import 'package:fitora_mobile_app/common/helper/navigation/app_navigation.dart';
 import 'package:fitora_mobile_app/common/widgets/skleton/dot_indicators.dart';
 import 'package:fitora_mobile_app/feature/onboarding/presentation/widgets/onboarding_content_widget.dart';
 import 'package:flutter/material.dart';

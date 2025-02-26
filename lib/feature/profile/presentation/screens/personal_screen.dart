@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:fitora_mobile_app/common/widgets/button/app_button_widget.dart';
-import 'package:fitora_mobile_app/core/config/router/app_router.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/config/theme/app_colors.dart';
+import '../../../../core/navigation/router/app_router.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({super.key});
