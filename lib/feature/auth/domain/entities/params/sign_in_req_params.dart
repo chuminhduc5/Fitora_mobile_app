@@ -12,7 +12,7 @@ class SignInReqParams {
     return 'SignInReqParams(email: $email, password: $password)';
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'email': email,
       'password': password,

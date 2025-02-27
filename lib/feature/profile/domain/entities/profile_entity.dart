@@ -23,6 +23,7 @@ class ProfileEntity extends Equatable {
         username,
         followerCount,
         followingCount,
+        relationship,
         userInfo,
       ];
 }

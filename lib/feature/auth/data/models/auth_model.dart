@@ -12,7 +12,6 @@ class AuthModel {
     if (responseDto == null) {
       throw Exception("Invalid response format: responseDto is null");
     }
-
     return AuthModel(
       user: UserModel.fromJson(responseDto['user'] ?? {}),
       token: AuthTokenModel.fromJson(responseDto['token'] ?? {}),

@@ -1,14 +1,9 @@
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:fitora_mobile_app/core/constants/api_constant.dart';
-import 'package:fitora_mobile_app/core/di/injection.dart';
+import 'package:fitora_mobile_app/core/constants/api_url.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
 import 'package:fitora_mobile_app/feature/auth/data/models/auth_model.dart';
-import 'package:fitora_mobile_app/feature/auth/data/models/user_model.dart';
-
 import '../../../../core/utils/logger.dart';
-import '../models/auth_token_model.dart';
 import '../models/request/sign_in_request.dart';
 import '../models/request/sign_up_request.dart';
 
@@ -19,22 +14,18 @@ abstract class AuthRemoteDataSource {
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+  final DioClient _dioClient;
+
+  const AuthRemoteDataSourceImpl(this._dioClient);
+
   @override
   Future<AuthModel> signIn(SignInRequest model) async {
     try {
-      var response = await getIt<DioClient>().post(
-        ApiConstant.signIn,
-        data: model.toMap(),
+      var response = await _dioClient.post(
+        ApiUrl.signIn,
+        data: model.toJson(),
       );
-      print("✅ API Response: ${response.statusCode} - ${response.data}");
-      if (response.statusCode == 200) {
-        print('Thành công');
-        return AuthModel.fromJson(response.data);
-      }  else {
-        // If that call was not successful, throw an error.
-        throw Exception('Failed to load post');
-      }
-      //return AuthModel.fromJson(response.data);
+      return AuthModel.fromJson(response.data);
     } on DioException catch (e) {
       throw ServerException();
     }
@@ -43,9 +34,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> signUp(SignUpRequest model) async {
     try {
-      await getIt<DioClient>().post(
-        ApiConstant.signUp,
-        data: model.toMap(),
+      await _dioClient.post(
+        ApiUrl.signUp,
+        data: model.toJson(),
       );
     } catch (e) {
       logger.e(e);

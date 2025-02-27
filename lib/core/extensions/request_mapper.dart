@@ -1,8 +1,8 @@
 import 'package:fitora_mobile_app/core/base/base_params.dart';
 import 'package:fitora_mobile_app/core/base/base_request.dart';
 
-extension RequestMapper<T extends BaseParams> on T {
-  BaseRequest toRequest() {
-    return this.toRequest();
+extension ParamsToRequestMapper<T extends BaseParams, R extends BaseRequest> on T {
+  R toRequest(R Function(Map<String, dynamic>) constructor) {
+    return constructor(toJson());
   }
 }

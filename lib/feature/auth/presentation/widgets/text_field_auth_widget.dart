@@ -1,5 +1,4 @@
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
-import 'package:fitora_mobile_app/core/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class TextFieldAuthWidget extends StatelessWidget {

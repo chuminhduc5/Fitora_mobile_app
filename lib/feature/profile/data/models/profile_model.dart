@@ -1,5 +1,3 @@
-import 'package:fitora_mobile_app/feature/profile/domain/entities/profile_entity.dart';
-
 class ProfileModel {
   final String email;
   final String username;

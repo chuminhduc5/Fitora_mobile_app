@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:fitora_mobile_app/core/constants/api_constant.dart';
+import 'package:fitora_mobile_app/core/constants/api_url.dart';
 import 'api_exception.dart';
 import 'logger_interceptor.dart';
 import 'authorzation_interceptor.dart';
@@ -10,7 +10,7 @@ class DioClient {
   DioClient()
       : _dio = Dio(
           BaseOptions(
-            baseUrl: ApiConstant.baseUrl,
+            baseUrl: ApiUrl.baseUrl,
             headers: {
               "Content-Type": "application/json",
             },

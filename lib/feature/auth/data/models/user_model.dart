@@ -1,7 +1,5 @@
 import 'package:fitora_mobile_app/feature/auth/domain/entities/user_entity.dart';
 
-import 'auth_token_model.dart';
-
 class UserModel {
   final String id;
   final String userName; // Tương ứng với email

@@ -1,4 +1,3 @@
-import 'package:fitora_mobile_app/common/widgets/newsfeed/video_player_widget.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,12 +5,10 @@ import 'package:flutter_svg/svg.dart';
 class NewsfeedPostWidget extends StatefulWidget {
   final String? avatar;
   final String? author;
-  final String? title;
   final String? content;
-  final List<String> images;
+  final List<String>? images;
   final String? video;
-  final String? description;
-  final String? time;
+  final DateTime? time;
   final int? favourite;
   final int? comment;
   final int? share;
@@ -21,11 +18,9 @@ class NewsfeedPostWidget extends StatefulWidget {
     super.key,
     this.avatar,
     this.author,
-    this.title,
     this.content,
     this.video,
-    required this.images,
-    this.description,
+    this.images,
     this.time,
     this.favourite,
     this.comment,
@@ -38,8 +33,8 @@ class NewsfeedPostWidget extends StatefulWidget {
 }
 
 class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget> {
-  bool _isLiked = false;
-  bool _isCheckNetwork = true;
+  // bool _isLiked = false;
+  // bool _isCheckNetwork = true;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +71,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  widget.time!,
+                  widget.time! as String,
                   style: const TextStyle(fontSize: 11, color: Colors.grey),
                 ),
                 const Spacer(),
@@ -93,11 +88,11 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget> {
             ),
           ),
           Text(
-            widget.title!,
+            widget.content!,
             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 5),
-          _buildImageLayout(context, widget.images),
+          _buildImageLayout(context, widget.images!),
           // ClipRRect(
           //   borderRadius: BorderRadius.circular(10),
           //   child: _isCheckNetwork
@@ -223,15 +218,15 @@ Widget _buildImageLayout(BuildContext context, List<String> images) {
   }
 }
 
-Widget _buildVideoPlayer(String videoUrl) {
-  return SizedBox(
-    width: double.infinity,
-    height: 300,
-    child: VideoPlayerWidget(
-      videoUrl: videoUrl,
-    ),
-  );
-}
+// Widget _buildVideoPlayer(String videoUrl) {
+//   return SizedBox(
+//     width: double.infinity,
+//     height: 300,
+//     child: VideoPlayerWidget(
+//       videoUrl: videoUrl,
+//     ),
+//   );
+// }
 
 Widget _buildFavourite(int? favouriteCount) {
   return Container(

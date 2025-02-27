@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fitora_mobile_app/core/domain/entities/newsfeed_entity.dart';
+import 'package:fitora_mobile_app/core/usecase/usecase.dart';
 import 'package:fitora_mobile_app/core/utils/failure_converter.dart';
-import 'package:fitora_mobile_app/feature/home/doamin/entities/params/newsfeed_req_params.dart';
 import 'package:fitora_mobile_app/feature/home/doamin/usecases/get_newsfeed_use_case.dart';
 import 'package:meta/meta.dart';
 
@@ -19,7 +19,7 @@ class NewsfeedBloc extends Bloc<NewsfeedEvent, NewsfeedState> {
 
   Future<void> _onFetchNewsfeed(FetchNewsfeedEvent event, Emitter emit) async {
     emit(FetchNewsfeedLoadingState());
-    final result = await _getNewsfeedUseCase.call(event.params);
+    final result = await _getNewsfeedUseCase.call(NoParams());
     result.fold(
       (error) => emit(FetchNewsfeedFailureState(message: mapFailureToMessage(error))),
       (data) => emit(FetchNewsfeedSuccessState(data: data)),

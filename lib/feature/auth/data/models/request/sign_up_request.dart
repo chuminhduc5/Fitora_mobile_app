@@ -9,7 +9,7 @@ class SignUpRequest {
     required this.fullName,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'email': email,
       'password': password,
