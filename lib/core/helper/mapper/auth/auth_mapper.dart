@@ -1,4 +1,4 @@
-import 'package:fitora_mobile_app/feature/auth/data/models/auth_model.dart';
+import 'package:fitora_mobile_app/feature/auth/data/models/responses/auth_model.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/auth_entity.dart';
 
 class AuthMapper {

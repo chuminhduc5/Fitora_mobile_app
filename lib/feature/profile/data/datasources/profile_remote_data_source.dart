@@ -1,4 +1,4 @@
-import 'package:fitora_mobile_app/feature/profile/data/models/profile_model.dart';
+import 'package:fitora_mobile_app/feature/profile/data/models/responses/profile_model.dart';
 
 abstract class ProfileRemoteDataSource {
   Future<ProfileModel> _getProfile();

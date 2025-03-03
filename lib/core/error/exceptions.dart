@@ -1,12 +1,3 @@
-// class ServerException implements Exception {
-//   final String message;
-//   ServerException([this.message = '']);
-//
-//   @override
-//   String toString() => message.isEmpty ? 'ServerException' : 'ServerException: $message';
-// }
-
-import 'failure.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ErrorHandler {

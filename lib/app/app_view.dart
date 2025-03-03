@@ -1,15 +1,12 @@
-import 'package:fitora_mobile_app/common/widgets/drawer/left_drawer/left_drawer.dart';
-import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawer.dart';
+import 'package:animations/animations.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
-import 'package:fitora_mobile_app/core/config/theme/app_theme.dart';
 import 'package:fitora_mobile_app/feature/chat/presentation/screens/chat_screen.dart';
 import 'package:fitora_mobile_app/feature/communities/presentation/screens/community_screen.dart';
 import 'package:fitora_mobile_app/feature/home/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/notification/presentation/screens/notification_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AppView extends StatefulWidget {

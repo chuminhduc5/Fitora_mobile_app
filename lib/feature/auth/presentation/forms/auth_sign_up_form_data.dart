@@ -11,7 +11,7 @@ class AuthSignUpFormData {
     required this.confirmPassword,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'username': username,
       'email': email,

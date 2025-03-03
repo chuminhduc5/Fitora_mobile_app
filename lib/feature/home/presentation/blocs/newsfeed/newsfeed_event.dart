@@ -8,11 +8,4 @@ abstract class NewsfeedEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetchNewsfeedEvent extends NewsfeedEvent {
-  final NewsfeedReqParams params;
-
-  const FetchNewsfeedEvent({required this.params});
-
-  @override
-  List<Object?> get props => [params];
-}
+class FetchNewsfeedEvent extends NewsfeedEvent {}

@@ -1,17 +1,17 @@
 import 'package:dartz/dartz.dart';
+import 'package:equatable/equatable.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/core/extensions/string_validator_extension.dart';
 import 'package:fitora_mobile_app/core/usecase/usecase.dart';
-import 'package:fitora_mobile_app/feature/auth/domain/entities/params/sign_up_req_params.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/repositories/auth_repository.dart';
 
-class AuthSignUpUseCase extends UseCase<void, SignUpReqParams> {
+class AuthSignUpUseCase extends UseCase<void, Params> {
   final AuthRepository _authRepository;
 
   AuthSignUpUseCase(this._authRepository);
 
   @override
-  Future<Either<Failure, void>> call(SignUpReqParams params) async {
+  Future<Either<Failure, void>> call(Params params) async {
     if (!params.email.isEmailValid) {
       return Left(InvalidEmailFailure());
     }
@@ -27,4 +27,26 @@ class AuthSignUpUseCase extends UseCase<void, SignUpReqParams> {
     final result = await _authRepository.signUp(params);
     return result;
   }
+}
+
+class Params extends Equatable {
+  final String username;
+  final String email;
+  final String password;
+  final String confirmPassword;
+
+  const Params({
+    required this.username,
+    required this.email,
+    required this.password,
+    required this.confirmPassword,
+  });
+
+  @override
+  List<Object?> get props => [
+        username,
+        email,
+        password,
+        confirmPassword,
+      ];
 }
