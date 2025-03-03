@@ -13,7 +13,7 @@ class NewsfeedInitialState extends NewsfeedState {}
 class FetchNewsfeedLoadingState extends NewsfeedState {}
 
 class FetchNewsfeedSuccessState extends NewsfeedState {
-  final List<NewsfeedEntity> data;
+  final List<PostEntity> data;
   const FetchNewsfeedSuccessState({required this.data});
 
   @override

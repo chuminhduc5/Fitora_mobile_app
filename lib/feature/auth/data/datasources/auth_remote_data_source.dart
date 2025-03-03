@@ -2,10 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:fitora_mobile_app/core/constants/api_url.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
-import 'package:fitora_mobile_app/feature/auth/data/models/auth_model.dart';
+import 'package:fitora_mobile_app/feature/auth/data/models/responses/auth_model.dart';
 import '../../../../core/utils/logger.dart';
-import '../models/request/sign_in_request.dart';
-import '../models/request/sign_up_request.dart';
+import '../models/requests/sign_in_request.dart';
+import '../models/requests/sign_up_request.dart';
 
 abstract class AuthRemoteDataSource {
   Future<AuthModel> signIn(SignInRequest model);

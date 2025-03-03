@@ -1,4 +1,4 @@
-class NewsfeedModel {
+class PostModel {
   final String id;
   final String userId;
   final String groupId;
@@ -12,7 +12,7 @@ class NewsfeedModel {
   final DateTime updateAt;
   final bool isDeleted;
 
-  const NewsfeedModel({
+  const PostModel({
     required this.id,
     required this.userId,
     required this.groupId,
@@ -27,8 +27,8 @@ class NewsfeedModel {
     required this.isDeleted,
   });
 
-  factory NewsfeedModel.fromJson(Map<String, dynamic> json) {
-    return NewsfeedModel(
+  factory PostModel.fromJson(Map<String, dynamic> json) {
+    return PostModel(
       id: json['id'],
       userId: json['userId'],
       groupId: json['groupId'],

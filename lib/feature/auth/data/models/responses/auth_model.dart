@@ -1,5 +1,5 @@
-import 'package:fitora_mobile_app/feature/auth/data/models/auth_token_model.dart';
-import 'package:fitora_mobile_app/feature/auth/data/models/user_model.dart';
+import 'package:fitora_mobile_app/feature/auth/data/models/responses/auth_token_model.dart';
+import 'package:fitora_mobile_app/feature/auth/data/models/responses/user_model.dart';
 
 class AuthModel {
   final UserModel user;

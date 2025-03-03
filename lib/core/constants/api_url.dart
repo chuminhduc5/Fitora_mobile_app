@@ -11,6 +11,10 @@ class ApiUrl {
 
   static const profile = '${api}user/profile';
 
-  static const postArticle = '${api}post/create-post';
   static const newsFeed = '${api}post/newfeed';
+  static const personal = '${api}post/personal';
+  static const post = '${api}post/post';
+  static const createPost = '${api}post/create-post';
+  static const updatePost = '${api}post/update-post';
+  static const deletePost = '${api}post/delete-post';
 }

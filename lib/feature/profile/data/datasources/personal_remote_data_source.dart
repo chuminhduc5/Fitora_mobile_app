@@ -2,7 +2,7 @@ import 'package:fitora_mobile_app/core/constants/api_url.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
-import 'package:fitora_mobile_app/feature/profile/data/models/personal_model.dart';
+import 'package:fitora_mobile_app/feature/profile/data/models/responses/personal_model.dart';
 
 abstract class PersonalRemoteDataSource {
   Future<PersonalModel> getPersonal();

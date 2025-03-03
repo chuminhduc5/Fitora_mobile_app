@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fitora_mobile_app/core/domain/entities/newsfeed_entity.dart';
 import 'package:fitora_mobile_app/core/usecase/usecase.dart';
 import 'package:fitora_mobile_app/core/utils/failure_converter.dart';
-import 'package:fitora_mobile_app/feature/home/doamin/usecases/get_newsfeed_use_case.dart';
+import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
+import 'package:fitora_mobile_app/feature/post/domain/usecases/get_newsfeed_use_case.dart';
 import 'package:meta/meta.dart';
 
 part 'newsfeed_event.dart';

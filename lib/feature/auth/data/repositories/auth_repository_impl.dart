@@ -5,13 +5,12 @@ import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/feature/auth/data/datasources/auth_local_data_source.dart';
 import 'package:fitora_mobile_app/feature/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:fitora_mobile_app/feature/auth/data/models/request/sign_in_request.dart';
+import 'package:fitora_mobile_app/feature/auth/data/models/requests/sign_in_request.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/auth_entity.dart';
-import 'package:fitora_mobile_app/feature/auth/domain/entities/params/sign_in_req_params.dart';
-import 'package:fitora_mobile_app/feature/auth/domain/entities/params/sign_up_req_params.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/repositories/auth_repository.dart';
+import 'package:fitora_mobile_app/feature/auth/domain/usecases/usecase_params.dart';
 import '../../../../core/helper/mapper/auth/auth_mapper.dart';
-import '../models/request/sign_up_request.dart';
+import '../models/requests/sign_up_request.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _authRemoteDataSource;
@@ -37,7 +36,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthEntity>> signIn(SignInReqParams params) async {
+  Future<Either<Failure, AuthEntity>> signIn(SignInParams params) async {
     try {
       final model = SignInRequest(
         email: params.email,
@@ -70,7 +69,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> signUp(SignUpReqParams params) async {
+  Future<Either<Failure, void>> signUp(SignUpParams params) async {
     try {
       final model = SignUpRequest(
         email: params.email,
