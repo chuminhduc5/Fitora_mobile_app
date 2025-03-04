@@ -6,6 +6,7 @@ import 'package:fitora_mobile_app/feature/post/domain/repositories/post_reposito
 
 class CreatePostUseCase extends UseCase<void, Params> {
   final PostRepository _postRepository;
+
   CreatePostUseCase(this._postRepository);
 
   @override
@@ -15,10 +16,10 @@ class CreatePostUseCase extends UseCase<void, Params> {
 }
 
 class Params extends Equatable {
-  final String? content;
-  final String? mediaUrl;
-  final int? privacy;
-  final String? groupId;
+  final String content;
+  final String mediaUrl;
+  final int privacy;
+  final String groupId;
 
   const Params({
     required this.content,

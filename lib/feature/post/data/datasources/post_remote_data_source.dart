@@ -9,10 +9,15 @@ import 'package:fitora_mobile_app/feature/post/data/models/responses/post_model.
 
 abstract class PostRemoteDataSource {
   Future<PostModel> fetchPost();
-  Future<void> createPost(CreatePostRequest model);
-  Future<void> updatePost(UpdatePostRequest model);
+
+  Future<void> createPost(CreatePostRequest request);
+
+  Future<void> updatePost(UpdatePostRequest request);
+
   Future<void> deletePost(String id);
+
   Future<List<PostModel>> fetchNewsfeed();
+
   Future<List<PostModel>> fetchPersonal();
 }
 
@@ -23,18 +28,20 @@ class PostRemoteDataSourceImpl extends PostRemoteDataSource {
 
   @override
   Future<PostModel> fetchPost() async {
-    var response = await _dioClient.get('${ApiUrl.post}?Cursor=1&Limit=1)');
-    final post = response.data;
-    return post;
+    try {
+      var response = await _dioClient.get('${ApiUrl.post}?Cursor=1&Limit=1)');
+      final post = response.data;
+      return post;
+    } on DioException catch (e) {
+      logger.e(e);
+      throw ServerException();
+    }
   }
 
   @override
-  Future<void> createPost(CreatePostRequest model) async {
+  Future<void> createPost(CreatePostRequest request) async {
     try {
-      await _dioClient.post(
-        ApiUrl.createPost,
-        data: model.toJson(),
-      );
+      await _dioClient.post(ApiUrl.createPost, data: request.toJson());
       return;
     } on DioException catch (e) {
       logger.e(e);
@@ -43,11 +50,11 @@ class PostRemoteDataSourceImpl extends PostRemoteDataSource {
   }
 
   @override
-  Future<void> updatePost(UpdatePostRequest model) async {
+  Future<void> updatePost(UpdatePostRequest request) async {
     try {
       await _dioClient.put(
-        '${ApiUrl.updatePost}/id=${model.id}',
-        data: model.toJson(),
+        '${ApiUrl.updatePost}/id=${request.id}',
+        data: request.toJson(),
       );
     } on DioException catch (e) {
       logger.e('Update Post failed: ${e.message}');
@@ -68,7 +75,8 @@ class PostRemoteDataSourceImpl extends PostRemoteDataSource {
   @override
   Future<List<PostModel>> fetchNewsfeed() async {
     try {
-      var response = await _dioClient.get('${ApiUrl.newsFeed}?Cursor=1&Limit=1)');
+      var response =
+          await _dioClient.get('${ApiUrl.newsFeed}?Cursor=1&Limit=1)');
       final List<PostModel> newsfeed = response.data
           .map<PostModel>((json) => PostModel.fromJson(json))
           .toList();
@@ -82,7 +90,8 @@ class PostRemoteDataSourceImpl extends PostRemoteDataSource {
   @override
   Future<List<PostModel>> fetchPersonal() async {
     try {
-      var response = await _dioClient.get('${ApiUrl.personal}?Cursor=1&Limit=1)');
+      var response =
+          await _dioClient.get('${ApiUrl.personal}?Cursor=1&Limit=1)');
       final List<PostModel> personal = response.data
           .map<PostModel>((json) => PostModel.fromJson(json))
           .toList();

@@ -8,12 +8,12 @@ abstract class PersonalState extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetchPersonalInitialState extends PersonalState {}
+class PersonalInitialState extends PersonalState {}
 
 class FetchPersonalLoadingState extends PersonalState {}
 
 class FetchPersonalSuccessState extends PersonalState {
-  final PersonalEntity data;
+  final List<PostEntity> data;
 
   const FetchPersonalSuccessState({required this.data});
 

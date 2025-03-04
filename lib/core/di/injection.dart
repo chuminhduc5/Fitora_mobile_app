@@ -1,3 +1,5 @@
+import 'package:fitora_mobile_app/core/blocs/theme/theme_bloc.dart';
+import 'package:fitora_mobile_app/core/blocs/translate/translate_bloc.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
 import 'package:fitora_mobile_app/feature/auth/di/auth_dependency.dart';
 import 'package:fitora_mobile_app/feature/chat/di/chat_dependency.dart';
@@ -19,5 +21,8 @@ void configureDependencies() {
   PostDependency.init();
   ProfileDependency.init();
 
-  getIt.registerSingleton<DioClient>(DioClient());
+  getIt.registerLazySingleton(() => ThemeBloc());
+  getIt.registerLazySingleton(() => TranslateBloc());
+  getIt.registerLazySingleton(() => DioClient());
+  // getIt.registerSingleton<DioClient>(DioClient());
 }

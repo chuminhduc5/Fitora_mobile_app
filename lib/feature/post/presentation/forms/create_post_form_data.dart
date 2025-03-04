@@ -1,36 +1,32 @@
 import 'package:equatable/equatable.dart';
 
-class PostFormData extends Equatable {
+class CreatePostFormData extends Equatable {
   final String content;
   final String mediaUrl;
   final int privacy;
   final String groupId;
-  final bool isValid;
 
-  const PostFormData({
+  const CreatePostFormData({
     required this.content,
     required this.mediaUrl,
     required this.privacy,
     required this.groupId,
-    required this.isValid,
   });
 
   @override
   List<Object?> get props => [content, mediaUrl, privacy, groupId];
 
-  PostFormData copyWith({
+  CreatePostFormData copyWith({
     String? content,
     String? mediaUrl,
     int? privacy,
     String? groupId,
-    bool? isValid,
   }) {
-    return PostFormData(
+    return CreatePostFormData(
       content: content ?? this.content,
       mediaUrl: mediaUrl ?? this.mediaUrl,
       privacy: privacy ?? this.privacy,
       groupId: groupId ?? this.groupId,
-      isValid: isValid ?? this.isValid,
     );
   }
 }

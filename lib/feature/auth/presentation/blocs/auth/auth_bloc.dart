@@ -14,6 +14,7 @@ import 'package:meta/meta.dart';
 import '../../../../../core/utils/logger.dart';
 
 part 'auth_event.dart';
+
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -46,17 +47,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.params.password,
       ),
     );
-    print("🔍 Email: ${event.params.email}");
-    print("🔍 Password: ${event.params.password}");
-    print("🔍 Result: ${result.toString()}");
 
     result.fold(
-      (failure) {
-        emit(AuthSignInFailureState(message: mapFailureToMessage(failure)));
-      },
-      (success) {
-        emit(AuthSignInSuccessState(data: success));
-      },
+      (failure) => emit(AuthSignInFailureState(mapFailureToMessage(failure))),
+      (success) => emit(AuthSignInSuccessState(data: success)),
     );
   }
 
@@ -65,6 +59,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter emit,
   ) async {
     emit(AuthSignUpLoadingState());
+
     final result = await _signUpUseCase.call(
       SignUpParams(
         username: event.params.username,
@@ -75,12 +70,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     result.fold(
-      (failure) {
-        emit(AuthSignUpFailureState(message: mapFailureToMessage(failure)));
-      },
-      (success) {
-        emit(const AuthSignUpSuccessState(message: "Sign Up Success"));
-      },
+      (failure) => emit(AuthSignUpFailureState(mapFailureToMessage(failure))),
+      (success) => emit(const AuthSignUpSuccessState("Sign Up Success")),
     );
   }
 
@@ -89,14 +80,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter emit,
   ) async {
     emit(AuthSignOutLoadingState());
+
     final result = await _signOutUseCase.call(NoParams());
+
     result.fold(
-      (failure) {
-        emit(AuthSignOutFailureState(message: mapFailureToMessage(failure)));
-      },
-      (success) {
-        emit(const AuthSignOutSuccessState(message: "Sign Out Success"));
-      },
+      (failure) => emit(AuthSignOutFailureState(mapFailureToMessage(failure))),
+      (success) => emit(const AuthSignOutSuccessState("Sign Out Success")),
     );
   }
 
@@ -105,18 +94,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter emit,
   ) async {
     emit(AuthCheckSignInStatusLoadingState());
+
     final result = await _checkSignInStatusUseCase.call(NoParams());
+
     result.fold(
-      (failure) {
-        emit(
-          AuthCheckSignInStatusFailureState(
-            message: mapFailureToMessage(failure),
-          ),
-        );
-      },
-      (success) {
-        emit(AuthCheckSignInStatusSuccessState(data: success));
-      },
+      (failure) => emit(AuthCheckSignInStatusFailureState(mapFailureToMessage(failure))),
+      (success) => emit(AuthCheckSignInStatusSuccessState(data: success)),
     );
   }
 

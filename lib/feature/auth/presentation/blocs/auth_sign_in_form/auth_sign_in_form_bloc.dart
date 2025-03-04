@@ -24,7 +24,7 @@ class AuthSignInFormBloc
     final updateData = SignInFormInputData(
       inputEmail: event.email,
       inputPassword: state.data.password,
-      inputValid: inputValidator(event.email, state.data.password),
+      inputIsValid: inputValidator(event.email, state.data.password),
     );
     emit(AuthSignInFormDataState(updateData));
   }
@@ -37,7 +37,7 @@ class AuthSignInFormBloc
     final updateData = SignInFormInputData(
       inputEmail: state.data.email,
       inputPassword: event.password,
-      inputValid: inputValidator(state.data.email, event.password),
+      inputIsValid: inputValidator(state.data.email, event.password),
     );
     emit(AuthSignInFormDataState(updateData));
   }
@@ -52,7 +52,7 @@ class AuthSignInFormBloc
 
   @override
   Future<void> close() {
-    logger.i("===== CLOSE AuthLoginFormBloc =====");
+    logger.i("===== CLOSE AuthSignInFormBloc =====");
     return super.close();
   }
 }

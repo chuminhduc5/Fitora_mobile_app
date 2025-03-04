@@ -33,7 +33,7 @@ class AuthSignUpFormInputDataState extends AuthSignUpFormState {
             username: inputData.inputUsername,
             password: inputData.inputPassword,
             confirmPassword: inputData.inputConfirmPassword,
-            isValid: inputData.inputValid,
+            isValid: inputData.inputIsValid,
           ),
         );
 
