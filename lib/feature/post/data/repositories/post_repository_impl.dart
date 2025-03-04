@@ -17,8 +17,8 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<Either<Failure, PostEntity>> getPost() async {
     try {
-      final data = await _postRemoteDataSource.fetchPost();
-      final post = PostMapper.toEntity(data);
+      final result = await _postRemoteDataSource.fetchPost();
+      final post = PostMapper.toEntity(result);
       return Right(post);
     } on ServerException {
       return Left(ServerFailure());
@@ -71,8 +71,8 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<Either<Failure, List<PostEntity>>> getNewsFeed() async {
     try {
-      final data = await _postRemoteDataSource.fetchNewsfeed();
-      final newsfeed = data.map((item) => PostMapper.toEntity(item)).toList();
+      final result = await _postRemoteDataSource.fetchNewsfeed();
+      final newsfeed = result.map((item) => PostMapper.toEntity(item)).toList();
       return Right(newsfeed);
     } on ServerException {
       return Left(ServerFailure());
@@ -82,8 +82,8 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<Either<Failure, List<PostEntity>>> getPersonal() async {
     try {
-      final data = await _postRemoteDataSource.fetchPersonal();
-      final personal = data.map((item) => PostMapper.toEntity(item)).toList();
+      final result = await _postRemoteDataSource.fetchPersonal();
+      final personal = result.map((item) => PostMapper.toEntity(item)).toList();
       return Right(personal);
     } on ServerException {
       return Left(ServerFailure());

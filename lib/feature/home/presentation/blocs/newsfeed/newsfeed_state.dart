@@ -1,7 +1,7 @@
 part of 'newsfeed_bloc.dart';
 
 @immutable
-abstract class NewsfeedState extends Equatable{
+abstract class NewsfeedState extends Equatable {
   const NewsfeedState();
 
   @override
@@ -14,6 +14,7 @@ class FetchNewsfeedLoadingState extends NewsfeedState {}
 
 class FetchNewsfeedSuccessState extends NewsfeedState {
   final List<PostEntity> data;
+
   const FetchNewsfeedSuccessState({required this.data});
 
   @override
@@ -22,6 +23,7 @@ class FetchNewsfeedSuccessState extends NewsfeedState {
 
 class FetchNewsfeedFailureState extends NewsfeedState {
   final String message;
+
   const FetchNewsfeedFailureState({required this.message});
 
   @override

@@ -29,7 +29,7 @@ class AuthSignInFormDataState extends AuthSignInFormState {
           SignInFormData(
             email: inputData.inputEmail,
             password: inputData.inputPassword,
-            isValid: inputData.inputValid,
+            isValid: inputData.inputIsValid,
           ),
         );
 

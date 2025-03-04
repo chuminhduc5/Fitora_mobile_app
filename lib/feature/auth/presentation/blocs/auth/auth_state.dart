@@ -16,7 +16,7 @@ class AuthSignUpLoadingState extends AuthState {}
 class AuthSignUpSuccessState extends AuthState {
   final String message;
 
-  const AuthSignUpSuccessState({required this.message});
+  const AuthSignUpSuccessState(this.message);
 
   @override
   List<Object?> get props => [message];
@@ -25,7 +25,7 @@ class AuthSignUpSuccessState extends AuthState {
 class AuthSignUpFailureState extends AuthState {
   final String message;
 
-  const AuthSignUpFailureState({required this.message});
+  const AuthSignUpFailureState(this.message);
 
   @override
   List<Object?> get props => [message];
@@ -46,7 +46,7 @@ class AuthSignInSuccessState extends AuthState {
 class AuthSignInFailureState extends AuthState {
   final String message;
 
-  const AuthSignInFailureState({required this.message});
+  const AuthSignInFailureState(this.message);
 
   @override
   List<Object?> get props => [message];
@@ -58,7 +58,7 @@ class AuthSignOutLoadingState extends AuthState {}
 class AuthSignOutSuccessState extends AuthState {
   final String message;
 
-  const AuthSignOutSuccessState({required this.message});
+  const AuthSignOutSuccessState(this.message);
 
   @override
   List<Object?> get props => [message];
@@ -67,7 +67,7 @@ class AuthSignOutSuccessState extends AuthState {
 class AuthSignOutFailureState extends AuthState {
   final String message;
 
-  const AuthSignOutFailureState({required this.message});
+  const AuthSignOutFailureState(this.message);
 
   @override
   List<Object?> get props => [message];
@@ -88,7 +88,7 @@ class AuthCheckSignInStatusSuccessState extends AuthState {
 class AuthCheckSignInStatusFailureState extends AuthState {
   final String message;
 
-  const AuthCheckSignInStatusFailureState({required this.message});
+  const AuthCheckSignInStatusFailureState(this.message);
 
   @override
   List<Object?> get props => [message];

@@ -19,9 +19,12 @@ class NewsfeedBloc extends Bloc<NewsfeedEvent, NewsfeedState> {
 
   Future<void> _onFetchNewsfeed(FetchNewsfeedEvent event, Emitter emit) async {
     emit(FetchNewsfeedLoadingState());
+
     final result = await _getNewsfeedUseCase.call(NoParams());
+
     result.fold(
-      (error) => emit(FetchNewsfeedFailureState(message: mapFailureToMessage(error))),
+      (error) =>
+          emit(FetchNewsfeedFailureState(message: mapFailureToMessage(error))),
       (data) => emit(FetchNewsfeedSuccessState(data: data)),
     );
   }

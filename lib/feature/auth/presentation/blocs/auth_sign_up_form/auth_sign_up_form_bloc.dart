@@ -29,7 +29,7 @@ class AuthSignUpFormBloc
       inputUsername: state.data.username,
       inputPassword: state.data.password,
       inputConfirmPassword: state.data.confirmPassword,
-      inputValid: inputValidator(
+      inputIsValid: inputValidator(
         event.email,
         state.data.username,
         state.data.password,
@@ -49,7 +49,7 @@ class AuthSignUpFormBloc
       inputUsername: event.username,
       inputPassword: state.data.password,
       inputConfirmPassword: state.data.confirmPassword,
-      inputValid: inputValidator(
+      inputIsValid: inputValidator(
         state.data.email,
         event.username,
         state.data.password,
@@ -69,7 +69,7 @@ class AuthSignUpFormBloc
       inputUsername: state.data.username,
       inputPassword: event.password,
       inputConfirmPassword: state.data.confirmPassword,
-      inputValid: inputValidator(
+      inputIsValid: inputValidator(
         state.data.email,
         state.data.username,
         event.password,
@@ -89,7 +89,7 @@ class AuthSignUpFormBloc
       inputUsername: state.data.username,
       inputPassword: state.data.password,
       inputConfirmPassword: event.confirmPassword,
-      inputValid: inputValidator(
+      inputIsValid: inputValidator(
         state.data.email,
         state.data.username,
         state.data.password,
