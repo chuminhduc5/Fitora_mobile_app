@@ -7,10 +7,10 @@ import 'authorzation_interceptor.dart';
 class DioClient {
   late final Dio _dio;
 
-  DioClient()
+  DioClient({required String baseUrl})
       : _dio = Dio(
           BaseOptions(
-            baseUrl: ApiUrl.baseUrl,
+            baseUrl: baseUrl,
             headers: {
               "Content-Type": "application/json",
             },
@@ -43,7 +43,7 @@ class DioClient {
       );
       return response;
     } on DioException catch (e) {
-      _handleDioError(e);
+      //_handleDioError(e);
       rethrow;
     }
   }

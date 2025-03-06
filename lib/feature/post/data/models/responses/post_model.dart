@@ -8,8 +8,8 @@ class PostModel {
   final int commentsCount;
   final int score;
   final int privacy;
-  final DateTime createAt;
-  final DateTime updateAt;
+  final DateTime? createAt;
+  final DateTime? updateAt;
   final bool isDeleted;
 
   const PostModel({
@@ -29,18 +29,18 @@ class PostModel {
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
     return PostModel(
-      id: json['id'],
-      userId: json['userId'],
-      groupId: json['groupId'],
-      content: json['content'],
-      mediaUrl: json['mediaUrl'],
-      votesCount: json['votesCount'],
-      commentsCount: json['commentsCount'],
-      score: json['score'],
-      privacy: json['privacy'],
-      createAt: json['createAt'],
-      updateAt: json['updateAt'],
-      isDeleted: json['isDeleted'],
+      id: json['id'] ?? '',
+      userId: json['userId'] ?? '',
+      groupId: json['groupId'] ?? '',
+      content: json['content'] ?? '',
+      mediaUrl: json['mediaUrl'] ?? '',
+      votesCount: json['votesCount'] ?? 0,
+      commentsCount: json['commentsCount'] ?? 0,
+      score: json['score'] ?? 0,
+      privacy: json['privacy'] ?? 0,
+      createAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
+      updateAt: json['updatedAt'] != null ? DateTime.tryParse(json['updatedAt']) : null,
+      isDeleted: json['isDeleted'] ?? false,
     );
   }
 }

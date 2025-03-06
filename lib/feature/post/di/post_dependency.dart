@@ -27,6 +27,6 @@ class PostDependency {
     getIt.registerLazySingleton(() => PostRepositoryImpl(getIt<PostRemoteDataSourceImpl>()));
 
     // Datasource
-    getIt.registerLazySingleton(() => PostRemoteDataSourceImpl(getIt<DioClient>()));
+    getIt.registerLazySingleton(() => PostRemoteDataSourceImpl(getIt<DioClient>(instanceName: 'interact')));
   }
 }

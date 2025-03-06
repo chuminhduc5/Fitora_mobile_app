@@ -19,6 +19,6 @@ class ProfileDependency {
     getIt.registerLazySingleton(() => ProfileRepositoryImpl(getIt<ProfileRemoteDataSourceImpl>()));
 
     // Datasource
-    getIt.registerLazySingleton(() => ProfileRemoteDataSourceImpl(getIt<DioClient>()));
+    getIt.registerLazySingleton(() => ProfileRemoteDataSourceImpl(getIt<DioClient>(instanceName: 'user')));
   }
 }

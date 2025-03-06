@@ -4,12 +4,12 @@ class CreatePostRequest {
   final int? privacy;
   final String? groupId;
 
-  const CreatePostRequest(
-    this.content,
-    this.mediaUrl,
-    this.privacy,
-    this.groupId,
-  );
+  const CreatePostRequest({
+    required this.content,
+    required this.mediaUrl,
+    required this.privacy,
+    required this.groupId,
+  });
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{

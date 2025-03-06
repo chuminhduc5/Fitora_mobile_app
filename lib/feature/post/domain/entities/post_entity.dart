@@ -10,8 +10,8 @@ class PostEntity extends Equatable {
   final int commentsCount;
   final int score;
   final int privacy;
-  final DateTime createAt;
-  final DateTime updateAt;
+  final DateTime? createAt;
+  final DateTime? updateAt;
   final bool isDeleted;
 
   const PostEntity({

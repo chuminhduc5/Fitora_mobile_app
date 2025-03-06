@@ -6,6 +6,7 @@ import 'package:fitora_mobile_app/feature/post/domain/repositories/post_reposito
 
 class UpdatePostUseCase extends UseCase<void, Params> {
   final PostRepository _postRepository;
+
   UpdatePostUseCase(this._postRepository);
 
   @override

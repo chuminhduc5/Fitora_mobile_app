@@ -1,17 +1,18 @@
+import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
+import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
+import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/extensions/integer_sizebox_extension.dart';
+import 'package:fitora_mobile_app/core/navigation/routes/app_route_conf.dart';
+import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
+import 'package:fitora_mobile_app/feature/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/blocs/auth_sign_up_form/auth_sign_up_form_bloc.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/forms/auth_sign_up_form_data.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/widgets/auth_sign_up_input_widget.dart';
+import 'package:fitora_mobile_app/feature/auth/presentation/widgets/button_auth_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../core/config/theme/app_colors.dart';
-import '../../../../core/di/injection.dart';
-import '../../../../common/dialog/app_display_message.dart';
-import '../../../../core/navigation/router/app_router.dart';
-import '../blocs/auth/auth_bloc.dart';
-import '../widgets/button_auth_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -37,6 +38,7 @@ class SignUpScreen extends StatelessWidget {
       create: (_) => getIt<AuthSignUpFormBloc>(),
       child: Scaffold(
         backgroundColor: AppColors.bgWhite,
+        resizeToAvoidBottomInset: false,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
             children: [SingleChildScrollView(
@@ -64,7 +66,7 @@ class SignUpScreen extends StatelessWidget {
                       listener: (_, state) {
                         if (state is AuthSignUpSuccessState) {
                           AppDisplayMessage.success(context, 'Đăng ký thành công');
-                          appRouter.go('/sign-in');
+                          context.goNamed(AppRoute.signIn.name);
                         } else if (state is AuthSignUpFailureState) {
                           AppDisplayMessage.error(context, 'Đăng ký thất bại');
                         }
@@ -96,7 +98,7 @@ class SignUpScreen extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pop(context);
+                              context.pushReplacementNamed(AppRoute.signIn.name);
                             },
                             child: const Text(
                               'Đăng nhập ngay!',
