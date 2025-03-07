@@ -29,10 +29,10 @@ class PostRepositoryImpl implements PostRepository {
   Future<Either<Failure, void>> createPost(CreatePostParams params) async {
     try {
       final request = CreatePostRequest(
-        params.content,
-        params.mediaUrl,
-        params.privacy,
-        params.groupId,
+        content: params.content,
+        mediaUrl: params.mediaUrl,
+        privacy: params.privacy,
+        groupId: params.groupId,
       );
       final result = await _postRemoteDataSource.createPost(request);
       return Right(result);

@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
+import 'package:fitora_mobile_app/core/di/injection.dart';
+import 'package:fitora_mobile_app/core/navigation/routes/app_route_conf.dart';
+import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/widgets/select_community_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../../../../core/navigation/router/app_router.dart';
 
 // class PostArticlesScreen extends StatelessWidget {
 //   const PostArticlesScreen({super.key});
@@ -75,7 +77,7 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
         backgroundColor: AppColors.bgWhite,
         leading: IconButton(
             onPressed: () {
-              appRouter.go('/app-view');
+              context.goNamed(AppRoute.home.name);
             },
             icon: const Icon(Icons.close)),
         actions: <Widget>[

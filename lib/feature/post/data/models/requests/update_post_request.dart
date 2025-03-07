@@ -7,10 +7,10 @@ class UpdatePostRequest {
 
   const UpdatePostRequest({
     required this.id,
-    this.content,
-    this.mediaUrl,
-    this.privacy,
-    this.groupId,
+    required this.content,
+    required this.mediaUrl,
+    required this.privacy,
+    required this.groupId,
   });
 
   Map<String, dynamic> toJson() {

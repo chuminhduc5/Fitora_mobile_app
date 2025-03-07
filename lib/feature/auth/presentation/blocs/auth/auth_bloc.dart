@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fitora_mobile_app/core/usecase/usecase.dart';
 import 'package:fitora_mobile_app/core/utils/failure_converter.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/auth_entity.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/usecases/auth_check_sign_in_status_use_case.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/usecases/auth_sign_in_use_case.dart';

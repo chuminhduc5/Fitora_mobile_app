@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fitora_mobile_app/core/constants/api_url.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/auth/data/models/responses/auth_model.dart';
 import '../../../../core/utils/logger.dart';
 import '../models/requests/sign_in_request.dart';

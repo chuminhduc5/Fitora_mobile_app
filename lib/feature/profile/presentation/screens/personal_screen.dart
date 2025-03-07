@@ -1,12 +1,17 @@
 import 'dart:io';
-
 import 'package:fitora_mobile_app/common/widgets/button/app_button_widget.dart';
+import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
+import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
+import 'package:fitora_mobile_app/core/di/injection.dart';
+import 'package:fitora_mobile_app/core/navigation/routes/app_route_conf.dart';
+import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:forui/forui.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../core/config/theme/app_colors.dart';
-import '../../../../core/navigation/router/app_router.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({super.key});
@@ -25,7 +30,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
       setState(() {
         //_image = File(pickedFile.path);
         _cropperImage(pickedFile.path);
-        logg.i(pickedFile.path);
+        logg.i("Path: ${pickedFile.path}");
       });
     }
   }
@@ -73,7 +78,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
         backgroundColor: AppColors.bgWhite,
         leading: IconButton(
           onPressed: () {
-            appRouter.go('/app-view');
+            context.goNamed(AppRoute.appView.name);
           },
           icon: const Icon(Icons.arrow_back),
         ),
@@ -89,62 +94,64 @@ class _PersonalScreenState extends State<PersonalScreen> {
             clipBehavior: Clip.none,
             children: [
               SizedBox(
-                height: 180,
+                height: 180.h,
                 width: double.infinity,
                 child: _image != null
                     ? Image.file(
                         _image!,
-                        width: double.infinity,
+                        width: 1.sw,
                         fit: BoxFit.cover,
                       )
-                    : Image.network(
-                        "https://ocafe.net/wp-content/uploads/2024/10/anh-nen-may-tinh-4k-1.jpg",
+                    : Image.asset(
+                        AppImages.bgImage,
                         width: double.infinity,
                         fit: BoxFit.cover,
                       ),
               ),
-              const Positioned(
-                top: 100,
-                left: 20,
+              Positioned(
+                top: 100.h,
+                left: 20.w,
                 child: CircleAvatar(
-                  radius: 60,
-                  backgroundImage: NetworkImage(
-                    "https://ocafe.net/wp-content/uploads/2024/10/hinh-nen-may-tinh-dep-4k-9.jpg",
+                  radius: 60.r,
+                  backgroundImage: const AssetImage(
+                    AppImages.avatar,
                   ),
                 ),
               ),
               Positioned(
-                top: 130,
-                right: 20,
+                top: 130.h,
+                right: 20.w,
                 child: InkWell(
                   onTap: () {
                     logg.i("Cập nhật ảnh");
                     _pickImage();
                   },
-                  child: const CircleAvatar(
-                    radius: 18,
+                  child: CircleAvatar(
+                    radius: 18.r,
                     backgroundColor: AppColors.bgWhite,
-                    child: Icon(Icons.camera_alt_outlined, size: 20),
+                    child: const Icon(Icons.camera_alt_outlined, size: 20),
                   ),
                 ),
               ),
             ],
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 50),
-                const Text(
+                SizedBox(height: 50.h),
+                Text(
                   'Chử Minh Đức',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style:
+                      TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
                 ),
-                const Text(
+                Text(
                   '1000 người bạn',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                  style:
+                      TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 15),
+                SizedBox(height: 20.h),
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: AppButtonWidget(
@@ -152,6 +159,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                     title: 'Thêm vào tin',
                   ),
                 ),
+                SizedBox(height: 5.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -160,17 +168,19 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         onPressed: () {},
                         bgColor: AppColors.gray,
                         color: Colors.black,
-                        paddingRight: 70,
-                        paddingLeft: 70,
+                        paddingRight: 75.h,
+                        paddingLeft: 75.h,
                         title: 'Chỉnh sửa trang cá nhân',
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 8),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15.w,
+                        vertical: 5.h,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.gray,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: const Icon(Icons.more_horiz),
                     ),
@@ -180,11 +190,69 @@ class _PersonalScreenState extends State<PersonalScreen> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            width: double.infinity,
-            height: 4,
+            margin: EdgeInsets.symmetric(vertical: 10.h),
+            width: 1.sw,
+            height: 4.h,
             color: Colors.grey[400],
-          )
+          ),
+          SizedBox(
+            width: 0.75.sw,
+            child: FTabs(
+              style: FTabsStyle(
+                  padding: EdgeInsets.zero,
+                  decoration: const BoxDecoration(color: AppColors.bgWhite),
+                  selectedLabelTextStyle: const TextStyle(color: AppColors.bgPink),
+                  unselectedLabelTextStyle: const TextStyle(color: Colors.black),
+                  indicatorDecoration: BoxDecoration(
+                    color: const Color.fromRGBO(255, 71, 112, 1.0),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  focusedOutlineStyle: const FFocusedOutlineStyle(
+                      color: AppColors.bgGreen,
+                      borderRadius: BorderRadius.zero)),
+              tabs: [
+                FTabEntry(
+                  label: const Text('Bài viết'),
+                  content: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: 100,
+                          color: AppColors.bgPink,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                FTabEntry(
+                  label: const Text('Ảnh'),
+                  content: FCard(
+                    child: const Column(
+                      children: [],
+                    ),
+                  ),
+                ),
+                FTabEntry(
+                  label: const Text('Video'),
+                  content: FCard(
+                    child: const Column(
+                      children: [],
+                    ),
+                  ),
+                ),
+                FTabEntry(
+                  label: const Text('Sự kiện'),
+                  content: FCard(
+                    child: const Column(
+                      children: [],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       )),
     );

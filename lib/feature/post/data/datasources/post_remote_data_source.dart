@@ -29,7 +29,7 @@ class PostRemoteDataSourceImpl extends PostRemoteDataSource {
   @override
   Future<PostModel> fetchPost() async {
     try {
-      var response = await _dioClient.get('${ApiUrl.post}?Cursor=1&Limit=1)');
+      var response = await _dioClient.get(ApiUrl.post);
       final post = response.data;
       return post;
     } on DioException catch (e) {
@@ -75,12 +75,16 @@ class PostRemoteDataSourceImpl extends PostRemoteDataSource {
   @override
   Future<List<PostModel>> fetchNewsfeed() async {
     try {
-      var response =
-          await _dioClient.get('${ApiUrl.newsFeed}?Cursor=1&Limit=1)');
-      final List<PostModel> newsfeed = response.data
-          .map<PostModel>((json) => PostModel.fromJson(json))
-          .toList();
-      return newsfeed;
+      var response = await _dioClient.get(ApiUrl.newsFeed);
+      final data = response.data['data'];
+      if (data != null && data['data'] is List) {
+        final List<PostModel> newsfeed = (data['data'] as List)
+            .map((json) => PostModel.fromJson(json))
+            .toList();
+        return newsfeed;
+      } else {
+        throw Exception("Invalid response format");
+      }
     } on DioException catch (e) {
       logger.e('Fetch Newsfeed failed: ${e.message}');
       throw ServerException();
@@ -90,9 +94,8 @@ class PostRemoteDataSourceImpl extends PostRemoteDataSource {
   @override
   Future<List<PostModel>> fetchPersonal() async {
     try {
-      var response =
-          await _dioClient.get('${ApiUrl.personal}?Cursor=1&Limit=1)');
-      final List<PostModel> personal = response.data
+      var response = await _dioClient.get(ApiUrl.personal);
+      final List<PostModel> personal = response.data['data']
           .map<PostModel>((json) => PostModel.fromJson(json))
           .toList();
       return personal;
