@@ -7,11 +7,11 @@ import 'package:fitora_mobile_app/feature/friends/data/models/friend_model.dart'
 import 'package:fitora_mobile_app/feature/friends/data/models/friend_request_model.dart';
 
 abstract class FriendRemoteDataSource {
-  Future<void> addFriend(String id);
-  Future<void> acceptFriend(String id);
+  Future<void> addFriend(String userId);
+  Future<void> acceptFriend(String userId);
   Future<List<FriendModel>> fetchFriend();
-  Future<void> deleteFriend(String id);
-  Future<void> unfriend(String id);
+  Future<void> deleteFriend(String userId);
+  Future<void> unfriend(String userId);
   Future<List<FriendRequestModel>> fetchSentFriendRequest();
   Future<List<FriendRequestModel>> fetchReceivedFriendRequest();
 }
@@ -20,9 +20,9 @@ class FriendRemoteDataSourceImpl implements FriendRemoteDataSource {
   final DioClient _dioClient;
   const FriendRemoteDataSourceImpl(this._dioClient);
   @override
-  Future<void> acceptFriend(String id) async {
+  Future<void> acceptFriend(String userId) async {
     try {
-      await _dioClient.put("${ApiUrl.acceptFriend}?id=$id");
+      await _dioClient.put("${ApiUrl.acceptFriend}?id=$userId");
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();
@@ -30,9 +30,9 @@ class FriendRemoteDataSourceImpl implements FriendRemoteDataSource {
   }
 
   @override
-  Future<void> addFriend(String id) async {
+  Future<void> addFriend(String userId) async {
     try {
-      await _dioClient.post("${ApiUrl.addFriend}?id=$id");
+      await _dioClient.post("${ApiUrl.addFriend}?id=$userId");
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();
@@ -40,9 +40,9 @@ class FriendRemoteDataSourceImpl implements FriendRemoteDataSource {
   }
 
   @override
-  Future<void> deleteFriend(String id) async {
+  Future<void> deleteFriend(String userId) async {
     try {
-      await _dioClient.delete("${ApiUrl.deleteFriend}?id=$id");
+      await _dioClient.delete("${ApiUrl.deleteFriend}?id=$userId");
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();
@@ -86,9 +86,9 @@ class FriendRemoteDataSourceImpl implements FriendRemoteDataSource {
   }
 
   @override
-  Future<void> unfriend(String id) async {
+  Future<void> unfriend(String userId) async {
     try {
-      await _dioClient.put("${ApiUrl.unfriend}?id=$id");
+      await _dioClient.put("${ApiUrl.unfriend}?id=$userId");
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();

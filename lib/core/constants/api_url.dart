@@ -41,5 +41,5 @@ class ApiUrl {
   static const deletePost = '${api}post/delete-post';
 
   // TODO: API INTERACT SERVICE - FILE
-  static const upFile = '${api}';
+  static const uploadFile = '${api}Upload/file';
 }

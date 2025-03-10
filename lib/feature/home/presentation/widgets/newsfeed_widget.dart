@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:fitora_mobile_app/common/dialog/app_error_widget.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
-import 'package:fitora_mobile_app/common/widgets/newsfeed/newsfeed_post_widget.dart';
+import 'package:fitora_mobile_app/common/widgets/post/newsfeed_post_widget.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/home/presentation/blocs/newsfeed/newsfeed_bloc.dart';
 import 'package:flutter/material.dart';

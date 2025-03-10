@@ -5,6 +5,7 @@ import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_in_scre
 import 'package:fitora_mobile_app/feature/chat/presentation/screens/chat_screen.dart';
 import 'package:fitora_mobile_app/feature/home/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
+import 'package:fitora_mobile_app/feature/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:fitora_mobile_app/feature/profile/presentation/screens/personal_screen.dart';
 import 'package:fitora_mobile_app/feature/profile/presentation/screens/profile_screen.dart';
 import 'package:fitora_mobile_app/feature/splash/presentation/screens/splash_screen.dart';
@@ -18,6 +19,11 @@ class AppRouteConf {
     initialLocation: AppRoute.signIn.path,
     debugLogDiagnostics: true,
     routes: [
+      GoRoute(
+        path: AppRoute.splash.path,
+        name: AppRoute.splash.name,
+        builder: (_, __) => const SplashScreen(),
+      ),
       GoRoute(
         path: AppRoute.signIn.path,
         name: AppRoute.signIn.name,
@@ -47,6 +53,48 @@ class AppRouteConf {
         path: AppRoute.profile.path,
         name: AppRoute.profile.name,
         builder: (_, __) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.editProfile.path,
+        name: AppRoute.editProfile.name,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const EditProfileScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var curvedAnimation = CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeInOut,
+            );
+            var reverseAnimation = CurvedAnimation(
+              parent: secondaryAnimation,
+              curve: Curves.easeInOut,
+            );
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(1, 0),
+                end: Offset.zero,
+              ).animate(curvedAnimation),
+              child: child,
+            );
+            // return Stack(
+            //   children: [
+            //     SlideTransition(
+            //       position: Tween<Offset>(
+            //         begin: const Offset(1, 0),
+            //         end: Offset.zero,
+            //       ).animate(curvedAnimation),
+            //       child: child,
+            //     ),
+            //     SlideTransition(
+            //       position: Tween<Offset>(
+            //         begin: Offset.zero,
+            //         end: const Offset(1, 0),
+            //       ).animate(reverseAnimation),
+            //       child: child,
+            //     ),
+            //   ],
+            // );
+          },
+        ),
       ),
       GoRoute(
         path: AppRoute.personal.path,

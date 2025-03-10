@@ -7,6 +7,7 @@ enum AppRoute {
   post(path: "/post"),
   chat(path: "/chat"),
   profile(path: "/profile"),
+  editProfile(path: "/editProfile"),
   personal(path: "/personal");
 
   final String path;

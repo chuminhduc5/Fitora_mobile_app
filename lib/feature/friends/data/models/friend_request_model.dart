@@ -7,7 +7,7 @@ class FriendRequestModel {
   final String receiverName;
   final String receiverImageUrl;
   final int status;
-  final DateTime createDate;
+  final DateTime? createDate;
 
   const FriendRequestModel({
     required this.id,
@@ -23,15 +23,15 @@ class FriendRequestModel {
 
   factory FriendRequestModel.frmJson(Map<String, dynamic> json) {
     return FriendRequestModel(
-      id: json['id'],
-      senderId: json['senderId'],
-      receiverId: json['receiverId'],
-      senderName: json['senderName'],
-      senderImageUrl: json['senderImageUrl'],
-      receiverName: json['receiverName'],
-      receiverImageUrl: json['receiverImageUrl'],
-      status: json['status'],
-      createDate: json['createDate'],
+      id: json['id'] ?? '',
+      senderId: json['senderId'] ?? '',
+      receiverId: json['receiverId'] ?? '',
+      senderName: json['senderName'] ?? '',
+      senderImageUrl: json['senderImageUrl'] ?? '',
+      receiverName: json['receiverName'] ?? '',
+      receiverImageUrl: json['receiverImageUrl'] ?? '',
+      status: json['status'] ?? 0,
+      createDate: json['createDate'] != null ? DateTime.tryParse(json['createDate']) : null,
     );
   }
 }

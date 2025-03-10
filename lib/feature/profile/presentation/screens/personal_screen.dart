@@ -157,6 +157,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                   child: AppButtonWidget(
                     onPressed: () {},
                     title: 'Thêm vào tin',
+                    bgColor: AppColors.bgPink,
                   ),
                 ),
                 SizedBox(height: 5.h),
@@ -165,18 +166,20 @@ class _PersonalScreenState extends State<PersonalScreen> {
                   children: [
                     SizedBox(
                       child: AppButtonWidget(
-                        onPressed: () {},
+                        onPressed: () {
+                          context.goNamed(AppRoute.profile.name);
+                        },
                         bgColor: AppColors.gray,
                         color: Colors.black,
-                        paddingRight: 75.h,
-                        paddingLeft: 75.h,
+                        paddingRight: 65.h,
+                        paddingLeft: 65.h,
                         title: 'Chỉnh sửa trang cá nhân',
                       ),
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 15.w,
-                        vertical: 5.h,
+                        vertical: 8.h,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.gray,
@@ -195,63 +198,64 @@ class _PersonalScreenState extends State<PersonalScreen> {
             height: 4.h,
             color: Colors.grey[400],
           ),
-          SizedBox(
-            width: 0.75.sw,
-            child: FTabs(
-              style: FTabsStyle(
-                  padding: EdgeInsets.zero,
-                  decoration: const BoxDecoration(color: AppColors.bgWhite),
-                  selectedLabelTextStyle: const TextStyle(color: AppColors.bgPink),
-                  unselectedLabelTextStyle: const TextStyle(color: Colors.black),
-                  indicatorDecoration: BoxDecoration(
-                    color: const Color.fromRGBO(255, 71, 112, 1.0),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  focusedOutlineStyle: const FFocusedOutlineStyle(
-                      color: AppColors.bgGreen,
-                      borderRadius: BorderRadius.zero)),
-              tabs: [
-                FTabEntry(
-                  label: const Text('Bài viết'),
-                  content: SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          height: 100,
-                          color: AppColors.bgPink,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                FTabEntry(
-                  label: const Text('Ảnh'),
-                  content: FCard(
-                    child: const Column(
-                      children: [],
-                    ),
-                  ),
-                ),
-                FTabEntry(
-                  label: const Text('Video'),
-                  content: FCard(
-                    child: const Column(
-                      children: [],
-                    ),
-                  ),
-                ),
-                FTabEntry(
-                  label: const Text('Sự kiện'),
-                  content: FCard(
-                    child: const Column(
-                      children: [],
-                    ),
-                  ),
-                ),
-              ],
+          FTabs(
+            style: FTabsStyle(
+              padding: EdgeInsets.zero,
+              decoration: const BoxDecoration(color: AppColors.bgWhite),
+              selectedLabelTextStyle: const TextStyle(color: AppColors.bgPink),
+              unselectedLabelTextStyle: const TextStyle(color: Colors.black),
+              indicatorDecoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedOutlineStyle: FFocusedOutlineStyle(
+                color: AppColors.bgPink,
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
+            scrollable: true,
+            tabs: [
+              FTabEntry(
+                label: const Text('Bài viết'),
+                content: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 100,
+                        padding: EdgeInsets.symmetric(horizontal: 15.w),
+                        //color: AppColors.bgPink,
+                        child: Text("Bài viết"),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              FTabEntry(
+                label: const Text('Ảnh'),
+                content: FCard(
+                  child: const Column(
+                    children: [],
+                  ),
+                ),
+              ),
+              FTabEntry(
+                label: const Text('Video'),
+                content: FCard(
+                  child: const Column(
+                    children: [],
+                  ),
+                ),
+              ),
+              FTabEntry(
+                label: const Text('Sự kiện'),
+                content: FCard(
+                  child: const Column(
+                    children: [],
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       )),

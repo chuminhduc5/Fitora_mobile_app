@@ -14,17 +14,16 @@ class NewsfeedBloc extends Bloc<NewsfeedEvent, NewsfeedState> {
   final GetNewsfeedUseCase _getNewsfeedUseCase;
 
   NewsfeedBloc(this._getNewsfeedUseCase) : super(NewsfeedInitialState()) {
-    on<FetchNewsfeedEvent>(_onFetchNewsfeed);
+    on<FetchNewsfeedEvent>(_fetchNewsfeed);
   }
 
-  Future<void> _onFetchNewsfeed(FetchNewsfeedEvent event, Emitter emit) async {
+  Future _fetchNewsfeed(FetchNewsfeedEvent event, Emitter emit) async {
     emit(FetchNewsfeedLoadingState());
 
     final result = await _getNewsfeedUseCase.call(NoParams());
 
     result.fold(
-      (error) =>
-          emit(FetchNewsfeedFailureState(message: mapFailureToMessage(error))),
+      (error) => emit(FetchNewsfeedFailureState(mapFailureToMessage(error))),
       (data) => emit(FetchNewsfeedSuccessState(data: data)),
     );
   }
