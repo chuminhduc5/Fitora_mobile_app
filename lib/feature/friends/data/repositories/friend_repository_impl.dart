@@ -14,9 +14,9 @@ class FriendRepositoryImpl implements FriendRepository {
   const FriendRepositoryImpl(this._friendRemoteDataSource);
 
   @override
-  Future<Either<Failure, void>> acceptFriend(String id) async {
+  Future<Either<Failure, void>> acceptFriend(String userId) async {
     try {
-      final result = await _friendRemoteDataSource.acceptFriend(id);
+      final result = await _friendRemoteDataSource.acceptFriend(userId);
       return Right(result);
     } on ServerException {
       return Left(ServerFailure());
@@ -24,9 +24,9 @@ class FriendRepositoryImpl implements FriendRepository {
   }
 
   @override
-  Future<Either<Failure, void>> addFriend(String id) async {
+  Future<Either<Failure, void>> addFriend(String userId) async {
     try {
-      final result = await _friendRemoteDataSource.addFriend(id);
+      final result = await _friendRemoteDataSource.addFriend(userId);
       return Right(result);
     } on ServerException {
       return Left(ServerFailure());
@@ -34,9 +34,9 @@ class FriendRepositoryImpl implements FriendRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteFriend(String id) async {
+  Future<Either<Failure, void>> deleteFriend(String userId) async {
     try {
-      final result = await _friendRemoteDataSource.deleteFriend(id);
+      final result = await _friendRemoteDataSource.deleteFriend(userId);
       return Right(result);
     } on ServerException {
       return Left(ServerFailure());
@@ -77,9 +77,9 @@ class FriendRepositoryImpl implements FriendRepository {
   }
 
   @override
-  Future<Either<Failure, void>> unfriend(String id) async {
+  Future<Either<Failure, void>> unfriend(String userId) async {
     try {
-      final result = await _friendRemoteDataSource.unfriend(id);
+      final result = await _friendRemoteDataSource.unfriend(userId);
       return Right(result);
     } on ServerException {
       return Left(ServerFailure());

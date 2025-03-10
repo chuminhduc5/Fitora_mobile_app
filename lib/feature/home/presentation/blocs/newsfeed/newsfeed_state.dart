@@ -24,7 +24,7 @@ class FetchNewsfeedSuccessState extends NewsfeedState {
 class FetchNewsfeedFailureState extends NewsfeedState {
   final String message;
 
-  const FetchNewsfeedFailureState({required this.message});
+  const FetchNewsfeedFailureState(this.message);
 
   @override
   List<Object?> get props => [message];

@@ -4,11 +4,11 @@ import 'package:fitora_mobile_app/feature/friends/domain/entities/friend_entity.
 import 'package:fitora_mobile_app/feature/friends/domain/entities/friend_request_entity.dart';
 
 abstract class FriendRepository {
-  Future<Either<Failure, void>> addFriend(String id);
-  Future<Either<Failure, void>> acceptFriend(String id);
+  Future<Either<Failure, void>> addFriend(String userId);
+  Future<Either<Failure, void>> acceptFriend(String userId);
   Future<Either<Failure, List<FriendEntity>>> getFriend();
-  Future<Either<Failure, void>> deleteFriend(String id);
-  Future<Either<Failure, void>> unfriend(String id);
+  Future<Either<Failure, void>> deleteFriend(String userId);
+  Future<Either<Failure, void>> unfriend(String userId);
   Future<Either<Failure, List<FriendRequestEntity>>> getSentFriendRequest();
   Future<Either<Failure, List<FriendRequestEntity>>> getReceivedFriendRequest();
 }

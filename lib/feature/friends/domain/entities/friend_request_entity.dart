@@ -9,7 +9,7 @@ class FriendRequestEntity extends Equatable {
   final String receiverName;
   final String receiverImageUrl;
   final int status;
-  final DateTime createDate;
+  final DateTime? createDate;
 
   const FriendRequestEntity({
     required this.id,

@@ -10,6 +10,8 @@ import '../../../../core/config/theme/app_colors.dart';
 
 class AuthTextFieldWidget<T> extends StatefulWidget {
   final String label;
+  final String hintText;
+  final Widget? prefixIcon;
   final bool? isSecure;
   final List<TextInputFormatter>? inputFormat;
   final void Function(String)? onChanged;
@@ -18,6 +20,8 @@ class AuthTextFieldWidget<T> extends StatefulWidget {
   const AuthTextFieldWidget({
     super.key,
     required this.label,
+    required this.hintText,
+    this.prefixIcon,
     this.isSecure,
     this.inputFormat,
     required this.onChanged,
@@ -41,7 +45,7 @@ class _AuthTextFieldWidgetState<T> extends State<AuthTextFieldWidget<T>> {
   Widget build(BuildContext context) {
     final formBloc = context.read<T>();
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.only(bottom: 12),
       child: TextFormField(
         initialValue: widget.initialValue,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -75,8 +79,12 @@ class _AuthTextFieldWidgetState<T> extends State<AuthTextFieldWidget<T>> {
           return null;
         },
         decoration: InputDecoration(
-          label: Text(widget.label),
+          //label: Text(widget.label),
+          hintText: widget.hintText,
+          hintStyle: const TextStyle(fontSize: 14),
           contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          prefixIcon: widget.prefixIcon,
+          prefixStyle: TextStyle(color: Colors.black),
           suffixIcon: widget.isSecure ?? false
               ? IconButton(
                   onPressed: () {
@@ -92,14 +100,14 @@ class _AuthTextFieldWidgetState<T> extends State<AuthTextFieldWidget<T>> {
               : null,
           border: const OutlineInputBorder(),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(
               color: Colors.grey,
-              width: 1,
+              width: 0.5,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(10),
             borderSide:
             const BorderSide(color: AppColors.pink, width: 1),
           ),

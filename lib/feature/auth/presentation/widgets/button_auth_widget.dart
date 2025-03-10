@@ -24,7 +24,7 @@ class ButtonAuthWidget extends StatelessWidget {
             backgroundColor: bgColor,
             padding: const EdgeInsets.all(5.0),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(10),
             )),
         child: Text(
           title,

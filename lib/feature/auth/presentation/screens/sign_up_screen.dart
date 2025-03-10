@@ -43,20 +43,27 @@ class SignUpScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
             children: [SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 15),
+                padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 15),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // const Center(
+                    //   child: Text(
+                    //     "Đăng ký",
+                    //     style: TextStyle(color: AppColors.bgPink, fontSize: 40, fontWeight: FontWeight.w700),
+                    //   ),
+                    // ),
+                    // 10.hS,
                     const Text(
-                      'Chào mừng trở lại!',
+                      'Chào mừng bạn!',
                       style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
                       textAlign: TextAlign.center,
                     ),
                     const Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 24),
                       child: Text(
-                        'Xin hãy đăng nhập vào tài khoản của bạn',
+                        'Xin hãy nhập thông tin để tạo tài khoản',
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -85,7 +92,7 @@ class SignUpScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 30),
                     Center(
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

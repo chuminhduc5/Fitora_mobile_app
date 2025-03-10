@@ -3,6 +3,7 @@ import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/active_stat
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawer_option.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/style_avatar.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
+import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/feature/profile/presentation/screens/personal_screen.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,7 @@ Widget rightDrawer(BuildContext context) {
       borderRadius: BorderRadius.circular(0),
       side: BorderSide.none,
     ),
+    backgroundColor: AppColors.bgWhite,
     child: ListView(
       children: [
         Stack(
