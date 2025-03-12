@@ -1,6 +1,6 @@
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
-import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
+import 'package:fitora_mobile_app/feature/profile/presentation/widgets/user_info_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:forui/forui.dart';
@@ -63,185 +63,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Column(
                   children: [
-                    Stack(
-                      children: [
-                        Column(
-                          children: [
-                            Center(
-                              child: CircleAvatar(
-                                radius: 55,
-                                backgroundColor: Colors.white,
-                                child: CircleAvatar(
-                                  radius: 60.r,
-                                  // backgroundImage: const NetworkImage(
-                                  //     'https://i.imgur.com/5M37i3l.jpg'),
-                                  child: Image.network("https://localhost:5005/uploads/1ce5a1cd-7768-46bd-b283-c6db18516151_TikVideo.app_7348465457374006535_3.jpeg"),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            const Text(
-                              "Minh Đức | Mobile Developer",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const Text(
-                              "Trở thành 1 lập trình viên mobile app!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            const SizedBox(height: 10),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 10),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 12,
-                                    spreadRadius: 0,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  _buildInFoItem("Công việc", "Developer"),
-                                  _buildInFoItem("Năm sinh", "2003"),
-                                  _buildInFoItem("Quê Quán", "Hà Nội"),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                _iconText(Icons.favorite_border, "Single"),
-                                const SizedBox(width: 20),
-                                _iconText(Icons.male, "Male"),
-                              ],
-                            ),
-                          ],
+                    const UserInfoWidget(username: "Lưu Nghĩa"),
+                    FTabs(
+                      style: FTabsStyle(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 15),
+                        indicatorSize: FTabBarIndicatorSize.tab,
+                        decoration:
+                        const BoxDecoration(color: AppColors.bgWhite),
+                        selectedLabelTextStyle: const TextStyle(
+                          color: AppColors.white,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _statItem("0", "Followers"),
-                        _buildVerticalLine(),
-                        _statItem("0", "Following"),
-                        _buildVerticalLine(),
-                        _statItem("0", "Bạn bè")
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _button(
-                            () {}, "Thông tin", AppColors.bgPink, Colors.white),
-                        const SizedBox(width: 10),
-                        _button(
-                          () {
-                            context.goNamed(AppRoute.editProfile.name);
-                          },
-                          "Chỉnh sửa",
-                          Colors.white,
-                          Colors.black,
+                        unselectedLabelTextStyle: const TextStyle(
+                          color: Colors.black,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _sectionTitle("Về tôi"),
-                          const Text(
-                            "I believe that no one should ever have to choose between a career we love and living our lives with authenticity and integrity",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(color: Colors.grey, fontSize: 14),
-                          ),
-                          const SizedBox(height: 20),
-                          _sectionTitle("QUAN TÂM"),
-                          _buildInterests(),
-                          const SizedBox(height: 15),
-                          FTabs(
-                            style: FTabsStyle(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              indicatorSize: FTabBarIndicatorSize.tab,
-                              decoration:
-                                  const BoxDecoration(color: AppColors.bgWhite),
-                              selectedLabelTextStyle: const TextStyle(
-                                color: AppColors.white,
-                              ),
-                              unselectedLabelTextStyle: const TextStyle(
-                                color: Colors.black,
-                              ),
-                              indicatorDecoration: BoxDecoration(
-                                color: AppColors.bgPink,
-                                border: Border.all(color: AppColors.bgPink),
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                              focusedOutlineStyle: FFocusedOutlineStyle(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                            ),
-                            tabs: [
-                              FTabEntry(
-                                //label: const Icon(Icons.grid_view),
-                                label: const Text("Bài viết"),
-                                content: Container(
-                                  width: double.infinity,
-                                  constraints: const BoxConstraints(
-                                    minHeight: 100,
-                                  ),
-                                ),
-                              ),
-                              FTabEntry(
-                                //label: const Icon(Icons.play_circle_outline),
-                                label: const Text("Ảnh"),
-                                content: Container(
-                                  width: double.infinity,
-                                  constraints: const BoxConstraints(
-                                    minHeight: 100,
-                                  ),
-                                  child: _buildLayoutImage(),
-                                ),
-                              ),
-                              FTabEntry(
-                                //label: const Icon(Icons.people_outline),
-                                label: const Text("Video"),
-                                content: FCard(
-                                  child: const Column(
-                                    children: [],
-                                  ),
-                                ),
-                              ),
-                              FTabEntry(
-                                //label: const Icon(Icons.file_copy),
-                                label: const Text("Bạn bè"),
-                                content: FCard(
-                                  child: const Column(
-                                    children: [],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                        indicatorDecoration: BoxDecoration(
+                          color: AppColors.bgPink,
+                          border: Border.all(color: AppColors.bgPink),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        focusedOutlineStyle: FFocusedOutlineStyle(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
                       ),
+                      tabs: [
+                        FTabEntry(
+                          //label: const Icon(Icons.grid_view),
+                          label: const Text("Bài viết"),
+                          content: Container(
+                            width: double.infinity,
+                            constraints: const BoxConstraints(
+                              minHeight: 100,
+                            ),
+                          ),
+                        ),
+                        FTabEntry(
+                          //label: const Icon(Icons.play_circle_outline),
+                          label: const Text("Ảnh"),
+                          content: Container(
+                            width: double.infinity,
+                            constraints: const BoxConstraints(
+                              minHeight: 100,
+                            ),
+                            child: _buildLayoutImage(),
+                          ),
+                        ),
+                        FTabEntry(
+                          //label: const Icon(Icons.people_outline),
+                          label: const Text("Video"),
+                          content: FCard(
+                            child: const Column(
+                              children: [],
+                            ),
+                          ),
+                        ),
+                        FTabEntry(
+                          //label: const Icon(Icons.file_copy),
+                          label: const Text("Bạn bè"),
+                          content: FCard(
+                            child: const Column(
+                              children: [],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -302,8 +188,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _button(
-      Function() onPressed, String text, Color bgColor, Color textColor) {
+  Widget _button(Function() onPressed, String text, Color bgColor, Color textColor) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(

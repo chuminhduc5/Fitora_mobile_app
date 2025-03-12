@@ -25,6 +25,8 @@ class SignInScreen extends StatelessWidget {
   void _login(BuildContext context) {
     primaryFocus?.unfocus();
     final authForm = context.read<AuthSignInFormBloc>().state;
+    logg.i("Email: ${authForm.data.email}");
+    logg.i("Password: ${authForm.data.password}");
     context.read<AuthBloc>().add(
           AuthSignInEvent(
             params: AuthSignInFormData(
