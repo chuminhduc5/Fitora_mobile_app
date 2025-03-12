@@ -58,6 +58,7 @@ class AppRouteConf {
         path: AppRoute.editProfile.path,
         name: AppRoute.editProfile.name,
         pageBuilder: (context, state) => CustomTransitionPage(
+          opaque: false,
           child: const EditProfileScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             var curvedAnimation = CurvedAnimation(

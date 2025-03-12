@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/core/extensions/string_validator_extension.dart';
 import 'package:fitora_mobile_app/core/usecase/usecase.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/auth_entity.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/repositories/auth_repository.dart';
 

@@ -3,6 +3,7 @@ import 'package:fitora_mobile_app/core/cache/hive_local_storage.dart';
 import 'package:fitora_mobile_app/core/cache/secure_local_storage.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
+import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/auth/data/datasources/auth_local_data_source.dart';
 import 'package:fitora_mobile_app/feature/auth/data/datasources/auth_remote_data_source.dart';
@@ -55,6 +56,7 @@ class AuthRepositoryImpl implements AuthRepository {
       
       return Right(result);
     } catch (e) {
+      logger.e("AuthRepositoryImpl Failure: $e");
       return Left(ServerFailure());
     }
   }

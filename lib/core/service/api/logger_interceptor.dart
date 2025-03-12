@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,7 +46,7 @@ class AuthorizationInterceptor extends Interceptor {
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     final token = sharedPreferences.getString('token');
     options.headers['Authorization'] = "Bearer $token";
-    handler.next(options); // continue with the Request
+    handler.next(options);
   }
 }
 
