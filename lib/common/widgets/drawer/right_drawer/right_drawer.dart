@@ -4,6 +4,7 @@ import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawe
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/style_avatar.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
+import 'package:fitora_mobile_app/core/navigation/app_navigation.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/feature/profile/presentation/screens/personal_screen.dart';
 import 'package:flutter/material.dart';
@@ -13,49 +14,49 @@ final List<Map<String, dynamic>> _option = [
     "icon": Icons.account_circle_outlined,
     "title": "Trang cá nhân",
     "description": null,
-    "route": PersonalScreen(),
+    "route": "",
   },
   {
     "icon": Icons.group_add_outlined,
     "title": "Tạo một cộng đồng",
     "description": null,
-    "route": PersonalScreen(),
+    "route": "",
   },
   {
     "icon": Icons.stars_outlined,
     "title": "Chương trình cộng tác viên",
     "description": "Kiếm được 0 vàng",
-    "route": PersonalScreen(),
+    "route": "",
   },
   {
     "icon": Icons.lock_open,
     "title": "Kho tiền",
     "description": null,
-    "route": PersonalScreen(),
+    "route": "",
   },
   {
     "icon": Icons.workspace_premium,
     "title": "Fitora cao cấp",
     "description": "Không có quảng cáo",
-    "route": PersonalScreen(),
+    "route": "",
   },
   {
     "icon": Icons.bookmarks_outlined,
     "title": "Lưu",
     "description": null,
-    "route": PersonalScreen(),
+    "route": "",
   },
   {
     "icon": Icons.history_toggle_off,
     "title": "Lịch sử",
     "description": null,
-    "route": PersonalScreen(),
+    "route": "",
   },
   {
     "icon": Icons.settings_outlined,
     "title": "Cài đặt",
     "description": null,
-    "route": PersonalScreen(),
+    "route": "",
   },
 ];
 
@@ -110,10 +111,7 @@ Widget rightDrawer(BuildContext context) {
               if (i["route"] != null) {
                 logger.i('Đã bấm vào: ${i["title"]}');
                 Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => i["route"]),
-                );
+                AppNavigation.pushReplacement(context, i["route"]);
               }
             },
           ),

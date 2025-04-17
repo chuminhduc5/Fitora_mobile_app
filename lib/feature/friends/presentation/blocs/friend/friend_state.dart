@@ -118,3 +118,23 @@ class FetchReceivedFriendRequestFailureState extends FriendState {
   @override
   List<Object?> get props => [message];
 }
+
+class FetchRecommendUserLoadingState extends FriendState {}
+
+class FetchRecommendUserSuccessState extends FriendState {
+  final List<RecommendUserEntity> users;
+
+  const FetchRecommendUserSuccessState({required this.users});
+
+  @override
+  List<Object?> get props => [users];
+}
+
+class FetchRecommendUserFailureState extends FriendState {
+  final String message;
+
+  const FetchRecommendUserFailureState(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

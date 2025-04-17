@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fitora_mobile_app/core/config/adapter/adapter_conf.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/utils/simple_bloc_observer.dart';
 import 'package:flutter/foundation.dart';
@@ -43,6 +44,7 @@ Future<void> runnerApp() async {
 
   HydratedBloc.storage = storage;
 
+  //configureAdapter();
   configureDependencies();
   Bloc.observer = SimpleBlocObserver();
   runApp(const MyApp());

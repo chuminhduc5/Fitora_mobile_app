@@ -33,6 +33,7 @@ class PostRepositoryImpl implements PostRepository {
         mediaUrl: params.mediaUrl,
         privacy: params.privacy,
         groupId: params.groupId,
+        categoryId: params.categoryId,
       );
       final result = await _postRemoteDataSource.createPost(request);
       return Right(result);

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fitora_mobile_app/core/extensions/string_validator_extension.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/forms/sign_up_form_data.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/forms/sign_up_form_input_data.dart';
 import 'package:meta/meta.dart';
@@ -12,7 +13,7 @@ part 'auth_sign_up_form_state.dart';
 
 class AuthSignUpFormBloc
     extends Bloc<AuthSignUpFormEvent, AuthSignUpFormState> {
-  AuthSignUpFormBloc() : super(AuthSignUpFormInitialState()) {
+  AuthSignUpFormBloc() : super(const AuthSignUpFormInitialState()) {
     on<SignUpFormEmailChangedEvent>(_emailChanged);
     on<SignUpFormUsernameChangedEvent>(_usernameChanged);
     on<SignUpFormPasswordChangedEvent>(_passwordChanged);
@@ -122,6 +123,7 @@ class AuthSignUpFormBloc
     }
 
     if (password != confirmPassword) {
+      logg.i("Trạng thái false");
       return false;
     }
 

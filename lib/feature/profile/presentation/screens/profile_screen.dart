@@ -1,8 +1,14 @@
+import 'package:fitora_mobile_app/common/dialog/app_error_widget.dart';
+import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
-import 'package:fitora_mobile_app/feature/profile/presentation/widgets/user_info_widget.dart';
+import 'package:fitora_mobile_app/feature/profile/presentation/blocs/profile/profile_bloc.dart';
+import 'package:fitora_mobile_app/feature/profile/presentation/widgets/friend_list_widget.dart';
+import 'package:fitora_mobile_app/feature/profile/presentation/widgets/photo_list_widget.dart';
+import 'package:fitora_mobile_app/feature/profile/presentation/widgets/profile/user_info_widget.dart';
+import 'package:fitora_mobile_app/feature/profile/presentation/widgets/video_list_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
 
@@ -20,120 +26,132 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgWhite,
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          if (notification is ScrollUpdateNotification) {
-            if (notification.metrics.pixels > 150) {
-              if (!_showTitle) setState(() => _showTitle = true);
-            } else {
-              if (_showTitle) setState(() => _showTitle = false);
-            }
-          }
-          return true;
+      body: RefreshIndicator(
+        onRefresh: () {
+          return Future.delayed(
+            const Duration(seconds: 1),
+          ).then(
+            (value) => context.read<ProfileBloc>().add(
+                  FetchProfileEvent(),
+                ),
+          );
         },
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              floating: false,
-              expandedHeight: kToolbarHeight,
-              backgroundColor: AppColors.bgWhite,
-              elevation: 0,
-              leading: IconButton(
-                onPressed: () {
-                  context.goNamed(AppRoute.appView.name);
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: Colors.grey,
-                  size: 20,
-                ),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.menu, color: Colors.grey),
-                ),
-              ],
-              title: _showTitle ? const Text("Minh Đức") : null,
-              centerTitle: true,
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Column(
-                  children: [
-                    const UserInfoWidget(username: "Lưu Nghĩa"),
-                    FTabs(
-                      style: FTabsStyle(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 15),
-                        indicatorSize: FTabBarIndicatorSize.tab,
-                        decoration:
-                        const BoxDecoration(color: AppColors.bgWhite),
-                        selectedLabelTextStyle: const TextStyle(
-                          color: AppColors.white,
-                        ),
-                        unselectedLabelTextStyle: const TextStyle(
-                          color: Colors.black,
-                        ),
-                        indicatorDecoration: BoxDecoration(
-                          color: AppColors.bgPink,
-                          border: Border.all(color: AppColors.bgPink),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        focusedOutlineStyle: FFocusedOutlineStyle(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                      ),
-                      tabs: [
-                        FTabEntry(
-                          //label: const Icon(Icons.grid_view),
-                          label: const Text("Bài viết"),
-                          content: Container(
-                            width: double.infinity,
-                            constraints: const BoxConstraints(
-                              minHeight: 100,
-                            ),
-                          ),
-                        ),
-                        FTabEntry(
-                          //label: const Icon(Icons.play_circle_outline),
-                          label: const Text("Ảnh"),
-                          content: Container(
-                            width: double.infinity,
-                            constraints: const BoxConstraints(
-                              minHeight: 100,
-                            ),
-                            child: _buildLayoutImage(),
-                          ),
-                        ),
-                        FTabEntry(
-                          //label: const Icon(Icons.people_outline),
-                          label: const Text("Video"),
-                          content: FCard(
-                            child: const Column(
-                              children: [],
-                            ),
-                          ),
-                        ),
-                        FTabEntry(
-                          //label: const Icon(Icons.file_copy),
-                          label: const Text("Bạn bè"),
-                          content: FCard(
-                            child: const Column(
-                              children: [],
-                            ),
-                          ),
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            if (notification is ScrollUpdateNotification) {
+              if (notification.metrics.pixels > 150) {
+                if (!_showTitle) setState(() => _showTitle = true);
+              } else {
+                if (_showTitle) setState(() => _showTitle = false);
+              }
+            }
+            return true;
+          },
+          child: BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, state) {
+              if (state is FetchProfileLoadingState) {
+                return const AppLoadingWidget();
+              } else if (state is FetchProfileFailureState) {
+                return AppErrorWidget(state.message);
+              } else if (state is FetchProfileSuccessState) {
+                final profile = state.data;
+                return CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      pinned: true,
+                      floating: false,
+                      expandedHeight: kToolbarHeight,
+                      backgroundColor: AppColors.bgWhite,
+                      elevation: 0,
+                      actions: [
+                        IconButton(
+                          onPressed: () {
+                            context.goNamed(AppRoute.auth.name);
+                          },
+                          icon: const Icon(Icons.menu, color: Colors.grey),
                         ),
                       ],
+                      title: _showTitle
+                          ? Text(
+                              "${profile.userInfo.firstName} ${profile.userInfo.lastName}",
+                            )
+                          : null,
+                      centerTitle: true,
+                    ),
+                    SliverToBoxAdapter(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Column(
+                          children: [
+                            UserInfoWidget(profile: profile),
+                            FTabs(
+                              style: FTabsStyle(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                indicatorSize: FTabBarIndicatorSize.tab,
+                                decoration: const BoxDecoration(
+                                    color: AppColors.bgWhite),
+                                selectedLabelTextStyle: const TextStyle(
+                                  color: AppColors.white,
+                                ),
+                                unselectedLabelTextStyle: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                                indicatorDecoration: BoxDecoration(
+                                  color: AppColors.bgPink,
+                                  border: Border.all(color: AppColors.bgPink),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                focusedOutlineStyle: FFocusedOutlineStyle(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              tabs: [
+                                FTabEntry(
+                                  label: const Text("Bài viết"),
+                                  content: Container(
+                                    width: double.infinity,
+                                    constraints: const BoxConstraints(
+                                      minHeight: 100,
+                                    ),
+                                    child: const SizedBox(),
+                                  ),
+                                ),
+                                FTabEntry(
+                                  label: const Text("Ảnh"),
+                                  content: Container(
+                                    width: double.infinity,
+                                    constraints: const BoxConstraints(
+                                      minHeight: 100,
+                                    ),
+                                    child: const PhotoListWidget(),
+                                  ),
+                                ),
+                                FTabEntry(
+                                    label: const Text("Video"),
+                                    content: Container(
+                                      width: double.infinity,
+                                      child: const VideoListWidget(),
+                                    )),
+                                FTabEntry(
+                                    label: const Text("Bạn bè"),
+                                    content: Container(
+                                      width: double.infinity,
+                                      child: const FriendListWidget(),
+                                    )),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
-                ),
-              ),
-            ),
-          ],
+                );
+              }
+              return const SizedBox();
+            },
+          ),
         ),
       ),
     );
@@ -188,7 +206,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _button(Function() onPressed, String text, Color bgColor, Color textColor) {
+  Widget _button(
+      Function() onPressed, String text, Color bgColor, Color textColor) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
@@ -266,59 +285,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         );
       }),
-    );
-  }
-
-  Widget _buildLayoutImage() {
-    final List<String> imageUrls = [
-      'https://i.imgur.com/5M37i3l.jpg',
-      'https://i.imgur.com/5M37i3l.jpg',
-      'https://i.imgur.com/5M37i3l.jpg',
-      'https://i.imgur.com/5M37i3l.jpg',
-      'https://i.imgur.com/5M37i3l.jpg',
-      'https://i.imgur.com/5M37i3l.jpg',
-      'https://i.imgur.com/5M37i3l.jpg',
-      'https://i.imgur.com/5M37i3l.jpg',
-      'https://i.imgur.com/5M37i3l.jpg',
-    ];
-
-    return GridView.builder(
-      shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: imageUrls.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-      ),
-      itemBuilder: (context, index) {
-        return Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                imageUrls[index],
-                width: double.infinity,
-                height: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              top: 8,
-              right: 8,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.8),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.image, size: 16, color: Colors.black),
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 }

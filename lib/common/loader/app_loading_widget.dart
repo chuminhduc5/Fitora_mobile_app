@@ -2,13 +2,14 @@ import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppLoadingWidget extends StatelessWidget {
-  const AppLoadingWidget({super.key});
+  final Color color;
+  const AppLoadingWidget({super.key, this.color = AppColors.bgPink});
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: CircularProgressIndicator(
-        color: AppColors.bgPink,
+        color: color,
         backgroundColor: AppColors.bgWhite,
       ),
     );

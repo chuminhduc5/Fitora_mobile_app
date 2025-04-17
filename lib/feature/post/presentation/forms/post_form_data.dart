@@ -4,14 +4,16 @@ class PostFormData extends Equatable {
   final String content;
   final String mediaUrl;
   final int privacy;
-  final String groupId;
+  final String? groupId;
+  final String? categoryId;
   final bool isValid;
 
   const PostFormData({
     required this.content,
     required this.mediaUrl,
     required this.privacy,
-    required this.groupId,
+    this.groupId,
+    this.categoryId,
     required this.isValid,
   });
 
@@ -23,6 +25,7 @@ class PostFormData extends Equatable {
     String? mediaUrl,
     int? privacy,
     String? groupId,
+    String? categoryId,
     bool? isValid,
   }) {
     return PostFormData(
@@ -30,6 +33,7 @@ class PostFormData extends Equatable {
       mediaUrl: mediaUrl ?? this.mediaUrl,
       privacy: privacy ?? this.privacy,
       groupId: groupId ?? this.groupId,
+      categoryId: categoryId ?? this.categoryId,
       isValid: isValid ?? this.isValid,
     );
   }

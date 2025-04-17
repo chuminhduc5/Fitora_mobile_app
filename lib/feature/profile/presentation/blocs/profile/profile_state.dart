@@ -10,6 +10,7 @@ abstract class ProfileState extends Equatable {
 
 class ProfileInitialState extends ProfileState {}
 
+// Trạng thái Profile
 class FetchProfileLoadingState extends ProfileState {}
 
 class FetchProfileSuccessState extends ProfileState {
@@ -25,6 +26,20 @@ class FetchProfileFailureState extends ProfileState {
   final String message;
 
   const FetchProfileFailureState(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+// Trạng thái UpdateProfile
+class UpdateProfileLoadingState extends ProfileState {}
+
+class UpdateProfileSuccessState extends ProfileState {}
+
+class UpdateProfileFailureState extends ProfileState {
+  final String message;
+
+  const UpdateProfileFailureState(this.message);
 
   @override
   List<Object?> get props => [message];

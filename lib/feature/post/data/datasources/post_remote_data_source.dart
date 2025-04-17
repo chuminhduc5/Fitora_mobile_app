@@ -3,6 +3,7 @@ import 'package:fitora_mobile_app/core/constants/api_url.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/requests/create_post_request.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/requests/update_post_request.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/responses/post_model.dart';
@@ -21,7 +22,7 @@ abstract class PostRemoteDataSource {
   Future<List<PostModel>> fetchPersonal();
 }
 
-class PostRemoteDataSourceImpl extends PostRemoteDataSource {
+class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   final DioClient _dioClient;
 
   PostRemoteDataSourceImpl(this._dioClient);
@@ -81,6 +82,7 @@ class PostRemoteDataSourceImpl extends PostRemoteDataSource {
         final List<PostModel> newsfeed = (data['data'] as List)
             .map((json) => PostModel.fromJson(json))
             .toList();
+        logg.i("Newsfeed: $newsfeed");
         return newsfeed;
       } else {
         throw Exception("Invalid response format");

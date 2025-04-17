@@ -6,6 +6,6 @@ import 'package:fitora_mobile_app/feature/auth/domain/usecases/usecase_params.da
 abstract class AuthRepository {
   Future<Either<Failure, AuthEntity>> signIn(SignInParams params);
   Future<Either<Failure, void>> signOut();
-  Future<Either<Failure, void>> signUp(SignUpParams params);
+  Future<Either<Failure, AuthEntity>> signUp(SignUpParams params);
   Future<Either<Failure, AuthEntity>> checkSignInStatus();
 }

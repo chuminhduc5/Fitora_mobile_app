@@ -5,8 +5,9 @@ class PostMapper {
   static PostEntity toEntity(PostModel post) {
     return PostEntity(
       id: post.id,
-      userId: post.userId,
       groupId: post.groupId,
+      categoryId: post.categoryId,
+      categoryName: post.categoryName,
       content: post.content,
       mediaUrl: post.mediaUrl,
       votesCount: post.votesCount,
@@ -16,6 +17,8 @@ class PostMapper {
       createAt: post.createAt,
       updateAt: post.updateAt,
       isDeleted: post.isDeleted,
+      user: post.user.toEntity(),
+      userVoteType: post.userVoteType,
     );
   }
 }

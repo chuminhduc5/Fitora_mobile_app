@@ -9,10 +9,12 @@ import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
 import 'package:fitora_mobile_app/feature/auth/di/auth_dependency.dart';
 import 'package:fitora_mobile_app/feature/chat/di/chat_dependency.dart';
 import 'package:fitora_mobile_app/feature/communities/di/community_dependency.dart';
+import 'package:fitora_mobile_app/feature/friends/di/friend_dependency.dart';
 import 'package:fitora_mobile_app/feature/home/di/home_dependency.dart';
 import 'package:fitora_mobile_app/feature/notification/di/notification_dependency.dart';
 import 'package:fitora_mobile_app/feature/post/di/post_dependency.dart';
 import 'package:fitora_mobile_app/feature/profile/di/profile_dependency.dart';
+import 'package:fitora_mobile_app/feature/splash/di/splash_dependency.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -20,6 +22,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 final getIt = GetIt.instance;
 
 void configureDependencies() {
+  SplashDependency.init();
   AuthDependency.init();
   ChatDependency.init();
   CommunityDependency.init();
@@ -27,6 +30,7 @@ void configureDependencies() {
   NotificationDependency.init();
   PostDependency.init();
   ProfileDependency.init();
+  FriendDependency.init();
 
   getIt.registerLazySingleton(() => ThemeBloc());
   getIt.registerLazySingleton(() => TranslateBloc());

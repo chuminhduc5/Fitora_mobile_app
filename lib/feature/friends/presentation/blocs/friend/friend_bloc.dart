@@ -2,13 +2,16 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fitora_mobile_app/core/usecase/usecase.dart';
 import 'package:fitora_mobile_app/core/utils/failure_converter.dart';
+import 'package:fitora_mobile_app/feature/friends/data/models/recommend_user_model.dart';
 import 'package:fitora_mobile_app/feature/friends/domain/entities/friend_entity.dart';
 import 'package:fitora_mobile_app/feature/friends/domain/entities/friend_request_entity.dart';
+import 'package:fitora_mobile_app/feature/friends/domain/entities/recommend_user_entity.dart';
 import 'package:fitora_mobile_app/feature/friends/domain/usecases/accept_friend_use_case.dart';
 import 'package:fitora_mobile_app/feature/friends/domain/usecases/add_friend_use_case.dart';
 import 'package:fitora_mobile_app/feature/friends/domain/usecases/delete_friend_use_case.dart';
 import 'package:fitora_mobile_app/feature/friends/domain/usecases/get_friend_use_case.dart';
 import 'package:fitora_mobile_app/feature/friends/domain/usecases/get_received_friend_request_use_case.dart';
+import 'package:fitora_mobile_app/feature/friends/domain/usecases/get_recommend_user_use_case.dart';
 import 'package:fitora_mobile_app/feature/friends/domain/usecases/get_sent_friend_request_use_case.dart';
 import 'package:fitora_mobile_app/feature/friends/domain/usecases/unfriend_use_case.dart';
 import 'package:meta/meta.dart';
@@ -25,16 +28,18 @@ class FriendBloc extends Bloc<FriendEvent, FriendState> {
   final GetFriendUseCase _getFriendUseCase;
   final GetSentFriendRequestUseCase _getSentFriendRequestUseCase;
   final GetReceivedFriendRequestUseCase _getReceivedFriendRequestUseCase;
+  final GetRecommendUserUseCase _getRecommendUserUseCase;
 
   FriendBloc(
-    this._addFriendUseCase,
-    this._acceptFriendUseCase,
-    this._deleteFriendUseCase,
-    this._unfriendUseCase,
-    this._getFriendUseCase,
-    this._getSentFriendRequestUseCase,
-    this._getReceivedFriendRequestUseCase,
-  ) : super(FriendInitialState()) {
+      this._addFriendUseCase,
+      this._acceptFriendUseCase,
+      this._deleteFriendUseCase,
+      this._unfriendUseCase,
+      this._getFriendUseCase,
+      this._getSentFriendRequestUseCase,
+      this._getReceivedFriendRequestUseCase,
+      this._getRecommendUserUseCase)
+      : super(FriendInitialState()) {
     on<AddFriendEvent>(_addFriend);
     on<AcceptFriendEvent>(_acceptFriend);
     on<DeleteFriendEvent>(_deleteFriend);
@@ -42,6 +47,7 @@ class FriendBloc extends Bloc<FriendEvent, FriendState> {
     on<FetchFriendEvent>(_fetchFriend);
     on<FetchSentFriendRequestEvent>(_fetchSentFriendRequest);
     on<FetchReceivedFriendRequestEvent>(_fetchReceivedFriendRequest);
+    on<FetchRecommendUserEvent>(_fetchRecommendUser);
   }
 
   Future<void> _addFriend(AddFriendEvent event, Emitter emit) async {
@@ -99,25 +105,41 @@ class FriendBloc extends Bloc<FriendEvent, FriendState> {
     );
   }
 
-  Future _fetchSentFriendRequest(FetchSentFriendRequestEvent event, Emitter emit) async {
+  Future _fetchSentFriendRequest(
+      FetchSentFriendRequestEvent event, Emitter emit) async {
     emit(FetchSentFriendRequestLoadingState());
 
     final result = await _getSentFriendRequestUseCase.call(NoParams());
 
     result.fold(
-      (failure) => emit(FetchSentFriendRequestFailureState(mapFailureToMessage(failure))),
+      (failure) => emit(
+          FetchSentFriendRequestFailureState(mapFailureToMessage(failure))),
       (data) => emit(FetchSentFriendRequestSuccessState(data: data)),
     );
   }
 
-  Future _fetchReceivedFriendRequest(FetchReceivedFriendRequestEvent event, Emitter emit) async {
+  Future _fetchReceivedFriendRequest(
+      FetchReceivedFriendRequestEvent event, Emitter emit) async {
     emit(FetchReceivedFriendRequestLoadingState());
 
     final result = await _getReceivedFriendRequestUseCase.call(NoParams());
 
     result.fold(
-      (failure) => emit(FetchReceivedFriendRequestFailureState(mapFailureToMessage(failure))),
+      (failure) => emit(
+          FetchReceivedFriendRequestFailureState(mapFailureToMessage(failure))),
       (data) => emit(FetchReceivedFriendRequestSuccessState(data: data)),
+    );
+  }
+
+  Future _fetchRecommendUser(
+      FetchRecommendUserEvent event, Emitter emit) async {
+    emit(FetchRecommendUserLoadingState());
+
+    final result = await _getRecommendUserUseCase.call(NoParams());
+
+    result.fold(
+      (failure) => emit(FetchRecommendUserFailureState(mapFailureToMessage(failure))),
+      (data) => emit(FetchRecommendUserSuccessState(users: data)),
     );
   }
 }

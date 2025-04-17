@@ -3,6 +3,7 @@ import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/left_drawer/left_drawer.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawer.dart';
+import 'package:fitora_mobile_app/common/widgets/post/newsfeed_post_widget.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
@@ -23,6 +24,75 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<Map<String, dynamic>> _articleList = [
+    {
+      "avatar": AppImages.avatar,
+      "author": "Minh Đức",
+      "title": "Chử minh đức đã cập nhật ảnh đại diện mới",
+      "content": "new",
+      "image": AppImages.bgImage,
+      "description": "",
+      "time": "2025-03-05T22:47:43.128427+07:00",
+      "favourite": 120,
+      "comment": 50,
+      "share": 0,
+    },
+    {
+      "avatar": AppImages.avatar,
+      "author": "Chử Minh Đức",
+      "content": "test",
+      "image": AppImages.bgImageSecond,
+      "description": "",
+      "time": "2025-03-05T22:47:43.128427+07:00",
+      "favourite": 120,
+      "comment": 50,
+      "share": 0,
+    },
+    {
+      "avatar": AppImages.avatar,
+      "author": "Chử Minh Đức",
+      "content": "test",
+      "image": AppImages.bgImageThird,
+      "description": "",
+      "time": "2025-03-05T22:47:43.128427+07:00",
+      "favourite": 120,
+      "comment": 50,
+      "share": 0,
+    },
+    {
+      "avatar": AppImages.avatar,
+      "author": "Minh Đức",
+      "content": "Test đăng bài",
+      "image": "",
+      "description": "",
+      "time": "2025-03-05T22:47:43.128427+07:00",
+      "favourite": 120,
+      "comment": 50,
+      "share": 0,
+    },
+  ];
+
+  int selectedIndex = 0;
+
+  String selectedCategory = 'Tất cả';
+  final List<String> categories = [
+    'Tất cả',
+    'BlockChain',
+    'AI',
+    'Web',
+    'Mobile',
+  ];
+
+  final List<Color> categoriesColor = [
+    Colors.white,
+    Colors.lightBlueAccent,
+    Colors.blue[200]!,
+    Colors.yellow[200]!,
+    Colors.green[200]!,
+  ];
+
+  final List<Widget> articlesByCategory = [];
+
   late NewsfeedBloc _newsfeedBloc;
   late Timer _timer;
 
@@ -65,7 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
   @override
   void dispose() {
     _timer.cancel();
@@ -94,59 +163,111 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }, builder: (context, state) {
         return Scaffold(
-            drawer: leftDrawer(),
-            endDrawer: rightDrawer(context),
+          backgroundColor: AppColors.bgWhite,
+          appBar: AppBar(
             backgroundColor: AppColors.bgWhite,
-            appBar: AppBar(
-              backgroundColor: AppColors.bgPink,
-              title: const Text(
-                'Fitora',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white),
+            title: const Text(
+              'Fitora',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: AppColors.bgPink,
               ),
-              actions: <Widget>[
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.search_outlined),
+            ),
+            actions: <Widget>[
+              IconButton(
+                onPressed: () {
+                  context.goNamed(AppRoute.search.name);
+                },
+                icon: const Icon(Icons.search_outlined),
+              ),
+              IconButton(
+                onPressed: () {
+                  context.goNamed(AppRoute.notification.name);
+                },
+                // icon: const Icon(Icons.notifications),
+                icon: Badge.count(
+                  count: 1,
+                  child: const Icon(Icons.notifications),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.notifications),
-                ),
-                Builder(builder: (context) {
-                  return InkWell(
-                    onTap: () {
-                      Scaffold.of(context).openEndDrawer();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.asset(
-                          AppImages.avatar,
-                          height: 33,
-                          width: 33,
-                          fit: BoxFit.cover,
+              ),
+            ],
+            iconTheme: const IconThemeData(color: Colors.black),
+          ),
+          body: Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+                color: Colors.grey[200],
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(categories.length, (index) {
+                      final isSelected = index == selectedIndex;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ChoiceChip(
+                          label: Text(categories[index]),
+                          selected: isSelected,
+                          onSelected: (_) {
+                            setState(() {
+                              selectedIndex = index;
+                            });
+                          },
+                          selectedColor: categoriesColor[index],
+                          backgroundColor: Colors.white,
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.black : Colors.grey[700],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                })
-              ],
-              iconTheme: const IconThemeData(color: Colors.white),
-            ),
-            body: RefreshIndicator(
-              color: AppColors.bgPink,
-              backgroundColor: AppColors.bgWhite,
-              onRefresh: () async {
-                await Future.delayed(const Duration(seconds: 1));
-                context.read<NewsfeedBloc>().add(FetchNewsfeedEvent());
-              },
-              child: const NewsfeedWidget(),
-            ),
-          );
+                      );
+                    }),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: RefreshIndicator(
+                  color: AppColors.bgPink,
+                  backgroundColor: AppColors.bgWhite,
+                  onRefresh: () async {
+                    await Future.delayed(const Duration(seconds: 1));
+                    context.read<NewsfeedBloc>().add(FetchNewsfeedEvent());
+                  },
+                  child: NewsfeedWidget(selectedCategory: categories[selectedIndex]),
+                ),
+              ),
+              // Expanded(
+              //   child: CustomScrollView(
+              //     slivers: [
+              //       SliverList(
+              //         delegate: SliverChildBuilderDelegate(
+              //           (context, index) {
+              //             final article = _articleList[index];
+              //             return NewsfeedPostWidget(
+              //               avatar: article['avatar'],
+              //               author: article['author'],
+              //               content: article['content'],
+              //               images: article["image"],
+              //               favourite: article['favourite'],
+              //               comment: article['comment'],
+              //               share: article['share'],
+              //               //time: article['time'],
+              //             );
+              //           },
+              //           childCount: _articleList.length,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+            ],
+          ),
+        );
       }),
     );
   }
@@ -167,4 +288,29 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
+  // Widget buildAllArticle() {
+  //   return CustomScrollView(
+  //     slivers: [
+  //       SliverList(
+  //         delegate: SliverChildBuilderDelegate(
+  //           (context, index) {
+  //             final article = _articleList[index];
+  //             return NewsfeedPostWidget(
+  //               avatar: article['avatar'],
+  //               author: article['author'],
+  //               content: article['content'],
+  //               images: article["image"],
+  //               favourite: article['favourite'],
+  //               comment: article['comment'],
+  //               share: article['share'],
+  //               //time: article['time'],
+  //             );
+  //           },
+  //           childCount: _articleList.length,
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }

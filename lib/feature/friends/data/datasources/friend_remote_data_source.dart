@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:fitora_mobile_app/core/constants/api_url.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/friends/data/models/friend_model.dart';
 import 'package:fitora_mobile_app/feature/friends/data/models/friend_request_model.dart';
+import 'package:fitora_mobile_app/feature/friends/data/models/recommend_user_model.dart';
 
 abstract class FriendRemoteDataSource {
   Future<void> addFriend(String userId);
@@ -14,6 +18,8 @@ abstract class FriendRemoteDataSource {
   Future<void> unfriend(String userId);
   Future<List<FriendRequestModel>> fetchSentFriendRequest();
   Future<List<FriendRequestModel>> fetchReceivedFriendRequest();
+
+  Future<List<RecommendUserModel>> fetchRecommendUser();
 }
 
 class FriendRemoteDataSourceImpl implements FriendRemoteDataSource {
@@ -32,7 +38,7 @@ class FriendRemoteDataSourceImpl implements FriendRemoteDataSource {
   @override
   Future<void> addFriend(String userId) async {
     try {
-      await _dioClient.post("${ApiUrl.addFriend}?id=$userId");
+      await _dioClient.post(ApiUrl.addFriend, data: jsonEncode(userId));
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();
@@ -89,6 +95,24 @@ class FriendRemoteDataSourceImpl implements FriendRemoteDataSource {
   Future<void> unfriend(String userId) async {
     try {
       await _dioClient.put("${ApiUrl.unfriend}?id=$userId");
+    } on DioException catch(e) {
+      logger.e(e);
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<RecommendUserModel>> fetchRecommendUser() async {
+    try {
+      final response = await _dioClient.get(ApiUrl.getRecommendUser);
+      final results = response.data['data'];
+      if (results != null && results['data'] is List) {
+        final users = (results['data'] as List).map((json) => RecommendUserModel.fromJson(json)).toList();
+        logg.i("Users: $users");
+        return users;
+      } else {
+        throw Exception("Invalid response format");
+      }
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();

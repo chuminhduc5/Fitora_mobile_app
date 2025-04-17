@@ -1,9 +1,9 @@
 class UpdatePostRequest {
   final String id;
-  final String? content;
-  final String? mediaUrl;
-  final int? privacy;
-  final String? groupId;
+  final String content;
+  final String mediaUrl;
+  final int privacy;
+  final String groupId;
 
   const UpdatePostRequest({
     required this.id,

@@ -16,16 +16,18 @@ class CreatePostUseCase extends UseCase<void, Params> {
 }
 
 class Params extends Equatable {
-  final String? content;
-  final String? mediaUrl;
-  final int? privacy;
+  final String content;
+  final String mediaUrl;
+  final int privacy;
   final String? groupId;
+  final String? categoryId;
 
   const Params({
     required this.content,
     required this.mediaUrl,
     required this.privacy,
-    required this.groupId,
+    this.groupId,
+    this.categoryId,
   });
 
   @override

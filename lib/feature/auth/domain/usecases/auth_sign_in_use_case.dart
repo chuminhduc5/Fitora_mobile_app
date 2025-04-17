@@ -23,6 +23,7 @@ class AuthSignInUseCase extends UseCase<AuthEntity, Params> {
     }
 
     final result = await _authRepository.signIn(params);
+    logg.i("Kết quả nhận được: $result");
     return result;
   }
 }

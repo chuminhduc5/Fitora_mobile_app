@@ -19,19 +19,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
 
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  final _formKey = GlobalKey<FormState>();
 
   void _login(BuildContext context) {
     primaryFocus?.unfocus();
+
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     final authForm = context.read<AuthSignInFormBloc>().state;
-    logg.i("Email: ${authForm.data.email}");
-    logg.i("Password: ${authForm.data.password}");
+    final email = authForm.data.email;
+    final password = authForm.data.password;
+    logg.i("Email: $email");
+    logg.i("Password: $password");
+
     context.read<AuthBloc>().add(
           AuthSignInEvent(
             params: AuthSignInFormData(
-              email: authForm.data.email,
-              password: authForm.data.password,
+              email: email,
+              password: password,
             ),
           ),
         );
@@ -41,38 +56,44 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => getIt<AuthSignInFormBloc>(),
-      child: Scaffold(
-        backgroundColor: AppColors.bgWhite,
-        resizeToAvoidBottomInset: false,
-        body: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 15),
+      child: Container(
+        color: AppColors.bgGrayLight,
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 15),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Fitora",
-                    style: TextStyle(
-                        color: AppColors.bgPink,
-                        fontSize: 40,
-                        fontWeight: FontWeight.w700),
+                  IconAuthWidget(
+                    onPressed: () {
+                      return showAppDiaLodWidget(context);
+                    },
+                    title: "Đăng nhập với Apple",
+                    icon: AppSvg.apple,
                   ),
-                  10.hS,
-                  const Text(
-                    'Chào mừng bạn!',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
-                    textAlign: TextAlign.center,
+                  const SizedBox(height: 15),
+                  IconAuthWidget(
+                    onPressed: () {
+                      return showAppDiaLodWidget(context);
+                    },
+                    title: "Đăng nhập với Google",
+                    icon: AppSvg.google,
                   ),
-                  const Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 15),
-                    child: Text(
-                      'Xin hãy đăng nhập vào tài khoản của bạn',
-                      textAlign: TextAlign.center,
-                    ),
+                  const SizedBox(height: 30),
+                  const Row(
+                    children: [
+                      Expanded(child: Divider()),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text('Hoặc'),
+                      ),
+                      Expanded(child: Divider()),
+                    ],
                   ),
-                  const AuthSignInInputWidget(),
+                  const SizedBox(height: 30),
+                  AuthSignInInputWidget(formKey: _formKey),
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -82,12 +103,10 @@ class SignInScreen extends StatelessWidget {
                             'Nhớ mật khẩu',
                             style: TextStyle(fontWeight: FontWeight.w400),
                           ),
-                          // value: state,
-                          // onChange: (value) => setState(() => state = value),
                         ),
                       ),
                       Text(
-                        "Quên mật khẩu",
+                        "Quên mật khẩu?",
                         style: TextStyle(
                           decoration: TextDecoration.underline,
                           decorationColor: AppColors.bgPink,
@@ -96,80 +115,50 @@ class SignInScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  20.hS,
-                  BlocConsumer<AuthBloc, AuthState>(
-                    listener: (_, state) {
-                      if (state is AuthSignInFailureState) {
-                        AppDisplayMessage.error(context, state.message);
-                      } else if (state is AuthSignInSuccessState) {
-                        context.goNamed(AppRoute.appView.name);
-                      }
-                    },
-                    builder: (context, state) {
-                      if (state is AuthSignInLoadingState) {
-                        return const AppLoadingWidget();
-                      }
-                      return ButtonAuthWidget(
-                        title: 'Đăng nhập',
-                        bgColor: AppColors.bgPink,
-                        onPressed: () {
-                          _login(context);
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  const Row(
-                    children: [
-                      Expanded(child: Divider()),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text('Or'),
-                      ),
-                      Expanded(child: Divider()),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  IconAuthWidget(
-                    onPressed: () {
-                      logg.i("---OnClick---");
-                      return showAppDiaLodWidget(context);
-                    },
-                    title: "Đăng nhập với Google",
-                    icon: AppSvg.googleSvg,
-                  ),
-                  const SizedBox(height: 30),
-                  //const Spacer(),
-                  Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Bạn chưa có tài khoản?',
-                          style: TextStyle(color: Colors.grey),
-                          textAlign: TextAlign.center,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context.pushReplacementNamed(AppRoute.signUp.name);
-                            logg.i('OnClick');
-                          },
-                          child: const Text(
-                            'Đăng ký ngay!',
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
-          ),
-        ]),
+            Positioned(
+              right: 0,
+              left: 0,
+              bottom: 60,
+              child: BlocConsumer<AuthBloc, AuthState>(
+                listener: (_, state) {
+                  if (state is AuthSignInFailureState) {
+                    AppDisplayMessage.error(context, state.message);
+                  } else if (state is AuthSignInSuccessState) {
+                    context.goNamed(AppRoute.appView.name);
+                  }
+                },
+                builder: (context, state) {
+                  if (state is AuthSignInLoadingState) {
+                    return const AppLoadingWidget();
+                  }
+                  return ButtonAuthWidget(
+                    title: 'Đăng nhập',
+                    bgColor: AppColors.bgPink,
+                    onPressed: () {
+                      _login(context);
+                    },
+                  );
+                },
+              ),
+            ),
+            const Positioned(
+              right: 0,
+              left: 0,
+              bottom: 10,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text(
+                  'Bằng cách đăng ký, bạn đồng ý với các điều khoản dịch vụ và chính sách bảo mật của chúng tôi!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

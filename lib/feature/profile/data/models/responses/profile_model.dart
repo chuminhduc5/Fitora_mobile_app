@@ -1,3 +1,6 @@
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
+import 'package:fitora_mobile_app/feature/profile/domain/entities/profile_entity.dart';
+
 class ProfileModel {
   final String email;
   final String username;
@@ -17,10 +20,10 @@ class ProfileModel {
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      email: json['email'],
-      username: json['username'],
-      followerCount: json['followerCount'],
-      followingCount: json['followingCount'],
+      email: json['email'] ?? "",
+      username: json['userName'] ?? "",
+      followerCount: json['followerCount'] ?? 0,
+      followingCount: json['followingCount'] ?? 0,
       relationship: RelationshipModel.fromJson(json['relationship']),
       userInfo: UserInfoModel.fromJson(json['userInfo']),
     );
@@ -45,6 +48,14 @@ class RelationshipModel {
       isFollowing: json['isFollowing'],
     );
   }
+
+  RelationshipEntity toEntity() {
+    return RelationshipEntity(
+      isFriend: isFriend,
+      isFriendRequest: isFriendRequest,
+      isFollowing: isFollowing,
+    );
+  }
 }
 
 class UserInfoModel {
@@ -60,9 +71,9 @@ class UserInfoModel {
   final String bio;
   final String id;
   final DateTime createdAt;
-  final DateTime createdBy;
+  final String? createdBy;
   final DateTime lastModified;
-  final DateTime lastModifiedBy;
+  final String? lastModifiedBy;
 
   const UserInfoModel({
     required this.userId,
@@ -77,28 +88,46 @@ class UserInfoModel {
     required this.bio,
     required this.id,
     required this.createdAt,
-    required this.createdBy,
+    this.createdBy,
     required this.lastModified,
-    required this.lastModifiedBy,
+    this.lastModifiedBy,
   });
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) {
     return UserInfoModel(
-      userId: json['userId'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
+      userId: json['userId'] ?? "",
+      firstName: json['firstName'] ?? "",
+      lastName: json['lastName'] ?? "",
       birthDate: DateTime.parse(json['birthDate']),
-      gender: json['gender'],
-      address: json['address'],
-      phoneNumber: json['phoneNumber'],
-      profilePictureUrl: json['profilePictureUrl'],
-      profileBackgroundPictureUrl: json['profileBackgroundPictureUrl'],
-      bio: json['bio'],
-      id: json['id'],
+      gender: json['gender'] ?? 0,
+      address: json['address'] ?? "",
+      phoneNumber: json['phoneNumber'] ?? "",
+      profilePictureUrl: json['profilePictureUrl'] ?? "",
+      profileBackgroundPictureUrl: json['profileBackgroundPictureUrl'] ?? "",
+      bio: json['bio'] ?? "",
+      id: json['id'] ?? "",
       createdAt: DateTime.parse(json['createdAt']),
-      createdBy: DateTime.parse(json['createdBy']),
+      createdBy: json['createdBy'] ?? "",
       lastModified: DateTime.parse(json['lastModified']),
-      lastModifiedBy: DateTime.parse(json['lastModifiedBy']),
+      lastModifiedBy: json['lastModifiedBy'] ?? "",
+    );
+  }
+
+  UserInfoEntity toEntity() {
+    return UserInfoEntity(
+      userId: userId,
+      firstName: firstName,
+      lastName: lastName,
+      birthDate: birthDate,
+      gender: gender,
+      address: address,
+      phoneNumber: phoneNumber,
+      profilePictureUrl: profilePictureUrl,
+      profileBackgroundPictureUrl: profileBackgroundPictureUrl,
+      bio: bio,
+      id: id,
+      createdAt: createdAt,
+      lastModified: lastModified,
     );
   }
 }

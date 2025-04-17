@@ -26,6 +26,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       mediaUrl: event.params.mediaUrl,
       privacy: event.params.privacy,
       groupId: event.params.groupId,
+      categoryId: event.params.categoryId,
     ));
 
     result.fold(

@@ -8,25 +8,45 @@ import 'package:fitora_mobile_app/feature/post/domain/usecases/get_newsfeed_use_
 import 'package:fitora_mobile_app/feature/post/domain/usecases/get_personal_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/get_post_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/update_post_use_case.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/post_form/post_form_bloc.dart';
 
 class PostDependency {
   PostDependency._();
 
   static void init() {
     // Bloc
+    getIt.registerFactory(
+      () => PostBloc(
+        getIt<CreatePostUseCase>(),
+      ),
+    );
+
+    getIt.registerFactory(() => PostFormBloc());
 
     // UseCase
-    getIt.registerLazySingleton(() => GetPostUseCase(getIt<PostRepositoryImpl>()));
-    getIt.registerLazySingleton(() => CreatePostUseCase(getIt<PostRepositoryImpl>()));
-    getIt.registerLazySingleton(() => UpdatePostUseCase(getIt<PostRepositoryImpl>()));
-    getIt.registerLazySingleton(() => DeletePostUseCase(getIt<PostRepositoryImpl>()));
-    getIt.registerLazySingleton(() => GetNewsfeedUseCase(getIt<PostRepositoryImpl>()));
-    getIt.registerLazySingleton(() => GetPersonalUseCase(getIt<PostRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => GetPostUseCase(getIt<PostRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => CreatePostUseCase(getIt<PostRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => UpdatePostUseCase(getIt<PostRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => DeletePostUseCase(getIt<PostRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => GetNewsfeedUseCase(getIt<PostRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => GetPersonalUseCase(getIt<PostRepositoryImpl>()));
 
     // Repository
-    getIt.registerLazySingleton(() => PostRepositoryImpl(getIt<PostRemoteDataSourceImpl>()));
+    getIt.registerLazySingleton(
+      () => PostRepositoryImpl(
+        getIt<PostRemoteDataSourceImpl>(),
+      ),
+    );
 
     // Datasource
-    getIt.registerLazySingleton(() => PostRemoteDataSourceImpl(getIt<DioClient>(instanceName: 'interact')));
+    getIt.registerLazySingleton(() =>
+        PostRemoteDataSourceImpl(getIt<DioClient>(instanceName: 'interact')));
   }
 }

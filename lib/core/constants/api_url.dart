@@ -20,6 +20,9 @@ class ApiUrl {
 
   // TODO: API USER SERVICE - USER
   static const profile = '${api}user/profile';
+  static const updateProfile = '${api}user/update-user';
+  static const getUsers = '${api}user/get-users';
+  static const getUser = '${api}user/get-user';
 
   // TODO: API USER SERVICE - FRIENDSHIP
   static const addFriend = '${api}friendship/add-friend'; // API Gửi lời mời kết bạn
@@ -29,6 +32,8 @@ class ApiUrl {
   static const unfriend = '${api}friendship/unfriend'; // API hủy kết bạn
   static const getSentFriendRequests = '${api}friendship/get-sent-friend-requests'; // API Danh sách lời mời kết bạn đã gửi
   static const getReceivedFriendRequests = '${api}friendship/get-received-friend-requests'; // API  Danh sách lời mời kết bạn nhận được
+
+  static const getRecommendUser = '${api}user/get-users';
 
   // TODO: API USER SERVICE - FOLLOW
 

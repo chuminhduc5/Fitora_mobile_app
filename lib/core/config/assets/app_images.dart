@@ -4,6 +4,8 @@ class AppImages {
 
   static const avatar = '${basePath}avatar.png';
   static const bgImage = '${basePath}anh_nen_test.jpg';
-  static const avatarAnime = '${basePath}avatar-anime.jpg';
+  static const bgImageSecond = '${basePath}anh_nen_test_02.jpg';
+  static const bgImageThird = '${basePath}anh_nen_test_03.jpg';
+  static const avatarAnime = '${basePath}avatar_anime.jpg';
   static const logoLogin = '${basePath}logo_login_1.png';
 }
