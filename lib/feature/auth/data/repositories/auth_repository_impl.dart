@@ -50,12 +50,17 @@ class AuthRepositoryImpl implements AuthRepository {
 
       final SharedPreferences pref = await SharedPreferences.getInstance();
       pref.setString('token', result.token.accessToken);
+      logg.i("Lưu Token: ${result.token.accessToken}");
 
       // await _secureLocalStorage.save(key: "user_id", value: result.user.id);
+      // logg.i("ID Người dùng: ${result.user.id}");
       // await _hiveLocalStorage.save(key: "user", value: result, boxName: "cache");
-      
+      // logg.i("Thông tin người dùng: $result");
+
       return Right(result);
-    } catch (e) {
+    } on AuthException {
+      return Left(CredentialFailure());
+    } on ServerException catch (e) {
       logger.e("AuthRepositoryImpl Failure: $e");
       return Left(ServerFailure());
     }
@@ -76,16 +81,20 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> signUp(SignUpParams params) async {
+  Future<Either<Failure, AuthEntity>> signUp(SignUpParams params) async {
     try {
       final model = SignUpRequest(
         email: params.email,
         password: params.password,
         fullName: params.username,
       );
-      final result = await _authRemoteDataSource.signUp(model);
+      final response = await _authRemoteDataSource.signUp(model);
+      final result = AuthMapper.toEntity(response);
       return Right(result);
-    } catch (e) {
+    } on DuplicateEmailException {
+      return Left(DuplicateEmailFailure());
+    } on ServerException catch (e) {
+      logger.e("AuthRepositoryImpl Failure: $e");
       return Left(ServerFailure());
     }
   }

@@ -1,32 +1,27 @@
 import 'package:equatable/equatable.dart';
 
-class CreatePostFormData extends Equatable {
+class CreatePostFormData {
   final String content;
   final String mediaUrl;
   final int privacy;
-  final String groupId;
+  final String? groupId;
+  final String? categoryId;
 
   const CreatePostFormData({
     required this.content,
     required this.mediaUrl,
     required this.privacy,
-    required this.groupId,
+    this.groupId,
+    this.categoryId,
   });
 
-  @override
-  List<Object?> get props => [content, mediaUrl, privacy, groupId];
-
-  CreatePostFormData copyWith({
-    String? content,
-    String? mediaUrl,
-    int? privacy,
-    String? groupId,
-  }) {
-    return CreatePostFormData(
-      content: content ?? this.content,
-      mediaUrl: mediaUrl ?? this.mediaUrl,
-      privacy: privacy ?? this.privacy,
-      groupId: groupId ?? this.groupId,
-    );
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'content': content,
+      'mediaUrl': mediaUrl,
+      'privacy': privacy,
+      'groupId': groupId,
+      'categoryId': categoryId,
+    };
   }
 }

@@ -16,6 +16,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
     on<PostMediaUrlChangedEvent>(_mediaUrlChanged);
     on<PostPrivacyChangedEvent>(_privacyChanged);
     on<PostGroupIdChangedEvent>(_groupIdChanged);
+    on<PostCategoryIdChangedEvent>(_categoryIdChanged);
   }
 
   Future _loadData(PostLoadDataEvent event, Emitter emit) async {
@@ -24,6 +25,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       inputMediaUrl: event.params.mediaUrl,
       inputPrivacy: event.params.privacy,
       inputGroupId: event.params.groupId,
+      inputCategoryId: event.params.categoryId,
       inputIsValid: inputValidator(event.params.content),
     );
     emit(PostFormDataState(updateData));
@@ -35,6 +37,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       inputMediaUrl: state.data.mediaUrl,
       inputPrivacy: state.data.privacy,
       inputGroupId: state.data.groupId,
+      inputCategoryId: state.data.categoryId,
       inputIsValid: inputValidator(event.content),
     );
     emit(PostFormDataState(updateData));
@@ -46,6 +49,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       inputMediaUrl: event.mediaUrl,
       inputPrivacy: state.data.privacy,
       inputGroupId: state.data.groupId,
+      inputCategoryId: state.data.categoryId,
       inputIsValid: inputValidator(state.data.content),
     );
     emit(PostFormDataState(updateData));
@@ -57,6 +61,7 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       inputMediaUrl: state.data.mediaUrl,
       inputPrivacy: event.privacy,
       inputGroupId: state.data.groupId,
+      inputCategoryId: state.data.categoryId,
       inputIsValid: inputValidator(state.data.content),
     );
     emit(PostFormDataState(updateData));
@@ -68,6 +73,19 @@ class PostFormBloc extends Bloc<PostFormEvent, PostFormState> {
       inputMediaUrl: state.data.mediaUrl,
       inputPrivacy: state.data.privacy,
       inputGroupId: event.groupId,
+      inputCategoryId: state.data.categoryId,
+      inputIsValid: inputValidator(state.data.content),
+    );
+    emit(PostFormDataState(updateData));
+  }
+
+  Future _categoryIdChanged(PostCategoryIdChangedEvent event, Emitter emit) async {
+    final updateData = PostFormInputData(
+      inputContent: state.data.content,
+      inputMediaUrl: state.data.mediaUrl,
+      inputPrivacy: state.data.privacy,
+      inputGroupId: state.data.groupId,
+      inputCategoryId: event.categoryId,
       inputIsValid: inputValidator(state.data.content),
     );
     emit(PostFormDataState(updateData));

@@ -18,16 +18,6 @@ class AuthSignInFormEmailChangedEvent extends AuthSignInFormEvent {
   List<Object?> get props => [email];
 }
 
-// Sự kiện người dùng thay đổi username
-class AuthSignInFormUsernameChangedEvent extends AuthSignInFormEvent {
-  final String username;
-
-  const AuthSignInFormUsernameChangedEvent(this.username);
-
-  @override
-  List<Object?> get props => [username];
-}
-
 // Sự kiện người dùng thay đổi password
 class AuthSignInFormPasswordChangedEvent extends AuthSignInFormEvent {
   final String password;
@@ -36,14 +26,4 @@ class AuthSignInFormPasswordChangedEvent extends AuthSignInFormEvent {
 
   @override
   List<Object?> get props => [password];
-}
-
-// Sự kiện xác nhận lại mật khẩu
-class AuthSignInFormConfirmPasswordChangedEvent extends AuthSignInFormEvent {
-  final String confirmPassword;
-
-  const AuthSignInFormConfirmPasswordChangedEvent(this.confirmPassword);
-
-  @override
-  List<Object?> get props => [confirmPassword];
 }

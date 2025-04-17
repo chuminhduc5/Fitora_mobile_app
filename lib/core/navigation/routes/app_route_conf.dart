@@ -1,13 +1,22 @@
 import 'package:fitora_mobile_app/app/app_view.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
+import 'package:fitora_mobile_app/feature/auth/presentation/screens/auth_screen.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_up_screen.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_in_screen.dart';
 import 'package:fitora_mobile_app/feature/chat/presentation/screens/chat_screen.dart';
+import 'package:fitora_mobile_app/feature/friends/domain/entities/recommend_user_entity.dart';
+import 'package:fitora_mobile_app/feature/friends/presentation/screens/friend_invitation_screen.dart';
+import 'package:fitora_mobile_app/feature/friends/presentation/screens/friend_screen.dart';
 import 'package:fitora_mobile_app/feature/home/presentation/screens/home_screen.dart';
+import 'package:fitora_mobile_app/feature/notification/presentation/screens/notification_screen.dart';
+import 'package:fitora_mobile_app/feature/home/presentation/screens/customize_categories_screen.dart';
+import 'package:fitora_mobile_app/feature/home/presentation/screens/onboarding_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
-import 'package:fitora_mobile_app/feature/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:fitora_mobile_app/feature/profile/domain/entities/profile_entity.dart';
+import 'package:fitora_mobile_app/feature/profile/presentation/screens/update_profile_screen.dart';
 import 'package:fitora_mobile_app/feature/profile/presentation/screens/personal_screen.dart';
 import 'package:fitora_mobile_app/feature/profile/presentation/screens/profile_screen.dart';
+import 'package:fitora_mobile_app/feature/search/presentation/screens/search_screen.dart';
 import 'package:fitora_mobile_app/feature/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,7 +25,7 @@ class AppRouteConf {
   GoRouter get router => _router;
 
   late final _router = GoRouter(
-    initialLocation: AppRoute.signIn.path,
+    initialLocation: AppRoute.splash.path,
     debugLogDiagnostics: true,
     routes: [
       GoRoute(
@@ -25,19 +34,105 @@ class AppRouteConf {
         builder: (_, __) => const SplashScreen(),
       ),
       GoRoute(
-        path: AppRoute.signIn.path,
-        name: AppRoute.signIn.name,
-        builder: (_, __) => const SignInScreen(),
+        path: AppRoute.onboarding.path,
+        name: AppRoute.onboarding.name,
+        //builder: (_, __) => const OnboardingScreen(),
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: const OnboardingScreen(),
+            transitionDuration: const Duration(milliseconds: 800),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = Offset(1.0, 0.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOut;
+
+              final tween = Tween(begin: begin, end: end);
+              final curvedAnimation = CurvedAnimation(
+                parent: animation,
+                curve: curve,
+              );
+
+              return SlideTransition(
+                position: tween.animate(curvedAnimation),
+                child: child,
+              );
+            },
+          );
+        },
       ),
       GoRoute(
-        path: AppRoute.signUp.path,
-        name: AppRoute.signUp.name,
-        builder: (_, __) => const SignUpScreen(),
+        path: AppRoute.customizeCategory.path,
+        name: AppRoute.customizeCategory.name,
+        builder: (_, __) => const CustomizeCategoriesScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.auth.path,
+        name: AppRoute.auth.name,
+        //builder: (_, __) => const AuthScreen(),
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: const AuthScreen(),
+            transitionDuration: const Duration(milliseconds: 1500),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = Offset(1.0, 0.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOut;
+
+              final tween = Tween(begin: begin, end: end);
+              final curvedAnimation = CurvedAnimation(
+                parent: animation,
+                curve: curve,
+              );
+
+              return SlideTransition(
+                position: tween.animate(curvedAnimation),
+                child: child,
+              );
+            },
+          );
+        },
+        routes: [
+          GoRoute(
+            path: AppRoute.signIn.path,
+            name: AppRoute.signIn.name,
+            builder: (_, __) => const SignInScreen(),
+          ),
+          GoRoute(
+            path: AppRoute.signUp.path,
+            name: AppRoute.signUp.name,
+            builder: (_, __) => const SignUpScreen(),
+          ),
+        ]
       ),
       GoRoute(
         path: AppRoute.appView.path,
         name: AppRoute.appView.name,
-        builder: (_, __) => const AppView(),
+        //builder: (_, __) => const AppView(),
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: const AppView(),
+            transitionDuration: const Duration(milliseconds: 800),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = Offset(1.0, 0.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOut;
+
+              final tween = Tween(begin: begin, end: end);
+              final curvedAnimation = CurvedAnimation(
+                parent: animation,
+                curve: curve,
+              );
+
+              return SlideTransition(
+                position: tween.animate(curvedAnimation),
+                child: child,
+              );
+            },
+          );
+        },
       ),
       GoRoute(
         path: AppRoute.home.path,
@@ -53,59 +148,66 @@ class AppRouteConf {
         path: AppRoute.profile.path,
         name: AppRoute.profile.name,
         builder: (_, __) => const ProfileScreen(),
-      ),
-      GoRoute(
-        path: AppRoute.editProfile.path,
-        name: AppRoute.editProfile.name,
-        pageBuilder: (context, state) => CustomTransitionPage(
-          opaque: false,
-          child: const EditProfileScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            var curvedAnimation = CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeInOut,
-            );
-            var reverseAnimation = CurvedAnimation(
-              parent: secondaryAnimation,
-              curve: Curves.easeInOut,
-            );
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(1, 0),
-                end: Offset.zero,
-              ).animate(curvedAnimation),
-              child: child,
-            );
-            // return Stack(
-            //   children: [
-            //     SlideTransition(
-            //       position: Tween<Offset>(
-            //         begin: const Offset(1, 0),
-            //         end: Offset.zero,
-            //       ).animate(curvedAnimation),
-            //       child: child,
-            //     ),
-            //     SlideTransition(
-            //       position: Tween<Offset>(
-            //         begin: Offset.zero,
-            //         end: const Offset(1, 0),
-            //       ).animate(reverseAnimation),
-            //       child: child,
-            //     ),
-            //   ],
-            // );
-          },
-        ),
+        routes: [
+          GoRoute(
+            path: AppRoute.updateProfile.path,
+            name: AppRoute.updateProfile.name,
+            pageBuilder: (context, state) {
+              final profile = state.extra as ProfileEntity;
+              return CustomTransitionPage(
+                opaque: false,
+                child: UpdateProfileScreen(profile: profile),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  var curvedAnimation = CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeInOut,
+                  );
+                  return SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(1, 0),
+                      end: Offset.zero,
+                    ).animate(curvedAnimation),
+                    child: child,
+                  );
+                },
+              );
+            }
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoute.personal.path,
         name: AppRoute.personal.name,
-        builder: (_, __) => const PersonalScreen(),
+        builder: (_, state) {
+          final userId = state.extra as String;
+          return PersonalScreen(userId: userId);
+        },
       ),
       GoRoute(
         path: AppRoute.chat.path,
         name: AppRoute.chat.name,
         builder: (_, __) => const ChatScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.search.path,
+        name: AppRoute.search.name,
+        builder: (_, __) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.notification.path,
+        name: AppRoute.notification.name,
+        builder: (_, __) => const NotificationScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.friends.path,
+        name: AppRoute.friends.name,
+        builder: (_, __) => const FriendScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.friendInvitation.path,
+        name: AppRoute.friendInvitation.name,
+        builder: (_, __) => const FriendInvitationScreen(),
       ),
     ],
   );

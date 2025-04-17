@@ -45,3 +45,5 @@ class FetchFriendEvent extends FriendEvent {}
 class FetchSentFriendRequestEvent extends FriendEvent {}
 
 class FetchReceivedFriendRequestEvent extends FriendEvent {}
+
+class FetchRecommendUserEvent extends FriendEvent {}

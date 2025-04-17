@@ -52,3 +52,12 @@ class PostGroupIdChangedEvent extends PostFormEvent {
   @override
   List<Object?> get props => [groupId];
 }
+
+class PostCategoryIdChangedEvent extends PostFormEvent {
+  final String categoryId;
+
+  const PostCategoryIdChangedEvent(this.categoryId);
+
+  @override
+  List<Object?> get props => [categoryId];
+}

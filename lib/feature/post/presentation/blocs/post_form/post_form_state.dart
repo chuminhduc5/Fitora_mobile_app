@@ -16,8 +16,9 @@ class PostFormInitialState extends PostFormState {
           const PostFormData(
             content: "",
             mediaUrl: "",
-            privacy: 1,
-            groupId: "",
+            privacy: 0,
+            groupId: null,
+            categoryId: null,
             isValid: false,
           ),
         );
@@ -33,6 +34,7 @@ class PostFormDataState extends PostFormState {
             mediaUrl: inputData.inputMediaUrl,
             privacy: inputData.inputPrivacy,
             groupId: inputData.inputGroupId,
+            categoryId: inputData.inputCategoryId,
             isValid: inputData.inputIsValid,
           ),
         );

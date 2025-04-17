@@ -6,4 +6,5 @@ import 'package:fitora_mobile_app/feature/profile/domain/usecases/usecase_params
 abstract class ProfileRepository {
   Future<Either<Failure, ProfileEntity>> getProfile();
   Future<Either<Failure, void>> updateProfile(UpdateProfileParams params);
+  Future<Either<Failure, ProfileEntity>> getPersonal(String userId);
 }

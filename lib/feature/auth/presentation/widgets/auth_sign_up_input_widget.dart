@@ -13,42 +13,40 @@ class AuthSignUpInputWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Họ tên", style: TextStyle(fontSize: 14)),
         AuthTextFieldWidget<AuthSignUpFormBloc>(
           label: "Username".tr(),
           hintText: "Họ và tên",
-          prefixIcon: Icon(Icons.person, size: 18,),
+          prefixIcon: const Icon(Icons.person_outline, size: 18,),
           onChanged: (val) {
             authBloc.add(SignUpFormUsernameChangedEvent(val));
           },
         ),
-        const Text("Email", style: TextStyle(fontSize: 14)),
         AuthTextFieldWidget<AuthSignUpFormBloc>(
           label: "Email".tr(),
-          prefixIcon: Icon(Icons.email, size: 18),
-          hintText: "yourname@gmail.com",
+          prefixIcon: const Icon(Icons.email_outlined, size: 18),
+          hintText: "Nhập email của bạn",
           onChanged: (val) {
             authBloc.add(SignUpFormEmailChangedEvent(val));
           },
         ),
-        const Text("Mật khẩu", style: TextStyle(fontSize: 14)),
         AuthTextFieldWidget<AuthSignUpFormBloc>(
           label: "Password".tr(),
-          hintText: "********",
-          prefixIcon: Icon(Icons.lock, size: 18,),
+          hintText: "Nhập mật khẩu của bạn",
+          prefixIcon: const Icon(Icons.lock_outline, size: 18,),
           onChanged: (val) {
             authBloc.add(SignUpFormPasswordChangedEvent(val));
           },
           isSecure: true,
         ),
-        // AuthTextFieldWidget<AuthSignUpFormBloc>(
-        //   label: "Confirm password",
-        //   hintText: "",
-        //   onChanged: (val) {
-        //     authBloc.add(SignUpFormConfirmPasswordChangedEvent(val));
-        //   },
-        //   isSecure: true,
-        // ),
+        AuthTextFieldWidget<AuthSignUpFormBloc>(
+          label: "Confirm Password",
+          hintText: "Nhập lại mật khẩu",
+          prefixIcon: const Icon(Icons.lock_outline, size: 18,),
+          onChanged: (val) {
+            authBloc.add(SignUpFormConfirmPasswordChangedEvent(val));
+          },
+          isSecure: true,
+        ),
       ],
     );
   }

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fitora_mobile_app/core/constants/api_url.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/auth/data/models/responses/auth_model.dart';
 import '../../../../core/utils/logger.dart';
 import '../models/requests/sign_in_request.dart';
@@ -9,7 +10,9 @@ import '../models/requests/sign_up_request.dart';
 
 abstract class AuthRemoteDataSource {
   Future<AuthModel> signIn(SignInRequest model);
-  Future<void> signUp(SignUpRequest model);
+
+  Future<AuthModel> signUp(SignUpRequest model);
+
   Future<void> signOut();
 }
 
@@ -25,21 +28,38 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         ApiUrl.signIn,
         data: model.toJson(),
       );
-      return AuthModel.fromJson(response.data);
+
+      if (response.data["isSuccess"] == false) {
+        throw AuthException();
+      }
+
+      final auth = AuthModel.fromJson(response.data);
+      return auth;
     } on DioException catch (e) {
       throw ServerException();
     }
   }
 
   @override
-  Future<void> signUp(SignUpRequest model) async {
+  Future<AuthModel> signUp(SignUpRequest model) async {
     try {
-      await _dioClient.post(
+      final response = await _dioClient.post(
         ApiUrl.signUp,
         data: model.toJson(),
       );
-    } catch (e) {
-      logger.e(e);
+
+      final user = response.data["data"]["user"];
+      final token = response.data["data"]["token"];
+      logg.i("User: $user");
+      logg.i("Token: $token");
+
+      if (user == null && token == null) {
+        throw DuplicateEmailException();
+      }
+
+      final auth = AuthModel.fromJson(response.data);
+      return auth;
+    } on DioException catch (e) {
       throw ServerException();
     }
   }

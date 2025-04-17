@@ -6,6 +6,8 @@ import 'package:fitora_mobile_app/feature/communities/presentation/screens/commu
 import 'package:fitora_mobile_app/feature/home/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/notification/presentation/screens/notification_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
+import 'package:fitora_mobile_app/feature/profile/presentation/screens/profile_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -17,14 +19,14 @@ class AppView extends StatefulWidget {
 }
 
 class _AppViewState extends State<AppView> {
+  int _currentIndex = 0;
   final List<Widget> _screen = [
     const HomeScreen(),
     const CommunityScreen(),
     const PostArticlesScreen(),
     const ChatScreen(),
-    const NotificationScreen(),
+    const ProfileScreen(),
   ];
-  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -54,29 +56,29 @@ class _AppViewState extends State<AppView> {
             type: BottomNavigationBarType.fixed,
             backgroundColor: AppColors.bgWhite,
             selectedItemColor: AppColors.bgPink,
-            unselectedItemColor: AppColors.bgPink,
+            unselectedItemColor: Colors.grey[400],
             selectedFontSize: 12,
             unselectedFontSize: 10,
-            items: [
-              const BottomNavigationBarItem(
+            items: const [
+              BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Trang chủ',
               ),
-              const BottomNavigationBarItem(
+              BottomNavigationBarItem(
                 icon: Icon(Icons.group),
                 label: 'Cộng đồng',
               ),
-              const BottomNavigationBarItem(
+              BottomNavigationBarItem(
                 icon: Icon(Icons.add),
                 label: 'Thêm',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(AppSvg.chatSvg, color: AppColors.bgPink),
+                icon: Icon(Icons.chat),
                 label: 'Trò chuyện',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(AppSvg.notificationSvg, height: 25, width: 25, color: AppColors.bgPink),
-                label: 'Thông báo',
+                icon: Icon(Icons.account_circle),
+                label: 'Cá nhân'
               ),
             ],
           ),

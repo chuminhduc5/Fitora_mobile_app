@@ -50,7 +50,10 @@ class AuthDependency {
 
     // Service - Đăng ký Service Dependency
     getIt.registerLazySingleton(
-        () => AuthRemoteDataSourceImpl(getIt<DioClient>(instanceName: 'auth')));
+      () => AuthRemoteDataSourceImpl(
+        getIt<DioClient>(instanceName: 'auth'),
+      ),
+    );
 
     getIt.registerLazySingleton(() => AuthLocalDataSourceImpl(
           getIt<SecureLocalStorage>(),

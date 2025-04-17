@@ -1,0 +1,1 @@
+export 'package:fitora_mobile_app/feature/auth/data/models/responses/adapter/auth_adapter.dart';

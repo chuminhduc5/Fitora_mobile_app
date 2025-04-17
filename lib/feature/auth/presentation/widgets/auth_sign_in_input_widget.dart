@@ -8,35 +8,36 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AuthSignInInputWidget extends StatelessWidget {
-  const AuthSignInInputWidget({super.key});
+  final GlobalKey<FormState> formKey;
+  const AuthSignInInputWidget({super.key, required this.formKey});
 
   @override
   Widget build(BuildContext context) {
     final authBloc = context.read<AuthSignInFormBloc>();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("Email", style: TextStyle(fontSize: 14)),
-        AuthTextFieldWidget<AuthSignInFormBloc>(
-          label: "Email".tr(),
-          hintText: "yourname@gmail.com",
-          prefixIcon: Icon(Icons.email, size: 18),
-          //prefixIcon: SvgPicture(AppSvg),
-          onChanged: (val) {
-            authBloc.add(AuthSignInFormEmailChangedEvent(val));
-          },
-        ),
-        const Text("Mật khẩu", style: TextStyle(fontSize: 14)),
-        AuthTextFieldWidget<AuthSignInFormBloc>(
-          label: "Password".tr(),
-          hintText: "********",
-          prefixIcon: Icon(Icons.lock, size: 18,),
-          onChanged: (val) {
-            authBloc.add(AuthSignInFormPasswordChangedEvent(val));
-          },
-          isSecure: true,
-        ),
-      ],
+    return Form(
+      key: formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AuthTextFieldWidget<AuthSignInFormBloc>(
+            label: "Email".tr(),
+            hintText: "Nhập email của bạn",
+            prefixIcon: const Icon(Icons.email_outlined, size: 18),
+            onChanged: (val) {
+              authBloc.add(AuthSignInFormEmailChangedEvent(val));
+            },
+          ),
+          AuthTextFieldWidget<AuthSignInFormBloc>(
+            label: "Password".tr(),
+            hintText: "Nhập mật khẩu của bạn",
+            prefixIcon: const Icon(Icons.lock_outline, size: 18,),
+            onChanged: (val) {
+              authBloc.add(AuthSignInFormPasswordChangedEvent(val));
+            },
+            isSecure: true,
+          ),
+        ],
+      ),
     );
   }
 }

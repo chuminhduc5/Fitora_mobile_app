@@ -56,9 +56,9 @@ class UserInfoEntity extends Equatable {
   final String bio;
   final String id;
   final DateTime createdAt;
-  final DateTime createdBy;
+  final DateTime? createdBy;
   final DateTime lastModified;
-  final DateTime lastModifiedBy;
+  final DateTime? lastModifiedBy;
 
   const UserInfoEntity({
     required this.userId,
@@ -73,9 +73,9 @@ class UserInfoEntity extends Equatable {
     required this.bio,
     required this.id,
     required this.createdAt,
-    required this.createdBy,
+    this.createdBy,
     required this.lastModified,
-    required this.lastModifiedBy,
+    this.lastModifiedBy,
   });
 
   @override

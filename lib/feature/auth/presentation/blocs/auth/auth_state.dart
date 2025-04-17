@@ -14,12 +14,12 @@ class AuthInitialState extends AuthState {}
 class AuthSignUpLoadingState extends AuthState {}
 
 class AuthSignUpSuccessState extends AuthState {
-  final String message;
+  final AuthEntity data;
 
-  const AuthSignUpSuccessState(this.message);
+  const AuthSignUpSuccessState({required this.data});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [data];
 }
 
 class AuthSignUpFailureState extends AuthState {

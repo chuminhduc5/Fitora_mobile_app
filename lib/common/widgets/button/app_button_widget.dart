@@ -15,6 +15,7 @@ class AppButtonWidget extends StatelessWidget {
   final double paddingLeft;
   final int? borderRadius;
   final bool isLoading;
+
   const AppButtonWidget({
     super.key,
     required this.onPressed,
@@ -33,40 +34,38 @@ class AppButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          foregroundColor: color,
-          backgroundColor: bgColor,
-          padding: EdgeInsets.fromLTRB(
-            paddingLeft,
-            paddingTop,
-            paddingRight,
-            paddingBottom,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        foregroundColor: color,
+        backgroundColor: bgColor,
+        padding: EdgeInsets.fromLTRB(
+          paddingLeft,
+          paddingTop,
+          paddingRight,
+          paddingBottom,
         ),
-        child: isLoading
-            ? const SizedBox(
-          width: 24,
-          height: 24,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.0,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-        )
-            : Text(
-          title,
-          style: TextStyle(
-            fontSize: fontSize,
-            color: color,
-            fontWeight: FontWeight.w500,
-          ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
+      child: isLoading
+          ? const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.0,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : Text(
+              title,
+              style: TextStyle(
+                fontSize: fontSize,
+                color: color,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
     );
   }
 }

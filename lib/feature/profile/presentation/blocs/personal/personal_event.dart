@@ -8,4 +8,10 @@ abstract class PersonalEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetchPersonalEvent extends PersonalEvent {}
+class FetchPersonalEvent extends PersonalEvent {
+  final String userId;
+  const FetchPersonalEvent({required this.userId});
+
+  @override
+  List<Object?> get props => [userId];
+}

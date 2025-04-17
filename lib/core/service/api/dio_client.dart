@@ -1,26 +1,53 @@
 import 'package:dio/dio.dart';
-import 'package:fitora_mobile_app/core/constants/api_url.dart';
+import 'package:fitora_mobile_app/core/utils/logger.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'api_exception.dart';
 import 'logger_interceptor.dart';
-import 'authorzation_interceptor.dart';
+import 'package:dio/io.dart';
+import 'dart:io';
 
 class DioClient {
   late final Dio _dio;
 
-  DioClient({required String baseUrl})
-      : _dio = Dio(
-          BaseOptions(
-            baseUrl: baseUrl,
-            headers: {
-              "Content-Type": "application/json",
-            },
-            responseType: ResponseType.json,
-            sendTimeout: const Duration(seconds: 10),
-            receiveTimeout: const Duration(seconds: 10),
-          ),
-        )..interceptors.addAll(
-            [AuthorizationInterceptor(), LoggerInterceptor()],
-          );
+  // DioClient({required String baseUrl})
+  //     : _dio = Dio(
+  //         BaseOptions(
+  //           baseUrl: baseUrl,
+  //           headers: {"Content-Type": "application/json; charset=utf-8"},
+  //           responseType: ResponseType.json,
+  //           sendTimeout: const Duration(seconds: 10),
+  //           receiveTimeout: const Duration(seconds: 10),
+  //         ),
+  //       )..interceptors.addAll(
+  //           [AuthorizationInterceptor(), LoggerInterceptor()],
+  //         );
+
+
+  DioClient({required String baseUrl}) {
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        responseType: ResponseType.json,
+        connectTimeout: const Duration(seconds: 10),
+        sendTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+      ),
+    )..interceptors.addAll(
+      [AuthorizationInterceptor(), LoggerInterceptor()],
+    );
+
+    // 👇 Bypass chứng chỉ SSL tự ký (self-signed cert) khi gọi https://10.0.2.2
+    (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) {
+        // In thêm log nếu cần kiểm tra chứng chỉ
+        logg.w("Bypassing SSL certificate for host: $host");
+        return true;
+      };
+      return client;
+    };
+  }
 
   // TODO: GET METHOD
   Future<Response> get(
@@ -39,7 +66,7 @@ class DioClient {
         onReceiveProgress: onReceiveProgress,
       );
       return response;
-    } on DioException catch (e) {
+    } on DioException {
       //_handleDioError(e);
       rethrow;
     }
@@ -64,7 +91,7 @@ class DioClient {
       );
       return response;
     } on DioException catch (e) {
-      _handleDioError(e);
+      //_handleDioError(e);
       rethrow;
     }
   }
@@ -91,7 +118,8 @@ class DioClient {
       );
       return response;
     } on DioException catch (e) {
-      _handleDioError(e);
+      //_handleDioError(e);
+      logger.e("DioException: $e");
       rethrow;
     }
   }
@@ -114,7 +142,7 @@ class DioClient {
       );
       return response.data;
     } on DioException catch (e) {
-      _handleDioError(e);
+      //_handleDioError(e);
       rethrow;
     }
   }
@@ -128,6 +156,7 @@ class DioClient {
       case DioExceptionType.receiveTimeout:
         throw Exception("Nhận dữ liệu quá thời gian!");
       case DioExceptionType.badResponse:
+        logger.e("DioExceptionType: ${error.response?.statusCode}, ${error.response?.data}");
         _handleHttpError(error.response?.statusCode, error.response?.data);
         break;
       case DioExceptionType.cancel:
@@ -135,6 +164,9 @@ class DioClient {
       case DioExceptionType.unknown:
         throw Exception("Lỗi không xác định, vui lòng thử lại!");
       default:
+        logg.i("DioError type: ${error.type}");
+        logg.i("DioError message: ${error.message}");
+        logg.i("DioError: ${error.toString()}");
         throw Exception("Đã xảy ra lỗi, vui lòng thử lại!");
     }
   }
@@ -142,6 +174,7 @@ class DioClient {
   void _handleHttpError(int? statusCode, dynamic data) {
     switch (statusCode) {
       case 400:
+        logger.e("HandleHttpError: $statusCode $data");
         throw BadRequestException("Lỗi yêu cầu không hợp lệ!");
       case 401:
         throw UnauthorizedException("Bạn cần đăng nhập lại!");

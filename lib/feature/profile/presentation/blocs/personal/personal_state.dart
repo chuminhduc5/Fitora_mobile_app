@@ -13,7 +13,7 @@ class PersonalInitialState extends PersonalState {}
 class FetchPersonalLoadingState extends PersonalState {}
 
 class FetchPersonalSuccessState extends PersonalState {
-  final List<PostEntity> data;
+  final ProfileEntity data;
 
   const FetchPersonalSuccessState({required this.data});
 
