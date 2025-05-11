@@ -11,7 +11,7 @@ class PostEntity extends Equatable {
   final int commentsCount;
   final double score;
   final int privacy;
-  final DateTime? createAt;
+  final DateTime createAt;
   final DateTime? updateAt;
   final bool isDeleted;
   final UserEntity user;

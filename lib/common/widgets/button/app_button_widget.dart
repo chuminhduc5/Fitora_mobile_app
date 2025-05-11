@@ -15,6 +15,7 @@ class AppButtonWidget extends StatelessWidget {
   final double paddingLeft;
   final int? borderRadius;
   final bool isLoading;
+  final Widget? prefixIcon;
 
   const AppButtonWidget({
     super.key,
@@ -30,6 +31,7 @@ class AppButtonWidget extends StatelessWidget {
     this.paddingLeft = 0,
     this.borderRadius = 10,
     this.isLoading = false,
+    this.prefixIcon,
   });
 
   @override
@@ -58,13 +60,20 @@ class AppButtonWidget extends StatelessWidget {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             )
-          : Text(
-              title,
-              style: TextStyle(
-                fontSize: fontSize,
-                color: color,
-                fontWeight: FontWeight.w500,
-              ),
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                prefixIcon ?? Container(),
+                const SizedBox(width: 4),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    color: color,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
     );
   }

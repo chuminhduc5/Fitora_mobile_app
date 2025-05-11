@@ -1,15 +1,11 @@
 import 'package:animations/animations.dart';
-import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/feature/chat/presentation/screens/chat_screen.dart';
-import 'package:fitora_mobile_app/feature/communities/presentation/screens/community_screen.dart';
-import 'package:fitora_mobile_app/feature/home/presentation/screens/home_screen.dart';
-import 'package:fitora_mobile_app/feature/notification/presentation/screens/notification_screen.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
-import 'package:fitora_mobile_app/feature/profile/presentation/screens/profile_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/group/community_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class AppView extends StatefulWidget {
   const AppView({super.key});
@@ -23,7 +19,7 @@ class _AppViewState extends State<AppView> {
   final List<Widget> _screen = [
     const HomeScreen(),
     const CommunityScreen(),
-    const PostArticlesScreen(),
+    //const PostArticlesScreen(),
     const ChatScreen(),
     const ProfileScreen(),
   ];
@@ -66,12 +62,12 @@ class _AppViewState extends State<AppView> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.group),
-                label: 'Cộng đồng',
+                label: 'Nhóm',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.add),
-                label: 'Thêm',
-              ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.add),
+              //   label: 'Thêm',
+              // ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat),
                 label: 'Trò chuyện',

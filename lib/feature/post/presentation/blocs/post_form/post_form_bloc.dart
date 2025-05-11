@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
-import 'package:fitora_mobile_app/feature/post/presentation/forms/post_form_data.dart';
-import 'package:fitora_mobile_app/feature/post/presentation/forms/post_form_input_data.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/forms/post/post_form_data.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/forms/post/post_form_input_data.dart';
 import 'package:meta/meta.dart';
 
 part 'post_form_event.dart';

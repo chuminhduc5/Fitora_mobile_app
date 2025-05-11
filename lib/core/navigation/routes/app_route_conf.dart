@@ -1,23 +1,23 @@
 import 'package:fitora_mobile_app/app/app_view.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/screens/auth_screen.dart';
-import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_up_screen.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_in_screen.dart';
+import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_up_screen.dart';
 import 'package:fitora_mobile_app/feature/chat/presentation/screens/chat_screen.dart';
-import 'package:fitora_mobile_app/feature/friends/domain/entities/recommend_user_entity.dart';
-import 'package:fitora_mobile_app/feature/friends/presentation/screens/friend_invitation_screen.dart';
-import 'package:fitora_mobile_app/feature/friends/presentation/screens/friend_screen.dart';
-import 'package:fitora_mobile_app/feature/home/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/notification/presentation/screens/notification_screen.dart';
-import 'package:fitora_mobile_app/feature/home/presentation/screens/customize_categories_screen.dart';
-import 'package:fitora_mobile_app/feature/home/presentation/screens/onboarding_screen.dart';
+import 'package:fitora_mobile_app/feature/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
-import 'package:fitora_mobile_app/feature/profile/domain/entities/profile_entity.dart';
-import 'package:fitora_mobile_app/feature/profile/presentation/screens/update_profile_screen.dart';
-import 'package:fitora_mobile_app/feature/profile/presentation/screens/personal_screen.dart';
-import 'package:fitora_mobile_app/feature/profile/presentation/screens/profile_screen.dart';
-import 'package:fitora_mobile_app/feature/search/presentation/screens/search_screen.dart';
 import 'package:fitora_mobile_app/feature/splash/presentation/screens/splash_screen.dart';
+import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/group/create_group_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/friend_invitation_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/friend_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/group/group_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/group/invite_friend_group_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/personal_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/profile_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/update_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -61,11 +61,11 @@ class AppRouteConf {
           );
         },
       ),
-      GoRoute(
-        path: AppRoute.customizeCategory.path,
-        name: AppRoute.customizeCategory.name,
-        builder: (_, __) => const CustomizeCategoriesScreen(),
-      ),
+      // GoRoute(
+      //   path: AppRoute.customizeCategory.path,
+      //   name: AppRoute.customizeCategory.name,
+      //   builder: (_, __) => const CustomizeCategoriesScreen(),
+      // ),
       GoRoute(
         path: AppRoute.auth.path,
         name: AppRoute.auth.name,
@@ -153,7 +153,7 @@ class AppRouteConf {
             path: AppRoute.updateProfile.path,
             name: AppRoute.updateProfile.name,
             pageBuilder: (context, state) {
-              final profile = state.extra as ProfileEntity;
+              final profile = state.extra as UserProfileEntity;
               return CustomTransitionPage(
                 opaque: false,
                 child: UpdateProfileScreen(profile: profile),
@@ -190,14 +190,30 @@ class AppRouteConf {
         builder: (_, __) => const ChatScreen(),
       ),
       GoRoute(
-        path: AppRoute.search.path,
-        name: AppRoute.search.name,
-        builder: (_, __) => const SearchScreen(),
-      ),
-      GoRoute(
         path: AppRoute.notification.path,
         name: AppRoute.notification.name,
         builder: (_, __) => const NotificationScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.group.path,
+        name: AppRoute.group.name,
+        builder: (_, state) {
+          final groupId = state.extra as String;
+          return GroupScreen(groupId: groupId);
+        },
+      ),
+      GoRoute(
+        path: AppRoute.createGroup.path,
+        name: AppRoute.createGroup.name,
+        builder: (_, __) => const CreateGroupScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.inviteFriendGroup.path,
+        name: AppRoute.inviteFriendGroup.name,
+        builder: (_, state) {
+          final groupId = state.extra as String;
+          return InviteFriendGroupScreen(groupId: groupId);
+        },
       ),
       GoRoute(
         path: AppRoute.friends.path,

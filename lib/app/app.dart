@@ -3,13 +3,15 @@ import 'package:fitora_mobile_app/core/blocs/translate/translate_bloc.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_theme.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_conf.dart';
-import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/blocs/auth/auth_bloc.dart';
-import 'package:fitora_mobile_app/feature/friends/presentation/blocs/friend/friend_bloc.dart';
-import 'package:fitora_mobile_app/feature/home/presentation/blocs/newsfeed/newsfeed_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/comment/comment_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/interact/interact_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/newsfeed/newsfeed_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
-import 'package:fitora_mobile_app/feature/profile/presentation/blocs/personal/personal_bloc.dart';
-import 'package:fitora_mobile_app/feature/profile/presentation/blocs/profile/profile_bloc.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/blocs/friend/friend_bloc.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/blocs/group/group_bloc.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/blocs/personal/personal_bloc.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/blocs/profile/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,9 +41,12 @@ class MyApp extends StatelessWidget {
                 ),
                 BlocProvider(create: (_) => getIt<NewsfeedBloc>()),
                 BlocProvider(create: (_) => getIt<PostBloc>()),
+                BlocProvider(create: (_) => getIt<InteractBloc>()),
+                BlocProvider(create: (_) => getIt<CommentBloc>()),
                 BlocProvider(create: (_) => getIt<ProfileBloc>()..add(FetchProfileEvent())),
                 BlocProvider(create: (_) => getIt<PersonalBloc>()),
                 BlocProvider(create: (_) => getIt<FriendBloc>()),
+                BlocProvider(create: (_) => getIt<GroupBloc>()),
               ],
               child: BlocBuilder<ThemeBloc, ThemeState>(
                 builder: (context, state) {

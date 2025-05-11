@@ -37,6 +37,19 @@ class ApiUrl {
 
   // TODO: API USER SERVICE - FOLLOW
 
+  // TODO: API USER SERVICE - GROUP
+  static const createGroup = '${api}group/create';
+  static const updateGroup = '${api}group/update';
+  static const deleteGroup = '${api}group/delete';
+  static const getGroupById = '${api}group/get-by-id';
+  static const getGroupMember = '${api}group/get-members';
+  static const inviteNewMembers = '${api}group/invite-new-members'; // Mời thành viên vào nhóm
+  static const getSentGroupInvite = '${api}group/get-sent-group-invites'; // Hiện thị danh sách lời mời thành viên vào nhóm
+  static const getReceivedGroupInvite = '${api}group/get-received-group-invites'; // Hiện thị lời mời tham gia nhóm
+  static const acceptGroupInvite = '${api}group/accept-group-invite'; // Chấp nhận lời mời tham gia nhóm
+  static const getManagedGroup = '${api}group/get-managed-groups';
+
+
   // TODO: API INTERACT SERVICE - POST
   static const newsFeed = '${api}post/newfeed';
   static const personal = '${api}post/personal';
@@ -44,7 +57,18 @@ class ApiUrl {
   static const createPost = '${api}post/create-post';
   static const updatePost = '${api}post/update-post';
   static const deletePost = '${api}post/delete-post';
+  static const votePost = '${api}post/vote';
 
   // TODO: API INTERACT SERVICE - FILE
   static const uploadFile = '${api}Upload/file';
+
+  // TODO: API INTERACT SERVICE - COMMENT
+  static const getCommentByPost = '${api}comment/get-by-post';
+  static const createComment =  '${api}comment/create';
+  static const updateComment = '${api}comment/update';
+  static const voteComment = '${api}comment/vote';
+
+  // TODO: API INTERACT SERVICE - Category
+  static const getCategory = '${api}category/get-list';
+  static const createCategory = '${api}category/create';
 }

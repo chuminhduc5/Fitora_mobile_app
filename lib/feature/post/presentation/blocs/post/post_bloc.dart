@@ -2,9 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fitora_mobile_app/core/utils/failure_converter.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
-import 'package:fitora_mobile_app/feature/post/domain/usecases/create_post_use_case.dart';
+import 'package:fitora_mobile_app/feature/post/domain/usecases/posts/create_post_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/usecase_params.dart';
-import 'package:fitora_mobile_app/feature/post/presentation/forms/create_post_form_data.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/forms/post/create_post_form_data.dart';
 import 'package:meta/meta.dart';
 
 part 'post_event.dart';

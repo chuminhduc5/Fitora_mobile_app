@@ -11,7 +11,7 @@ class PostModel {
   final int commentsCount;
   final double score;
   final int privacy;
-  final DateTime? createAt;
+  final DateTime createAt;
   final DateTime? updateAt;
   final bool isDeleted;
   final UserModel user;
@@ -36,6 +36,12 @@ class PostModel {
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
+    DateTime? parseDateTime(String? dateTimeString) {
+      if (dateTimeString == null) return null;
+      final utcDateTime = DateTime.parse(dateTimeString).toUtc();
+      return utcDateTime.add(const Duration(hours: 7));
+    }
+    print('DEBUG createAt: ${json['createdAt']}');
     return PostModel(
       id: json['id'] ?? '',
       groupId: json['groupId'] ?? '',
@@ -47,9 +53,7 @@ class PostModel {
       commentsCount: json['commentsCount'] ?? 0,
       score: (json['score'] as num?)?.toDouble() ?? 0.0,
       privacy: json['privacy'] ?? 0,
-      createAt: json['createdAt'] != null
-          ? DateTime.tryParse(json['createdAt'])
-          : null,
+      createAt: parseDateTime(json['createdAt']) ?? DateTime.now(),
       updateAt: json['updatedAt'] != null
           ? DateTime.tryParse(json['updatedAt'])
           : null,

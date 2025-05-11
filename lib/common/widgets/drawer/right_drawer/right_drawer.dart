@@ -6,7 +6,6 @@ import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/navigation/app_navigation.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
-import 'package:fitora_mobile_app/feature/profile/presentation/screens/personal_screen.dart';
 import 'package:flutter/material.dart';
 
 final List<Map<String, dynamic>> _option = [

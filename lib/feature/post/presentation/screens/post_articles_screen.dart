@@ -6,11 +6,12 @@ import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/enums/post/privacy_post.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/newsfeed/newsfeed_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post_form/post_form_bloc.dart';
-import 'package:fitora_mobile_app/feature/post/presentation/forms/create_post_form_data.dart';
-import 'package:fitora_mobile_app/feature/post/presentation/widgets/category_dropdown_widget.dart';
-import 'package:fitora_mobile_app/feature/post/presentation/widgets/post_input_widget.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/forms/post/create_post_form_data.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/widgets/post/category_dropdown_widget.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/widgets/post/post_input_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
@@ -96,7 +97,8 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
           if (state is CreatePostFailureState) {
             AppDisplayMessage.error(context, state.message);
           } else if (state is CreatePostSuccessState) {
-            context.goNamed(AppRoute.appView.name);
+            context.pop(true);
+            context.read<NewsfeedBloc>().add(FetchNewsfeedEvent());
             AppDisplayMessage.success(context, "Đăng bài thành công");
           }
         },
