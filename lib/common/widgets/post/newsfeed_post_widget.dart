@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fitora_mobile_app/common/widgets/post/comment_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/post/favourite_widget.dart';
@@ -7,8 +6,8 @@ import 'package:fitora_mobile_app/common/widgets/post/premium_badge_widget.dart'
 import 'package:fitora_mobile_app/common/widgets/post/share_widget.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
-import 'package:fitora_mobile_app/feature/home/presentation/screens/comment_screen.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:forui/forui.dart';
@@ -35,6 +34,12 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
   // bool _isCheckNetwork = true;
   Color _colorVote = Colors.black;
   Color _colorUnVote = Colors.black;
+
+  bool isExpanded = false;
+
+  bool _isLongText(String text) {
+    return text.length > 200;
+  }
 
   @override
   void initState() {
@@ -65,7 +70,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
   //   );
   // }
 
-  void _showBottomSheet(BuildContext context) {
+  void _showBottomSheet(BuildContext context, PostEntity post) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -73,7 +78,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
         borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
       ),
       builder: (BuildContext context) {
-        return CommentScreen();
+        return CommentScreen(post: post);
       },
     );
   }
@@ -157,10 +162,24 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
               ],
             ),
           ),
+          // Text(
+          //   post.content!,
+          //   style: const TextStyle(fontSize: 14),
+          // ),
           Text(
-            post.content!,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            post.content,
+            style: const TextStyle(fontSize: 14),
+            maxLines: isExpanded ? null : 5,
+            overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
           ),
+          if (_isLongText(post.content))
+            GestureDetector(
+              onTap: () => setState(() => isExpanded = !isExpanded),
+              child: Text(
+                isExpanded ? 'Ẩn bớt' : 'Xem thêm',
+                style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
+              ),
+            ),
           const SizedBox(height: 5),
           if (post.mediaUrl != null && post.mediaUrl!.isNotEmpty) ...[
             Image.file(
@@ -192,7 +211,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
               CommentWidget(
                   commentCount: post.commentsCount,
                   onPressed: () {
-                    _showBottomSheet(context);
+                    _showBottomSheet(context, widget.post);
                   }),
               const Spacer(),
               const PremiumBadgeWidget(),

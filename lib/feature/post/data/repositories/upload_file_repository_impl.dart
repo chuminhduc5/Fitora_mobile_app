@@ -3,7 +3,7 @@ import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/core/helper/mapper/post/upload_file_mapper.dart';
 import 'package:fitora_mobile_app/feature/post/data/datasources/upload_file_remote_data_source.dart';
-import 'package:fitora_mobile_app/feature/post/data/models/requests/upload_file_request.dart';
+import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/upload_file_request.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/upload_file_entity.dart';
 import 'package:fitora_mobile_app/feature/post/domain/repositories/upload_file_repository.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/usecase_params.dart';

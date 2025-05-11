@@ -3,8 +3,8 @@ import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/core/helper/mapper/post/post_mapper.dart';
 import 'package:fitora_mobile_app/feature/post/data/datasources/post_remote_data_source.dart';
-import 'package:fitora_mobile_app/feature/post/data/models/requests/create_post_request.dart';
-import 'package:fitora_mobile_app/feature/post/data/models/requests/update_post_request.dart';
+import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/create_post_request.dart';
+import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/update_post_request.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
 import 'package:fitora_mobile_app/feature/post/domain/repositories/post_repository.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/usecase_params.dart';
@@ -50,7 +50,6 @@ class PostRepositoryImpl implements PostRepository {
         content: params.content,
         mediaUrl: params.mediaUrl,
         privacy: params.privacy,
-        groupId: params.groupId,
       );
       final result = await _postRemoteDataSource.updatePost(request);
       return Right(result);
@@ -73,7 +72,8 @@ class PostRepositoryImpl implements PostRepository {
   Future<Either<Failure, List<PostEntity>>> getNewsFeed() async {
     try {
       final result = await _postRemoteDataSource.fetchNewsfeed();
-      final newsfeed = result.map((item) => PostMapper.toEntity(item)).toList();
+      final newsfeed = result.map((i) => PostMapper.toEntity(i)).toList();
+      newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
       return Right(newsfeed);
     } on ServerException {
       return Left(ServerFailure());

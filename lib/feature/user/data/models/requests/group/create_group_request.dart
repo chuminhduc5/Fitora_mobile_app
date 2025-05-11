@@ -1,0 +1,28 @@
+class CreateGroupRequest {
+  final String name;
+  final String description;
+  final int privacy;
+  final bool requirePostApproval;
+  final String coverImageUrl;
+  final String avatarUrl;
+
+  const CreateGroupRequest({
+    required this.name,
+    required this.description,
+    required this.privacy,
+    required this.requirePostApproval,
+    required this.coverImageUrl,
+    required this.avatarUrl,
+  });
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      "name": name,
+      "description": description,
+      "privacy": privacy,
+      "requirePostApproval": requirePostApproval,
+      "coverImageUrl": coverImageUrl,
+      "avatarUrl": avatarUrl,
+    };
+  }
+}

@@ -4,8 +4,8 @@ import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
-import 'package:fitora_mobile_app/feature/post/data/models/requests/create_post_request.dart';
-import 'package:fitora_mobile_app/feature/post/data/models/requests/update_post_request.dart';
+import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/create_post_request.dart';
+import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/update_post_request.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/responses/post_model.dart';
 
 abstract class PostRemoteDataSource {
@@ -66,7 +66,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<void> deletePost(String id) async {
     try {
-      await _dioClient.delete(ApiUrl.deletePost);
+      await _dioClient.delete('${ApiUrl.deletePost}/id');
     } on DioException catch (e) {
       logger.e(e);
       throw ServerException();

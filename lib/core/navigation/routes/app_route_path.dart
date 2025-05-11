@@ -14,6 +14,9 @@ enum AppRoute {
   updateProfile(path: "/profile/update"),
   personal(path: "/personal"),
   notification(path: "/notification"),
+  group(path: "/group"),
+  createGroup(path: "/createGroup"),
+  inviteFriendGroup(path: "/inviteFriendGroup"),
   friends(path: "/friends"),
   friendInvitation(path: "/friendInvitation");
 
