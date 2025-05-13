@@ -17,6 +17,7 @@ import 'package:fitora_mobile_app/feature/user/domain/usecases/friends/get_sent_
 import 'package:fitora_mobile_app/feature/user/domain/usecases/friends/unfriend_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/accept_group_invite_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/create_group_use_case.dart';
+import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/delete_group_invite_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_group_by_id_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_group_member_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_managed_group_use_case.dart';
@@ -53,6 +54,7 @@ class UserDependency {
           getIt<InviteNewMembersUseCase>(),
           getIt<GetReceivedGroupInviteUseCase>(),
           getIt<AcceptGroupInviteUseCase>(),
+          getIt<DeleteGroupInviteUseCase>(),
           getIt<GetManagedGroupUseCase>(),
         ));
     getIt.registerFactory(() => GroupFormBloc());
@@ -89,6 +91,8 @@ class UserDependency {
         () => GetReceivedGroupInviteUseCase(getIt<GroupRepositoryImpl>()));
     getIt.registerLazySingleton(
         () => AcceptGroupInviteUseCase(getIt<GroupRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => DeleteGroupInviteUseCase(getIt<GroupRepositoryImpl>()));
     getIt.registerLazySingleton(
         () => GetManagedGroupUseCase(getIt<GroupRepositoryImpl>()));
 

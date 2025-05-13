@@ -10,6 +10,7 @@ import 'package:fitora_mobile_app/feature/user/domain/entities/managed_group_ent
 import 'package:fitora_mobile_app/feature/user/domain/entities/received_group_invite_entity.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/accept_group_invite_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/create_group_use_case.dart';
+import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/delete_group_invite_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_group_by_id_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_group_member_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_managed_group_use_case.dart';
@@ -30,6 +31,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   final InviteNewMembersUseCase _inviteNewMembersUseCase;
   final GetReceivedGroupInviteUseCase _getReceivedGroupInviteUseCase;
   final AcceptGroupInviteUseCase _acceptGroupInviteUseCase;
+  final DeleteGroupInviteUseCase _deleteGroupInviteUseCase;
   final GetManagedGroupUseCase _getManagedGroupUseCase;
 
   GroupBloc(
@@ -39,6 +41,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     this._inviteNewMembersUseCase,
     this._getReceivedGroupInviteUseCase,
     this._acceptGroupInviteUseCase,
+    this._deleteGroupInviteUseCase,
     this._getManagedGroupUseCase,
   ) : super(GroupInitialState()) {
     on<CreateGroupEvent>(_create);
@@ -47,6 +50,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     on<InviteNewMembersEvent>(_inviteNewMember);
     on<FetchReceivedGroupInviteEvent>(_fetchReceived);
     on<AcceptGroupInviteEvent>(_accept);
+    on<DeleteGroupInviteEvent>(_deleteGroupInvite);
     on<FetchManagedGroupEvent>(_fetchManagedGroup);
   }
 
@@ -123,6 +127,17 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     result.fold(
       (failure) => emit(AcceptGroupInviteFailureState(mapFailureToMessage(failure))),
       (success) => emit(AcceptGroupInviteSuccessState()),
+    );
+  }
+
+  Future<void> _deleteGroupInvite(DeleteGroupInviteEvent event, Emitter emit) async {
+    emit(DeleteGroupInviteLoadingState());
+
+    final result = await _acceptGroupInviteUseCase.call(event.id);
+
+    result.fold(
+          (failure) => emit(DeleteGroupInviteFailureState(mapFailureToMessage(failure))),
+          (success) => emit(DeleteGroupInviteSuccessState()),
     );
   }
 

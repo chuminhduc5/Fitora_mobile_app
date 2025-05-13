@@ -74,4 +74,16 @@ class UserRepositoryImpl implements UserRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<UserEntity>>> searchUsers(String keySearch) async {
+    try {
+      final result = await _userRemoteDataSource.searchUsers(keySearch);
+      final users = result.map((i) => UserMapper.toEntity(i)).toList();
+      logg.i("Danh sách người dùng (Repository): $users");
+      return Right(users);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
 }

@@ -118,6 +118,20 @@ class AcceptGroupInviteFailureState extends GroupState {
   List<Object?> get props => [message];
 }
 
+// Trạng thái sự kiện xóa tham lời mới nhóm
+class DeleteGroupInviteLoadingState extends GroupState {}
+
+class DeleteGroupInviteSuccessState extends GroupState {}
+
+class DeleteGroupInviteFailureState extends GroupState {
+  final String message;
+
+  const DeleteGroupInviteFailureState(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class FetchManagedGroupLoadingState extends GroupState {}
 
 class FetchManagedGroupSuccessState extends GroupState {

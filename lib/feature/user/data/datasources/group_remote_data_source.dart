@@ -21,6 +21,7 @@ abstract class GroupRemoteDataSource {
   Future<void> inviteNewMembers(InviteNewMembersRequest request);
   Future<List<ReceivedGroupInviteModel>> fetchReceivedGroupInvite();
   Future<void> acceptGroupInvite(String id);
+  Future<void> deleteGroupInvite(String id);
   Future<List<ManagedGroupModel>> fetchManagedGroup();
 
 }
@@ -81,6 +82,16 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   Future<void> acceptGroupInvite(String id) async {
     try {
       await _dioClient.post('${ApiUrl.acceptGroupInvite}?Id=$id');
+    } on DioException catch(e) {
+      logger.e(e);
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<void> deleteGroupInvite(String id) async {
+    try {
+      await _dioClient.post('${ApiUrl.deleteGroupInvite}?Id=$id');
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();

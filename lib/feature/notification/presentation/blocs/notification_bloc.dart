@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/core/usecase/usecase.dart';
 import 'package:fitora_mobile_app/core/utils/failure_converter.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
@@ -21,32 +23,47 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     this._getReceivedFriendRequestUseCase,
     this._getReceivedGroupInviteUseCase,
   ) : super(NotificationInitialState()) {
-    on<FetchReceivedFriendRequestEvent>(_fetchReceivedFriend);
-    on<FetchReceivedGroupInviteEvent>(_fetchReceivedGroup);
+    on<FetchNotificationEvent>(_fetchNotification);
   }
 
-  Future _fetchReceivedFriend(
-      FetchReceivedFriendRequestEvent event, Emitter emit) async {
-    emit(FetchReceivedFriendRequestLoadingState());
-
-    final result = await _getReceivedFriendRequestUseCase.call(NoParams());
-
-    result.fold(
-          (failure) => emit(
-          FetchReceivedFriendRequestFailureState(mapFailureToMessage(failure))),
-          (data) => emit(FetchReceivedFriendRequestSuccessState(data: data)),
-    );
+  // Gọi usecase lấy lời mời kết bạn
+  Future<Either<Failure, List<FriendRequestEntity>>> _fetchFriendRequests() {
+    return _getReceivedFriendRequestUseCase(NoParams());
   }
 
-  Future<void> _fetchReceivedGroup(FetchReceivedGroupInviteEvent event, Emitter emit) async {
-    emit(FetchReceivedGroupInviteLoadingState());
+  // Gọi usecase lấy lời mời nhóm
+  Future<Either<Failure, List<ReceivedGroupInviteEntity>>> _fetchGroupInvites() {
+    return _getReceivedGroupInviteUseCase(NoParams());
+  }
 
-    final result = await _getReceivedGroupInviteUseCase.call(NoParams());
+  // Xử lý khi nhận FetchNotificationEvent
+  Future _fetchNotification(FetchNotificationEvent event, Emitter emit) async {
+    emit(FetchNotificationLoadingState());
 
-    result.fold(
-          (failure) => emit(FetchReceivedGroupInviteFailureState(mapFailureToMessage(failure))),
-          (success) => emit(FetchReceivedGroupInviteSuccessState(data: success)),
-    );
+    final friendResultFuture = _fetchFriendRequests();
+    final groupResultFuture = _fetchGroupInvites();
+
+    final friendResult = await friendResultFuture;
+    final groupResult = await groupResultFuture;
+
+    final isFriendSuccess = friendResult.isRight();
+    final isGroupSuccess = groupResult.isRight();
+
+    if (isFriendSuccess && isGroupSuccess) {
+      emit(FetchNotificationSuccessState(
+        friendRequests: friendResult.getOrElse(() => []),
+        groupInvites: groupResult.getOrElse(() => []),
+      ));
+    } else {
+      final errorMessage = friendResult.fold(
+            (f) => mapFailureToMessage(f),
+            (_) => groupResult.fold(
+              (f) => mapFailureToMessage(f),
+              (_) => 'Unknown error',
+        ),
+      );
+      emit(FetchNotificationFailureState(errorMessage));
+    }
   }
 
   @override

@@ -67,5 +67,15 @@ class AcceptGroupInviteEvent extends GroupEvent {
   List<Object?> get props => [id];
 }
 
+// Sự kiện xóa lời mời tham gia nhóm
+class DeleteGroupInviteEvent extends GroupEvent {
+  final String id;
+
+  const DeleteGroupInviteEvent({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+
 // Sự kiện hiện thị danh sách nhóm
 class FetchManagedGroupEvent extends GroupEvent {}
