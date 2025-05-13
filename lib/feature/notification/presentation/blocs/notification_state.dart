@@ -10,41 +10,25 @@ abstract class NotificationState extends Equatable {
 
 class NotificationInitialState extends NotificationState {}
 
-// Trạng thái nhận lời mời kết bạn
-class FetchReceivedFriendRequestLoadingState extends NotificationState {}
+class FetchNotificationLoadingState extends NotificationState {}
 
-class FetchReceivedFriendRequestSuccessState extends NotificationState {
-  final List<FriendRequestEntity> data;
-  const FetchReceivedFriendRequestSuccessState({required this.data});
+class FetchNotificationSuccessState extends NotificationState {
+  final List<FriendRequestEntity> friendRequests;
+  final List<ReceivedGroupInviteEntity> groupInvites;
 
-  @override
-  List<Object?> get props => [data];
-}
-
-class FetchReceivedFriendRequestFailureState extends NotificationState {
-  final String message;
-  const FetchReceivedFriendRequestFailureState(this.message);
+  const FetchNotificationSuccessState({
+    required this.friendRequests,
+    required this.groupInvites,
+  });
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [friendRequests, groupInvites];
 }
 
-// Trạng thái nhận lời mời tham gia nhóm
-class FetchReceivedGroupInviteLoadingState extends NotificationState {}
-
-class FetchReceivedGroupInviteSuccessState extends NotificationState {
-  final List<ReceivedGroupInviteEntity> data;
-
-  const FetchReceivedGroupInviteSuccessState({required this.data});
-
-  @override
-  List<Object?> get props => [data];
-}
-
-class FetchReceivedGroupInviteFailureState extends NotificationState {
+class FetchNotificationFailureState extends NotificationState {
   final String message;
 
-  const FetchReceivedGroupInviteFailureState(this.message);
+  const FetchNotificationFailureState(this.message);
 
   @override
   List<Object?> get props => [message];

@@ -91,6 +91,16 @@ class GroupRepositoryImpl implements GroupRepository {
   }
 
   @override
+  Future<Either<Failure, void>> deleteGroupInvite(String id) async {
+    try {
+      final result = await _groupRemoteDataSource.deleteGroupInvite(id);
+      return Right(result);
+    } on DioException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
   Future<Either<Failure, List<GroupMemberEntity>>> getGroupMembers(String groupId) async {
     try {
       final result = await _groupRemoteDataSource.fetchGroupMembers(groupId);

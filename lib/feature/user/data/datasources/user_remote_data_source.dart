@@ -18,6 +18,8 @@ abstract class UserRemoteDataSource {
   Future<UserProfileModel> fetchPersonal(String userId);
 
   Future<List<UserModel>> fetchUsers();
+
+  Future<List<UserModel>> searchUsers(String keySearch);
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
@@ -81,6 +83,26 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         throw Exception("Không tồn tại người dùng nào!");
       }
     } on DioException catch (e) {
+      logger.e("DioException: ${e.message}");
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<UserModel>> searchUsers(String keySearch) async {
+    try {
+      final response = await _dioClient.get("${ApiUrl.getUsers}?KeySearch=$keySearch");
+      final data = response.data['data'];
+      if (data != null && data['data'] is List) {
+        final users = (data['data'] as List)
+            .map((i) => UserModel.fromJson(i))
+            .toList();
+        logg.i("Danh sách người dùng (RemoteDataSource): $users");
+        return users;
+      } else {
+        throw Exception("Không tồn tại người dùng nào!");
+      }
+    } on DioException catch(e) {
       logger.e("DioException: ${e.message}");
       throw ServerException();
     }

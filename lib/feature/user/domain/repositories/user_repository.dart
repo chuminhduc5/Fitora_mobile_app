@@ -9,4 +9,5 @@ abstract class UserRepository {
   Future<Either<Failure, void>> updateProfile(UpdateProfileParams params);
   Future<Either<Failure, UserProfileEntity>> getPersonal(String userId);
   Future<Either<Failure, List<UserEntity>>> getUsers();
+  Future<Either<Failure, List<UserEntity>>> searchUsers(String keySearch);
 }

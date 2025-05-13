@@ -8,8 +8,5 @@ abstract class NotificationEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-// Sự kiện nhận lời mời kết bạn
-class FetchReceivedFriendRequestEvent extends NotificationEvent {}
-
-// Sự kiện nhận lời mời tham gia nhóm
-class FetchReceivedGroupInviteEvent extends NotificationEvent {}
+// Sự kiện hiện thị thông báo
+class FetchNotificationEvent extends NotificationEvent {}

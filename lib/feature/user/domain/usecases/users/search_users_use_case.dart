@@ -4,13 +4,13 @@ import 'package:fitora_mobile_app/core/usecase/usecase.dart';
 import 'package:fitora_mobile_app/feature/user/domain/entities/user_entity.dart';
 import 'package:fitora_mobile_app/feature/user/domain/repositories/user_repository.dart';
 
-class GetUsersUseCase extends UseCase<List<UserEntity>, NoParams> {
+class SearchUsersUseCase extends UseCase<List<UserEntity>, String> {
   final UserRepository _userRepository;
 
-  GetUsersUseCase(this._userRepository);
+  SearchUsersUseCase(this._userRepository);
 
   @override
-  Future<Either<Failure, List<UserEntity>>> call(NoParams params) async {
-    return await _userRepository.getUsers();
+  Future<Either<Failure, List<UserEntity>>> call(String params) async {
+    return _userRepository.searchUsers(params);
   }
 }
