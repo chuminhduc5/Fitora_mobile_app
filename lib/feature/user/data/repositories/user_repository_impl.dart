@@ -10,6 +10,7 @@ import 'package:fitora_mobile_app/feature/user/domain/entities/user_entity.dart'
 import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
 import 'package:fitora_mobile_app/feature/user/domain/repositories/user_repository.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/usecase_params.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final UserRemoteDataSource _userRemoteDataSource;
@@ -23,6 +24,10 @@ class UserRepositoryImpl implements UserRepository {
       logg.i("Thông tin người dùng chưa convert: ${result.email}");
       final profile = UserProfileMapper.toEntity(result);
       logg.i("Thông tin người dùng(Repo): $profile");
+      // await _secureLocalStorage.save(key: "user_id", value: result.user.id);
+      // logg.i("ID Người dùng: ${result.user.id}");
+      // await _hiveLocalStorage.save(key: "user", value: result, boxName: "cache");
+      // logg.i("Thông tin người dùng: $result");
       return Right(profile);
     } on ServerException {
       return Left(ServerFailure());

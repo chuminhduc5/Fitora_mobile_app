@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:fitora_mobile_app/common/widgets/avatar/app_avatar_widget.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/comment_entity.dart';
+import 'package:fitora_mobile_app/feature/post/domain/entities/comment_response_entity.dart';
 import 'package:flutter/material.dart';
 
 class CommentWidget extends StatelessWidget {
@@ -9,18 +12,22 @@ class CommentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = comment.user;
+    logg.i("Thông tin người dùng: $user");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 18,
-              backgroundImage:
-              FileImage(File(comment.user.profilePictureUrl)),
-            ),
-            const SizedBox(width: 8),
+            // AppAvatarWidget(imagePath: comment.user!.profilePictureUrl, size: 40),
+            // CircleAvatar(
+            //   radius: 18,
+            //   backgroundImage: comment.user?.profilePictureUrl != null
+            //       ? NetworkImage(comment.user!.profilePictureUrl)
+            //       : const AssetImage('assets/images/default_avatar.png') as ImageProvider,
+            // ),
+            // const SizedBox(width: 8),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(8),
@@ -34,7 +41,7 @@ class CommentWidget extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          comment.user.username,
+                          comment.user!.username,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(width: 4),

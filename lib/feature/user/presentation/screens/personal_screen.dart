@@ -4,11 +4,14 @@ import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/blocs/friend/friend_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/personal/personal_bloc.dart';
-import 'package:fitora_mobile_app/feature/user/presentation/widgets/friend_list_widget.dart';
-import 'package:fitora_mobile_app/feature/user/presentation/widgets/photo_list_widget.dart';
-import 'package:fitora_mobile_app/feature/user/presentation/widgets/profile/user_info_widget.dart';
-import 'package:fitora_mobile_app/feature/user/presentation/widgets/video_list_widget.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/widgets/user_friend_list_widget.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/widgets/personal/user_info_widget.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/widgets/profile/profile_info_widget.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/widgets/user_photo_list_widget.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/widgets/user_post_list_widget.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/widgets/user_video_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
@@ -25,6 +28,7 @@ class PersonalScreen extends StatefulWidget {
 
 class _PersonalScreenState extends State<PersonalScreen> {
   bool _showTitle = false;
+
   //late PersonalBloc _personal;
 
   @override
@@ -33,11 +37,16 @@ class _PersonalScreenState extends State<PersonalScreen> {
     super.initState();
   }
 
+  void _addFriend(BuildContext context) {
+    context.read<FriendBloc>().add(AddFriendEvent(widget.userId));
+    logg.i('Kết bạn với người dùng: ${widget.userId}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<PersonalBloc>()
-        ..add(FetchPersonalEvent(userId: widget.userId)),
+      create: (context) =>
+          getIt<PersonalBloc>()..add(FetchPersonalEvent(userId: widget.userId)),
       child: Scaffold(
         backgroundColor: AppColors.bgWhite,
         body: RefreshIndicator(
@@ -45,9 +54,9 @@ class _PersonalScreenState extends State<PersonalScreen> {
             return Future.delayed(
               const Duration(seconds: 1),
             ).then(
-                  (value) => context.read<PersonalBloc>().add(
-                FetchPersonalEvent(userId: widget.userId),
-              ),
+              (value) => context.read<PersonalBloc>().add(
+                    FetchPersonalEvent(userId: widget.userId),
+                  ),
             );
           },
           child: NotificationListener<ScrollNotification>(
@@ -69,6 +78,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                   return AppErrorWidget(state.message);
                 } else if (state is FetchPersonalSuccessState) {
                   final profile = state.data;
+                  final userId = profile.userInfo.userId;
                   return CustomScrollView(
                     slivers: [
                       SliverAppBar(
@@ -87,8 +97,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         ],
                         title: _showTitle
                             ? Text(
-                          "${profile.userInfo.firstName} ${profile.userInfo.lastName}",
-                        )
+                                "${profile.userInfo.firstName} ${profile.userInfo.lastName}",
+                              )
                             : null,
                         centerTitle: true,
                       ),
@@ -97,7 +107,10 @@ class _PersonalScreenState extends State<PersonalScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Column(
                             children: [
-                              UserInfoWidget(profile: profile),
+                              UserInfoWidget(
+                                addFriend: () => _addFriend(context),
+                                profile: profile,
+                              ),
                               FTabs(
                                 style: FTabsStyle(
                                   padding: const EdgeInsets.symmetric(
@@ -129,7 +142,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                       constraints: const BoxConstraints(
                                         minHeight: 100,
                                       ),
-                                      child: const SizedBox(),
+                                      child: UserPostListWidget(userId: userId),
                                     ),
                                   ),
                                   FTabEntry(
@@ -139,20 +152,20 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                       constraints: const BoxConstraints(
                                         minHeight: 100,
                                       ),
-                                      child: const PhotoListWidget(),
+                                      child: const UserPhotoListWidget(),
                                     ),
                                   ),
                                   FTabEntry(
                                       label: const Text("Video"),
                                       content: Container(
                                         width: double.infinity,
-                                        child: const VideoListWidget(),
+                                        child: const UserVideoListWidget(),
                                       )),
                                   FTabEntry(
                                       label: const Text("Bạn bè"),
                                       content: Container(
                                         width: double.infinity,
-                                        child: const FriendListWidget(),
+                                        child: const UserFriendListWidget(),
                                       )),
                                 ],
                               ),

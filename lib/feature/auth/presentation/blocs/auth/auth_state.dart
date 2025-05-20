@@ -55,14 +55,7 @@ class AuthSignInFailureState extends AuthState {
 // Trạng thái đăng xuất
 class AuthSignOutLoadingState extends AuthState {}
 
-class AuthSignOutSuccessState extends AuthState {
-  final String message;
-
-  const AuthSignOutSuccessState(this.message);
-
-  @override
-  List<Object?> get props => [message];
-}
+class AuthSignOutSuccessState extends AuthState {}
 
 class AuthSignOutFailureState extends AuthState {
   final String message;

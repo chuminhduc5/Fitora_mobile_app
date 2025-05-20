@@ -6,6 +6,7 @@ class AppTextFieldWidget extends StatelessWidget {
   final String hinText;
   final bool obscureText;
   final TextInputType keyboardType;
+  final TextInputAction? textInputAction;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final String? Function(String?)? validator;
@@ -20,6 +21,7 @@ class AppTextFieldWidget extends StatelessWidget {
     required this.hinText,
     required this.obscureText,
     required this.keyboardType,
+    this.textInputAction,
     this.validator,
     this.prefixIcon,
     this.suffixIcon,
@@ -41,8 +43,10 @@ class AppTextFieldWidget extends StatelessWidget {
       textInputAction: TextInputAction.next,
       autovalidateMode: autovalidateMode,
       decoration: InputDecoration(
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 10,
+        ),
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
         enabledBorder: OutlineInputBorder(
@@ -54,8 +58,7 @@ class AppTextFieldWidget extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius!),
-          borderSide:
-          const BorderSide(color: AppColors.pink, width: 1),
+          borderSide: const BorderSide(color: AppColors.pink, width: 1),
         ),
         fillColor: Colors.white,
         filled: true,

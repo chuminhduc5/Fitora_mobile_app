@@ -2,15 +2,16 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/core/usecase/usecase.dart';
+import 'package:fitora_mobile_app/feature/post/domain/entities/comment_entity.dart';
 import 'package:fitora_mobile_app/feature/post/domain/repositories/comment_repository.dart';
 
-class CreateCommentUseCase extends UseCase<void, Params> {
+class CreateCommentUseCase extends UseCase<CommentEntity, Params> {
   final CommentRepository _commentRepository;
 
   CreateCommentUseCase(this._commentRepository);
 
   @override
-  Future<Either<Failure, void>> call(Params params) async {
+  Future<Either<Failure, CommentEntity>> call(Params params) async {
     return await _commentRepository.createComment(params);
   }
 }

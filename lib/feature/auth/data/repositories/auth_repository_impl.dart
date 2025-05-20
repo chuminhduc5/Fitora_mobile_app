@@ -50,7 +50,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
       final SharedPreferences pref = await SharedPreferences.getInstance();
       pref.setString('token', result.token.accessToken);
+      pref.setString('userId', result.user.id);
       logg.i("Lưu Token: ${result.token.accessToken}");
+      logg.i("Lưu UserId: ${result.user.id}");
 
       // await _secureLocalStorage.save(key: "user_id", value: result.user.id);
       // logg.i("ID Người dùng: ${result.user.id}");

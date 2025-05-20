@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/feature/chat/presentation/screens/chat_screen.dart';
+import 'package:fitora_mobile_app/feature/notification/presentation/screens/notification_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/community_screen.dart';
@@ -19,8 +20,8 @@ class _AppViewState extends State<AppView> {
   final List<Widget> _screen = [
     const HomeScreen(),
     const CommunityScreen(),
-    //const PostArticlesScreen(),
     const ChatScreen(),
+    const NotificationScreen(),
     const ProfileScreen(),
   ];
 
@@ -64,13 +65,13 @@ class _AppViewState extends State<AppView> {
                 icon: Icon(Icons.group),
                 label: 'Nhóm',
               ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.add),
-              //   label: 'Thêm',
-              // ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat),
                 label: 'Trò chuyện',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notifications),
+                label: 'Thông báo',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle),

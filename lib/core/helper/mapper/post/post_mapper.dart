@@ -13,6 +13,7 @@ class PostMapper {
       votesCount: post.votesCount,
       commentsCount: post.commentsCount,
       score: post.score,
+      isCategoryFollowed: post.isCategoryFollowed,
       privacy: post.privacy,
       createAt: post.createAt,
       updateAt: post.updateAt,

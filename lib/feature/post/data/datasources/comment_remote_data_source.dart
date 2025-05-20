@@ -6,16 +6,19 @@ import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/requests/comments/create_comment_request.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/requests/comments/update_comment_request.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/responses/comment_model.dart';
+import 'package:fitora_mobile_app/feature/post/data/models/responses/comment_response_model.dart';
 
 abstract class CommentRemoteDataSource {
   Future<List<CommentModel>> fetchComment(String postId);
-  Future<void> createComment(CreateCommentRequest request);
+
+  Future<CommentModel> createComment(CreateCommentRequest request);
+
   Future<void> updateComment(UpdateCommentRequest request);
 }
 
 class CommentRemoteDataSourceImpl implements CommentRemoteDataSource {
   final DioClient _dioClient;
-  
+
   const CommentRemoteDataSourceImpl(this._dioClient);
 
   @override
@@ -24,7 +27,6 @@ class CommentRemoteDataSourceImpl implements CommentRemoteDataSource {
       final response = await _dioClient.get('${ApiUrl.getCommentByPost}?PostId=$postId');
       final List<dynamic> data = response.data['data']['data'];
 
-      // Chuyển List<dynamic> → List<CommentModel>
       final comments = data.map((e) => CommentModel.fromJson(e)).toList();
 
       return comments;
@@ -34,12 +36,16 @@ class CommentRemoteDataSourceImpl implements CommentRemoteDataSource {
     }
   }
 
-
   @override
-  Future<void> createComment(CreateCommentRequest request) async {
+  Future<CommentModel> createComment(CreateCommentRequest request) async {
     try {
-      await _dioClient.post(ApiUrl.createComment, data: request.toJson());
-    } on DioException catch(e) {
+      final response = await _dioClient.post(
+        ApiUrl.createComment,
+        data: request.toJson(),
+      );
+      final comment = CommentModel.fromJson(response.data['data']);
+      return comment;
+    } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
     }
@@ -49,7 +55,7 @@ class CommentRemoteDataSourceImpl implements CommentRemoteDataSource {
   Future<void> updateComment(UpdateCommentRequest request) async {
     try {
       await _dioClient.put(ApiUrl.createComment, data: request.toJson());
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
     }

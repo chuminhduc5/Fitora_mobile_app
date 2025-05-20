@@ -24,7 +24,7 @@ class FriendRemoteDataSourceImpl implements FriendRemoteDataSource {
   @override
   Future<void> acceptFriend(String userId) async {
     try {
-      await _dioClient.put("${ApiUrl.acceptFriend}?id=$userId");
+      await _dioClient.put(ApiUrl.acceptFriend, data: jsonEncode(userId));
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();
@@ -55,8 +55,14 @@ class FriendRemoteDataSourceImpl implements FriendRemoteDataSource {
   Future<List<FriendModel>> fetchFriend() async {
     try {
       final response = await _dioClient.get(ApiUrl.friend);
-      final friends = response.data;
-      return friends;
+      final results = response.data['data'];
+      if (results != null && results['data'] is List) {
+        final friends = (results['data'] as List).map((i) => FriendModel.fromJson(i)).toList();
+        logger.i("Danh sách lời mời kết bạn: $friends");
+        return friends;
+      } else {
+        throw Exception("Invalid response format");
+      }
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();
@@ -67,8 +73,14 @@ class FriendRemoteDataSourceImpl implements FriendRemoteDataSource {
   Future<List<FriendRequestModel>> fetchReceivedFriendRequest() async {
     try {
       final response = await _dioClient.get(ApiUrl.getReceivedFriendRequests);
-      final results = response.data;
-      return results;
+      final results = response.data['data'];
+      if (results != null && results['data'] is List) {
+        final received = (results['data'] as List).map((i) => FriendRequestModel.fromJson(i)).toList();
+        logger.i("Danh sách lời mời kết bạn: $received");
+        return received;
+      } else {
+        throw Exception("Invalid response format");
+      }
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();

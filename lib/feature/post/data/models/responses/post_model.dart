@@ -10,6 +10,7 @@ class PostModel {
   final int votesCount;
   final int commentsCount;
   final double score;
+  final bool isCategoryFollowed;
   final int privacy;
   final DateTime createAt;
   final DateTime? updateAt;
@@ -27,6 +28,7 @@ class PostModel {
     required this.votesCount,
     required this.commentsCount,
     required this.score,
+    required this.isCategoryFollowed,
     required this.privacy,
     required this.createAt,
     required this.updateAt,
@@ -52,6 +54,7 @@ class PostModel {
       votesCount: json['votesCount'] ?? 0,
       commentsCount: json['commentsCount'] ?? 0,
       score: (json['score'] as num?)?.toDouble() ?? 0.0,
+      isCategoryFollowed: json['isCategoryFollowed'],
       privacy: json['privacy'] ?? 0,
       createAt: parseDateTime(json['createdAt']) ?? DateTime.now(),
       updateAt: json['updatedAt'] != null

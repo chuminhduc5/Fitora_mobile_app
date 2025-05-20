@@ -134,6 +134,7 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   Future<void> inviteNewMembers(InviteNewMembersRequest request) async {
     try {
       await _dioClient.post(ApiUrl.inviteNewMembers, data: request.toJson());
+      print("🔍 Sending data: ${request.toJson()}");
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();

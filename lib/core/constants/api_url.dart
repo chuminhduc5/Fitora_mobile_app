@@ -66,7 +66,7 @@ class ApiUrl {
   static const newsFeed = '${api}post/newfeed'; // Lấy bài viết trên newsfeed
   static const personal = '${api}post/personal'; // Lấy bài viết cá nhân
   static const getTrendingPost = '${api}post/trending-feed'; // Lấy bài viết trending
-  static const getSavedPost = '${api}post/saved-posts'; // Lấy bài viết thình hành
+  static const getSavedPost = '${api}post/saved-posts'; // Lấy bài viết đã lưu
   static const getExplorePosts = '${api}post/explore-feed'; // Lấy bài viết khám phá
   static const post = '${api}post/post';
   static const createPost = '${api}post/create-post';
@@ -74,7 +74,7 @@ class ApiUrl {
   static const deletePost = '${api}post/delete-post';
 
   static const votePost = '${api}post/vote'; // Thực hiện upvote hoặc downvote bài viết
-  static const savePost = '${api}post/save-post';
+  static const savePost = '${api}post/save-post'; // Lưu bài viết
   static const unSavePost = '${api}post/unsave-post';
 
   // TODO: API INTERACT SERVICE - FILE

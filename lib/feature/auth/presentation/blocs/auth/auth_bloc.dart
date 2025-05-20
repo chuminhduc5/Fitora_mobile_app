@@ -50,10 +50,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     result.fold(
-      (failure) {
-        logg.i("AuthSignInFailureState: $failure");
-        emit(AuthSignInFailureState(mapFailureToMessage(failure)));
-      },
+      (failure) => emit(AuthSignInFailureState(mapFailureToMessage(failure))),
       (success) => emit(AuthSignInSuccessState(data: success)),
     );
   }
@@ -89,7 +86,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     result.fold(
       (failure) => emit(AuthSignOutFailureState(mapFailureToMessage(failure))),
-      (success) => emit(const AuthSignOutSuccessState("Sign Out Success")),
+      (success) => emit(AuthSignOutSuccessState()),
     );
   }
 

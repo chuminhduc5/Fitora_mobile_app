@@ -35,9 +35,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
   void initState() {
     super.initState();
     _groupBloc = getIt<GroupBloc>()..add(FetchManagedGroupEvent());
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<GroupBloc>().add(FetchManagedGroupEvent());
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   context.read<GroupBloc>().add(FetchManagedGroupEvent());
+    // });
   }
 
   @override

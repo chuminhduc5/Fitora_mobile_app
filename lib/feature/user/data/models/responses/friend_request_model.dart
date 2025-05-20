@@ -21,7 +21,7 @@ class FriendRequestModel {
     required this.createDate,
   });
 
-  factory FriendRequestModel.frmJson(Map<String, dynamic> json) {
+  factory FriendRequestModel.fromJson(Map<String, dynamic> json) {
     return FriendRequestModel(
       id: json['id'] ?? '',
       senderId: json['senderId'] ?? '',

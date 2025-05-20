@@ -47,44 +47,48 @@ class NotificationScreen extends StatelessWidget {
                   }
                   return CustomScrollView(
                     slivers: [
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final friendRequest = friendRequests[index];
-                            final groupInvite = groupInvites[index];
-                            return Column(
-                              children: [
-                                if (friendRequests.isNotEmpty) ...[
-                                  const Text(
-                                    "Lời mời kết bạn",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  ReceivedFriendRequestCardWidget(
-                                    friend: friendRequest,
-                                  ),
-                                ],
-                                if (groupInvites.isNotEmpty) ...[
-                                  const Text(
-                                    "Lời mời tham gia nhóm",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  ReceivedGroupInviteCardWidget(
-                                    groupInvite: groupInvite,
-                                  ),
-                                ],
-                              ],
-                            );
-                          },
+                      if (friendRequests.isNotEmpty) ...[
+                        const SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Text(
+                              "Lời mời kết bạn",
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ),
                         ),
-                      ),
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                              return ReceivedFriendRequestCardWidget(
+                                friend: friendRequests[index],
+                              );
+                            },
+                            childCount: friendRequests.length,
+                          ),
+                        ),
+                      ],
+                      if (groupInvites.isNotEmpty) ...[
+                        const SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Text(
+                              "Lời mời tham gia nhóm",
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                              return ReceivedGroupInviteCardWidget(
+                                groupInvite: groupInvites[index],
+                              );
+                            },
+                            childCount: groupInvites.length,
+                          ),
+                        ),
+                      ],
                     ],
                   );
                 }

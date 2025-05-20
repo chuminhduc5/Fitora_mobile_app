@@ -16,6 +16,7 @@ class AppButtonWidget extends StatelessWidget {
   final int? borderRadius;
   final bool isLoading;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   const AppButtonWidget({
     super.key,
@@ -32,6 +33,7 @@ class AppButtonWidget extends StatelessWidget {
     this.borderRadius = 10,
     this.isLoading = false,
     this.prefixIcon,
+    this.suffixIcon,
   });
 
   @override
@@ -60,21 +62,26 @@ class AppButtonWidget extends StatelessWidget {
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                prefixIcon ?? Container(),
-                const SizedBox(width: 4),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: fontSize,
-                    color: color,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
+          : (title.isEmpty
+              ? Center(child: prefixIcon ?? const SizedBox())
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (prefixIcon != null) prefixIcon!,
+                    if (prefixIcon != null) const SizedBox(width: 4),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: fontSize,
+                        color: color,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    if (suffixIcon != null) const SizedBox(width: 4),
+                    if (suffixIcon != null) suffixIcon!,
+                  ],
+                )),
     );
   }
 }

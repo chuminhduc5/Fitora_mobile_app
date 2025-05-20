@@ -10,7 +10,7 @@ class InviteNewMembersRequest {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       "groupId": groupId,
-      "receiverUserIds": [receiverUserIds],
+      "receiverUserIds": receiverUserIds,
     };
   }
 }

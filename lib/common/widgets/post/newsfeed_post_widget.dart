@@ -6,6 +6,7 @@ import 'package:fitora_mobile_app/common/widgets/post/premium_badge_widget.dart'
 import 'package:fitora_mobile_app/common/widgets/post/share_widget.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +16,17 @@ import 'package:forui/forui.dart';
 class NewsfeedPostWidget extends StatefulWidget {
   final PostEntity post;
   final String? category;
-  final Function()? onPressed;
+  final void Function(String)? upVote;
+  final void Function(String)? unVote;
+  final void Function(String)? downVote;
 
   const NewsfeedPostWidget({
     super.key,
     required this.post,
     this.category,
-    this.onPressed,
+    this.upVote,
+    this.unVote,
+    this.downVote,
   });
 
   @override
@@ -32,8 +37,10 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
     with SingleTickerProviderStateMixin {
   // bool _isLiked = false;
   // bool _isCheckNetwork = true;
-  Color _colorVote = Colors.black;
-  Color _colorUnVote = Colors.black;
+  late int voteCount = widget.post.votesCount;
+  int? userVoteType;
+  Color _upVoteColor = Colors.black;
+  Color _downVoteColor = Colors.black;
 
   bool isExpanded = false;
 
@@ -43,6 +50,9 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
 
   @override
   void initState() {
+    userVoteType = widget.post.userVoteType;
+    _upVoteColor = widget.post.userVoteType == 1 ? AppColors.bgPink : Colors.black;
+    _downVoteColor = widget.post.userVoteType == 2 ? AppColors.bgPink : Colors.black;
     super.initState();
   }
 
@@ -81,6 +91,56 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
         return CommentScreen(post: post);
       },
     );
+  }
+
+  void handleUpVote() {
+    setState(() {
+      if (userVoteType == 1) {
+        voteCount -= 1;
+        _upVoteColor = Colors.black;
+        userVoteType = null;
+        widget.unVote?.call(widget.post.id);
+      } else {
+        if (userVoteType == 2) voteCount += 2;
+        if (userVoteType == null) voteCount += 1;
+        _upVoteColor = AppColors.bgPink;
+        _downVoteColor = Colors.black;
+        userVoteType = 1;
+        widget.upVote?.call(widget.post.id);
+      }
+    });
+  }
+
+  void handleDownVote() {
+    setState(() {
+      if (userVoteType == 2) {
+        voteCount += 1;
+        _downVoteColor = Colors.black;
+        userVoteType = null;
+        widget.unVote?.call(widget.post.id);
+      } else {
+        if (userVoteType == 1) voteCount -= 2;
+        if (userVoteType == null) voteCount -= 1;
+        _downVoteColor = AppColors.bgPink;
+        _upVoteColor = Colors.black;
+        userVoteType = 2;
+        widget.downVote?.call(widget.post.id);
+      }
+    });
+  }
+
+  void handleUnVote() {
+    setState(() {
+      if (userVoteType == 1) {
+        voteCount -= 1;
+      } else if (userVoteType == 2) {
+        voteCount += 1;
+      }
+      _upVoteColor = Colors.black;
+      _downVoteColor = Colors.black;
+      userVoteType = null;
+      widget.unVote?.call(widget.post.id);
+    });
   }
 
   @override
@@ -194,19 +254,14 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
             spacing: 5,
             children: <Widget>[
               FavouriteWidget(
-                favouriteCount: post.votesCount,
-                colorVote: _colorVote,
-                colorUnVote: _colorUnVote,
-                vote: () {
-                  setState(() {
-                    _colorVote = AppColors.bgPink;
-                  });
-                },
-                unVote: () {
-                  setState(() {
-                    _colorVote = Colors.black;
-                  });
-                },
+                postId: post.id,
+                userVoteType: userVoteType,
+                favouriteCount: voteCount,
+                upVoteColor: _upVoteColor,
+                downVoteColor: _downVoteColor,
+                upVote: (_) => handleUpVote(),
+                downVote: (_) => handleDownVote(),
+                unVote: (_) => handleUnVote(),
               ),
               CommentWidget(
                   commentCount: post.commentsCount,
@@ -215,7 +270,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                   }),
               const Spacer(),
               const PremiumBadgeWidget(),
-              ShareWidget(shareCount: 0),
+              const ShareWidget(shareCount: 0),
             ],
           ),
         ],

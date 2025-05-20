@@ -8,6 +8,7 @@ import 'package:fitora_mobile_app/feature/post/presentation/blocs/comment/commen
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/interact/interact_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/newsfeed/newsfeed_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
+import 'package:fitora_mobile_app/feature/search/presentation/blocs/search_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/friend/friend_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/group/group_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/personal/personal_bloc.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
                 BlocProvider(create: (_) => getIt<PersonalBloc>()),
                 BlocProvider(create: (_) => getIt<FriendBloc>()),
                 BlocProvider(create: (_) => getIt<GroupBloc>()),
+                BlocProvider(create: (_) => getIt<SearchBloc>()),
               ],
               child: BlocBuilder<ThemeBloc, ThemeState>(
                 builder: (context, state) {
