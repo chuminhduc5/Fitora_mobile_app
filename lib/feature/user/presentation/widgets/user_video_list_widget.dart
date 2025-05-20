@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class VideoListWidget extends StatelessWidget {
-  const VideoListWidget({super.key});
+class UserVideoListWidget extends StatelessWidget {
+  const UserVideoListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

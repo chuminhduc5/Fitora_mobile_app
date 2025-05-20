@@ -1,13 +1,12 @@
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
+import 'package:fitora_mobile_app/feature/post/domain/usecases/posts/get_saved_post_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/data/datasources/friend_remote_data_source.dart';
 import 'package:fitora_mobile_app/feature/user/data/datasources/group_remote_data_source.dart';
 import 'package:fitora_mobile_app/feature/user/data/datasources/user_remote_data_source.dart';
 import 'package:fitora_mobile_app/feature/user/data/repositories/friend_repository_impl.dart';
 import 'package:fitora_mobile_app/feature/user/data/repositories/group_repository_impl.dart';
 import 'package:fitora_mobile_app/feature/user/data/repositories/user_repository_impl.dart';
-import 'package:fitora_mobile_app/feature/user/domain/repositories/friend_repository.dart';
-import 'package:fitora_mobile_app/feature/user/domain/repositories/group_repository.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/friends/accept_friend_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/friends/add_friend_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/friends/delete_friend_use_case.dart';
@@ -26,6 +25,7 @@ import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/invite_new
 import 'package:fitora_mobile_app/feature/user/domain/usecases/users/get_personal_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/users/get_profile_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/users/get_users_use_case.dart';
+import 'package:fitora_mobile_app/feature/user/domain/usecases/users/search_users_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/users/update_profile_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/friend/friend_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/group/group_bloc.dart';
@@ -33,7 +33,10 @@ import 'package:fitora_mobile_app/feature/user/presentation/blocs/group_form/gro
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/personal/personal_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/profile/profile_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/profile_form/profile_form_bloc.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/blocs/saved_post/saved_post_bloc.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/blocs/user_post/user_post_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/users/users_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/domain/usecases/newsfeed/get_user_post_use_case.dart';
 
 class UserDependency {
   UserDependency._();
@@ -41,13 +44,15 @@ class UserDependency {
   static void init() {
     // Bloc
     getIt.registerFactory(() => UsersBloc(getIt<GetUsersUseCase>()));
-    getIt.registerFactory(() => ProfileBloc(
+    getIt.registerFactory(() =>
+        ProfileBloc(
           getIt<GetProfileUseCase>(),
           getIt<UpdateProfileUseCase>(),
         ));
     getIt.registerFactory(() => ProfileFormBloc());
     getIt.registerFactory(() => PersonalBloc(getIt<GetPersonalUseCase>()));
-    getIt.registerFactory(() => GroupBloc(
+    getIt.registerFactory(() =>
+        GroupBloc(
           getIt<CreateGroupUseCase>(),
           getIt<GetGroupByIdUseCase>(),
           getIt<GetGroupMemberUseCase>(),
@@ -58,7 +63,8 @@ class UserDependency {
           getIt<GetManagedGroupUseCase>(),
         ));
     getIt.registerFactory(() => GroupFormBloc());
-    getIt.registerFactory(() => FriendBloc(
+    getIt.registerFactory(() =>
+        FriendBloc(
           getIt<AddFriendUseCase>(),
           getIt<AcceptFriendUseCase>(),
           getIt<DeleteFriendUseCase>(),
@@ -67,65 +73,71 @@ class UserDependency {
           getIt<GetSentFriendRequestUseCase>(),
           getIt<GetReceivedFriendRequestUseCase>(),
         ));
+    getIt.registerFactory(() => UserPostBloc(getIt<GetUserPostUseCase>()));
+    getIt.registerFactory(() => SavedPostBloc(getIt<GetSavedPostUseCase>()));
 
     // UseCase - User
     getIt.registerLazySingleton(
-        () => GetUsersUseCase(getIt<UserRepositoryImpl>()));
+            () => GetUsersUseCase(getIt<UserRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => GetProfileUseCase(getIt<UserRepositoryImpl>()));
+            () => GetProfileUseCase(getIt<UserRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => GetPersonalUseCase(getIt<UserRepositoryImpl>()));
+            () => GetPersonalUseCase(getIt<UserRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => UpdateProfileUseCase(getIt<UserRepositoryImpl>()));
+            () => UpdateProfileUseCase(getIt<UserRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => SearchUsersUseCase(getIt<UserRepositoryImpl>()));
 
     // UseCase - Group
     getIt.registerLazySingleton(
-        () => CreateGroupUseCase(getIt<GroupRepositoryImpl>()));
+    () => CreateGroupUseCase(getIt<GroupRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => GetGroupByIdUseCase(getIt<GroupRepositoryImpl>()));
+    () => GetGroupByIdUseCase(getIt<GroupRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => GetGroupMemberUseCase(getIt<GroupRepositoryImpl>()));
+    () => GetGroupMemberUseCase(getIt<GroupRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => InviteNewMembersUseCase(getIt<GroupRepositoryImpl>()));
+    () => InviteNewMembersUseCase(getIt<GroupRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => GetReceivedGroupInviteUseCase(getIt<GroupRepositoryImpl>()));
+    () => GetReceivedGroupInviteUseCase(getIt<GroupRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => AcceptGroupInviteUseCase(getIt<GroupRepositoryImpl>()));
+    () => AcceptGroupInviteUseCase(getIt<GroupRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => DeleteGroupInviteUseCase(getIt<GroupRepositoryImpl>()));
+    () => DeleteGroupInviteUseCase(getIt<GroupRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => GetManagedGroupUseCase(getIt<GroupRepositoryImpl>()));
+    () => GetManagedGroupUseCase(getIt<GroupRepositoryImpl>()));
 
     // UseCase - Friend
     getIt.registerLazySingleton(
-        () => AddFriendUseCase(getIt<FriendRepositoryImpl>()));
+    () => AddFriendUseCase(getIt<FriendRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => AcceptFriendUseCase(getIt<FriendRepositoryImpl>()));
+    () => AcceptFriendUseCase(getIt<FriendRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => DeleteFriendUseCase(getIt<FriendRepositoryImpl>()));
+    () => DeleteFriendUseCase(getIt<FriendRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => UnfriendUseCase(getIt<FriendRepositoryImpl>()));
+    () => UnfriendUseCase(getIt<FriendRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => GetFriendUseCase(getIt<FriendRepositoryImpl>()));
+    () => GetFriendUseCase(getIt<FriendRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => GetSentFriendRequestUseCase(getIt<FriendRepositoryImpl>()));
+    () => GetSentFriendRequestUseCase(getIt<FriendRepositoryImpl>()));
     getIt.registerLazySingleton(
-        () => GetReceivedFriendRequestUseCase(getIt<FriendRepositoryImpl>()));
+    () => GetReceivedFriendRequestUseCase(getIt<FriendRepositoryImpl>()));
 
     // Repository
     getIt.registerLazySingleton(
-        () => UserRepositoryImpl(getIt<UserRemoteDataSourceImpl>()));
+    () => UserRepositoryImpl(getIt<UserRemoteDataSourceImpl>()));
     getIt.registerLazySingleton(
-        () => GroupRepositoryImpl(getIt<GroupRemoteDataSourceImpl>()));
+    () => GroupRepositoryImpl(getIt<GroupRemoteDataSourceImpl>()));
     getIt.registerLazySingleton(
-        () => FriendRepositoryImpl(getIt<FriendRemoteDataSourceImpl>()));
+    () => FriendRepositoryImpl(getIt<FriendRemoteDataSourceImpl>()));
 
     // Datasource
     getIt.registerLazySingleton(
-        () => UserRemoteDataSourceImpl(getIt<DioClient>(instanceName: 'user')));
+    () => UserRemoteDataSourceImpl(getIt<DioClient>(instanceName: 'user')));
     getIt.registerLazySingleton(() =>
-        GroupRemoteDataSourceImpl(getIt<DioClient>(instanceName: 'user')));
+    GroupRemoteDataSourceImpl(getIt<DioClient>(instanceName: 'user')));
     getIt.registerLazySingleton(() =>
-        FriendRemoteDataSourceImpl(getIt<DioClient>(instanceName: 'user')));
+    FriendRemoteDataSourceImpl(getIt<DioClient>(instanceName: 'user')
+    )
+    );
   }
 }

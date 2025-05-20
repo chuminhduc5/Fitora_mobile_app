@@ -10,6 +10,7 @@ import 'package:fitora_mobile_app/feature/auth/di/auth_dependency.dart';
 import 'package:fitora_mobile_app/feature/chat/di/chat_dependency.dart';
 import 'package:fitora_mobile_app/feature/notification/di/notification_dependency.dart';
 import 'package:fitora_mobile_app/feature/post/di/post_dependency.dart';
+import 'package:fitora_mobile_app/feature/search/di/search_dependency.dart';
 import 'package:fitora_mobile_app/feature/splash/di/splash_dependency.dart';
 import 'package:fitora_mobile_app/feature/user/di/user_dependency.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -25,6 +26,7 @@ void configureDependencies() {
   NotificationDependency.init();
   PostDependency.init();
   UserDependency.init();
+  SearchDependency.init();
 
   getIt.registerLazySingleton(() => ThemeBloc());
   getIt.registerLazySingleton(() => TranslateBloc());

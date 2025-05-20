@@ -71,7 +71,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<List<UserModel>> fetchUsers() async {
     try {
-      final response = await _dioClient.get(ApiUrl.getUsers);
+      final response = await _dioClient.get("${ApiUrl.getUsers}?PageSize=30");
       final data = response.data['data'];
       if (data != null && data['data'] is List) {
         final users = (data['data'] as List)

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class InviteFriendGroupCardWidget extends StatelessWidget {
   final UserEntity user;
-  final void Function(String) onPressed;
+  final void Function(String)? onPressed;
   final bool isActionInvite;
 
   const InviteFriendGroupCardWidget({
@@ -25,7 +25,7 @@ class InviteFriendGroupCardWidget extends StatelessWidget {
         width: 80,
         height: 40,
         child: AppButtonWidget(
-          onPressed: () => onPressed(user.id),
+          onPressed: () => onPressed?.call(user.id),
           title: isActionInvite ? "Đã mời" : "Mời",
           color: isActionInvite ? AppColors.black : AppColors.white,
           bgColor: isActionInvite ? AppColors.bgGray : AppColors.bgPink,

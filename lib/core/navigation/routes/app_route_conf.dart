@@ -8,6 +8,7 @@ import 'package:fitora_mobile_app/feature/notification/presentation/screens/noti
 import 'package:fitora_mobile_app/feature/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
+import 'package:fitora_mobile_app/feature/search/presentation/screens/search_screen.dart';
 import 'package:fitora_mobile_app/feature/splash/presentation/screens/splash_screen.dart';
 import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/create_group_screen.dart';
@@ -224,6 +225,11 @@ class AppRouteConf {
         path: AppRoute.friendInvitation.path,
         name: AppRoute.friendInvitation.name,
         builder: (_, __) => const FriendInvitationScreen(),
+      ),
+      GoRoute(
+        path: AppRoute.search.path,
+        name: AppRoute.search.name,
+        builder: (_, __) => const SearchScreen(),
       ),
     ],
   );

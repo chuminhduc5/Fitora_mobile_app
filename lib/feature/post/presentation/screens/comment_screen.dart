@@ -1,6 +1,9 @@
 import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
 import 'package:fitora_mobile_app/common/dialog/app_error_widget.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
+import 'package:fitora_mobile_app/common/widgets/avatar/app_avatar_widget.dart';
+import 'package:fitora_mobile_app/common/widgets/textfield/app_text_field_widget.dart';
+import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
@@ -43,11 +46,10 @@ class _CommentScreenState extends State<CommentScreen> {
 
   void _createComment(BuildContext context) async {
     primaryFocus?.unfocus();
-    // final formBloc = context.read<CommentFormBloc>().state;
     final formState = context.read<CommentFormBloc>().state;
     final formData = formState.data;
     logg.i("PostId: ${widget.post.id}");
-    //logg.i("ParentCommentId: ${formBloc.data.parentCommentId}");
+    logg.i("ParentCommentId: ${formState.data.parentCommentId}");
     logg.i("Content: ${_controller.text}");
     logg.i("MediaUrl: ");
     context.read<CommentBloc>().add(
@@ -64,13 +66,16 @@ class _CommentScreenState extends State<CommentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Kiểm tra xem bàn phím có mở hay không
     bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<CommentFormBloc>()),
-        BlocProvider(create: (_) => getIt<CommentBloc>()..add(FetchCommentEvent(postId: widget.post.id))),
+        BlocProvider(
+          create: (_) => getIt<CommentBloc>()
+            ..add(
+              FetchCommentEvent(postId: widget.post.id),
+            ),
+        ),
       ],
       child: Scaffold(
         resizeToAvoidBottomInset: true,
@@ -91,7 +96,7 @@ class _CommentScreenState extends State<CommentScreen> {
                         slivers: [
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
+                              (context, index) {
                                 final comment = comments[index];
                                 return CommentWidget(comment: comment);
                               },
@@ -111,21 +116,20 @@ class _CommentScreenState extends State<CommentScreen> {
                   padding: const EdgeInsets.all(0.0),
                   child: Row(
                     children: [
-                      // const Padding(
-                      //   padding: EdgeInsets.only(top: 8.0),
-                      //   child: CircleAvatar(radius: 16),
-                      // ),
-                      const SizedBox(width: 8),
+                      //AppAvatarWidget(imagePath: imagePath, size: size)
+                      //const SizedBox(width: 8),
                       Expanded(
                         child: TextField(
                           controller: _controller,
                           focusNode: _focusNode,
                           decoration: InputDecoration(
-                            hintText: 'Viết bình luận công khai...',
+                            hintText: "Viết bình luận...",
                             filled: true,
                             fillColor: Colors.grey.shade100,
                             contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 10),
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                               borderSide: BorderSide.none,
@@ -144,7 +148,10 @@ class _CommentScreenState extends State<CommentScreen> {
                         listener: (context, state) {
                           if (state is CreateCommentFailureState) {
                             AppDisplayMessage.error(context, state.message);
-                          } else if (state is CreateCommentSuccessState) {}
+                          } else if (state is CreateCommentSuccessState) {
+                            logg.i("Bình luận đã được gửi: ${_controller.text}");
+                            _controller.clear();
+                          }
                         },
                         builder: (context, state) {
                           if (state is CreateCommentLoadingState) {
@@ -170,21 +177,20 @@ class _CommentScreenState extends State<CommentScreen> {
                   padding: const EdgeInsets.all(0.0),
                   child: Row(
                     children: [
-                      // const Padding(
-                      //   padding: EdgeInsets.only(top: 8.0),
-                      //   child: CircleAvatar(radius: 16),
-                      // ),
-                      const SizedBox(width: 8),
+                      //AppAvatarWidget(imagePath: imagePath, size: size)
+                      //const SizedBox(width: 8),
                       Expanded(
                         child: TextField(
                           controller: _controller,
                           focusNode: _focusNode,
                           decoration: InputDecoration(
-                            hintText: 'Viết bình luận công khai...',
+                            hintText: "Viết bình luận...",
                             filled: true,
                             fillColor: Colors.grey.shade100,
                             contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 10),
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                               borderSide: BorderSide.none,
@@ -203,7 +209,10 @@ class _CommentScreenState extends State<CommentScreen> {
                         listener: (context, state) {
                           if (state is CreateCommentFailureState) {
                             AppDisplayMessage.error(context, state.message);
-                          } else if (state is CreateCommentSuccessState) {}
+                          } else if (state is CreateCommentSuccessState) {
+                            logg.i("Bình luận đã được gửi: ${_controller.text}");
+                            _controller.clear();
+                          }
                         },
                         builder: (context, state) {
                           if (state is CreateCommentLoadingState) {

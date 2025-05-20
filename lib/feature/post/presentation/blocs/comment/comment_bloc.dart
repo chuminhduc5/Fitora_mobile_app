@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:fitora_mobile_app/core/utils/failure_converter.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/comment_entity.dart';
+import 'package:fitora_mobile_app/feature/post/domain/entities/comment_response_entity.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/create_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/get_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/usecase_params.dart';
@@ -38,7 +39,11 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
 
     result.fold(
       (failure) => emit(CreateCommentFailureState(mapFailureToMessage(failure))),
-      (success) => emit(CreateCommentSuccessState()),
+      (data) {
+        _addCommentToList(data);
+        emit(CreateCommentSuccessState(newComment: data));
+        emit(FetchCommentSuccessState(data: _comments));
+      },
     );
   }
 
@@ -49,8 +54,15 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
 
     result.fold(
       (failure) => emit(FetchCommentFailureState(mapFailureToMessage(failure))),
-      (success) => emit(FetchCommentSuccessState(data: success)),
+      (success) {
+        _comments = success;
+        emit(FetchCommentSuccessState(data: _comments));
+      },
     );
+  }
+
+  void _addCommentToList(CommentEntity comment) {
+    _comments.insert(0, comment);
   }
 
   @override

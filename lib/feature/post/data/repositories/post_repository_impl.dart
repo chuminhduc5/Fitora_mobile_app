@@ -4,6 +4,7 @@ import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/core/helper/mapper/post/post_mapper.dart';
 import 'package:fitora_mobile_app/feature/post/data/datasources/post_remote_data_source.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/create_post_request.dart';
+import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/save_post_request.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/update_post_request.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
 import 'package:fitora_mobile_app/feature/post/domain/repositories/post_repository.dart';
@@ -71,8 +72,8 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<Either<Failure, List<PostEntity>>> getNewsFeed() async {
     try {
-      final result = await _postRemoteDataSource.fetchNewsfeed();
-      final newsfeed = result.map((i) => PostMapper.toEntity(i)).toList();
+      final results = await _postRemoteDataSource.fetchNewsfeed();
+      final newsfeed = results.map((i) => PostMapper.toEntity(i)).toList();
       newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
       return Right(newsfeed);
     } on ServerException {
@@ -81,11 +82,35 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Future<Either<Failure, List<PostEntity>>> getPersonal() async {
+  Future<Either<Failure, List<PostEntity>>> getPersonal(String userId) async {
     try {
-      final result = await _postRemoteDataSource.fetchPersonal();
+      final result = await _postRemoteDataSource.fetchPersonal(userId);
       final personal = result.map((item) => PostMapper.toEntity(item)).toList();
       return Right(personal);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> savePost(SavePostParams params) async {
+    try {
+      final result = await _postRemoteDataSource.savePost(SavePostRequest(
+        userId: params.userId,
+        postId: params.postId,
+      ));
+      return Right(result);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PostEntity>>> getSavedPost() async {
+    try {
+      final results = await _postRemoteDataSource.fetchSavedPost();
+      final posts = results.map((i) => PostMapper.toEntity(i)).toList();
+      return Right(posts);
     } on ServerException {
       return Left(ServerFailure());
     }

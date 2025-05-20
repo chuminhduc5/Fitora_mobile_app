@@ -24,12 +24,12 @@ class _InviteFriendGroupScreenState extends State<InviteFriendGroupScreen> {
   Set<String> invitedUserIds = {};
   void _inviteFriendGroup(String userId) {
     primaryFocus?.unfocus();
-    // context.read<GroupBloc>().add(
-    //       InviteNewMembersEvent(
-    //         groupId: widget.groupId,
-    //         receiverUserIds: [userId],
-    //       ),
-    //     );
+    context.read<GroupBloc>().add(
+          InviteNewMembersEvent(
+            groupId: widget.groupId,
+            receiverUserIds: [userId],
+          ),
+        );
     logg.i("Id Người dùng: $userId");
     setState(() {
       invitedUserIds.add(userId);

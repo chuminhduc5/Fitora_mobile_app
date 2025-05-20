@@ -9,5 +9,7 @@ abstract class PostRepository {
   Future<Either<Failure, void>> updatePost(UpdatePostParams params);
   Future<Either<Failure, void>> deletePost(String id);
   Future<Either<Failure, List<PostEntity>>> getNewsFeed();
-  Future<Either<Failure, List<PostEntity>>> getPersonal();
+  Future<Either<Failure, List<PostEntity>>> getPersonal(String userId);
+  Future<Either<Failure, void>> savePost(SavePostParams params);
+  Future<Either<Failure, List<PostEntity>>> getSavedPost();
 }

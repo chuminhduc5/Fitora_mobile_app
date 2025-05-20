@@ -5,12 +5,16 @@ import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/network/network_checker.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/blocs/auth/auth_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/interact/interact_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/newsfeed/newsfeed_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/widgets/newsfeed/newsfeed_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,6 +24,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late final String userId;
   int selectedIndex = 0;
 
   String selectedCategory = 'Tất cả';
@@ -46,12 +51,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    _getUserId();
     _newsfeedBloc = getIt<NewsfeedBloc>()..add(FetchNewsfeedEvent());
     final network = getIt<NetworkChecker>();
     _timer = Timer.periodic(const Duration(seconds: 30), (_) {
       //_checkInternetConnection(network);
     });
     super.initState();
+  }
+
+  Future<void> _getUserId() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      userId = pref.getString('userId')!;
+    });
   }
 
   // void _checkInternetConnection(NetworkChecker network) {
@@ -83,6 +96,39 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _upVote(String postId) {
+    context.read<InteractBloc>().add(
+          InteractPostEvent(
+            userId: userId,
+            postId: postId,
+            voteType: 1,
+          ),
+        );
+    logg.i('VoteType: 1');
+  }
+
+  void _downVote(String postId) {
+    context.read<InteractBloc>().add(
+          InteractPostEvent(
+            userId: userId,
+            postId: postId,
+            voteType: 2,
+          ),
+        );
+    logg.i('VoteType: 2');
+  }
+
+  void _unVote(String postId) {
+    context.read<InteractBloc>().add(
+          InteractPostEvent(
+            userId: userId,
+            postId: postId,
+            voteType: 3,
+          ),
+        );
+    logg.i('VoteType: 3');
+  }
+
   @override
   void dispose() {
     _timer.cancel();
@@ -96,112 +142,104 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocProvider(create: (_) => _newsfeedBloc),
         BlocProvider(create: (_) => getIt<AuthBloc>()),
       ],
-      child: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
-        if (state is AuthSignOutLoadingState) {
-          showDialog(
-            context: context,
-            builder: (_) => const AppLoadingWidget(),
-          );
-        } else if (state is AuthSignOutSuccessState) {
-          context.goNamed(AppRoute.signIn.name);
-          AppDisplayMessage.success(context, state.message);
-        } else if (state is AuthSignOutFailureState) {
-          context.pop();
-          AppDisplayMessage.error(context, state.message);
-        }
-      }, builder: (context, state) {
-        return Scaffold(
+      child: Scaffold(
+        backgroundColor: AppColors.bgWhite,
+        appBar: AppBar(
           backgroundColor: AppColors.bgWhite,
-          appBar: AppBar(
-            backgroundColor: AppColors.bgWhite,
-            title: const Text(
-              'Fitora',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: AppColors.bgPink,
+          title: const Text(
+            'Fitora',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: AppColors.bgPink,
+            ),
+          ),
+          actions: <Widget>[
+            IconButton(
+              onPressed: () async {
+                final result = await context.pushNamed(AppRoute.post.name);
+                if (result == true) {
+                  context
+                      .read<NewsfeedBloc>()
+                      .add(FetchNewsfeedEvent()); // gọi lại API
+                }
+              },
+              icon: const Icon(Icons.add),
+            ),
+            IconButton(
+              onPressed: () {
+                context.pushNamed(AppRoute.search.name);
+              },
+              icon: const Icon(Icons.search_outlined),
+            ),
+            // IconButton(
+            //   onPressed: () {
+            //     context.goNamed(AppRoute.notification.name);
+            //   },
+            //   // icon: const Icon(Icons.notifications),
+            //   icon: Badge.count(
+            //     count: 1,
+            //     child: const Icon(Icons.notifications),
+            //   ),
+            // ),
+          ],
+          iconTheme: const IconThemeData(color: Colors.black),
+        ),
+        body: Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+              color: Colors.grey[200],
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(categories.length, (index) {
+                    final isSelected = index == selectedIndex;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: ChoiceChip(
+                        label: Text(categories[index]),
+                        selected: isSelected,
+                        onSelected: (_) {
+                          setState(() {
+                            selectedIndex = index;
+                          });
+                        },
+                        selectedColor: categoriesColor[index],
+                        backgroundColor: Colors.white,
+                        labelStyle: TextStyle(
+                          color: isSelected ? Colors.black : Colors.grey[700],
+                          fontWeight: FontWeight.w500,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
               ),
             ),
-            actions: <Widget>[
-              IconButton(
-                onPressed: () async {
-                  final result = await context.pushNamed(AppRoute.post.name);
-                  if (result == true) {
-                    context.read<NewsfeedBloc>().add(FetchNewsfeedEvent()); // gọi lại API
-                  }
+            Expanded(
+              child: RefreshIndicator(
+                color: AppColors.bgPink,
+                backgroundColor: AppColors.bgWhite,
+                onRefresh: () async {
+                  await Future.delayed(const Duration(seconds: 1));
+                  context.read<NewsfeedBloc>().add(FetchNewsfeedEvent());
                 },
-                icon: const Icon(Icons.add),
-              ),
-              IconButton(
-                onPressed: () {
-                  context.goNamed(AppRoute.search.name);
-                },
-                icon: const Icon(Icons.search_outlined),
-              ),
-              // IconButton(
-              //   onPressed: () {
-              //     context.goNamed(AppRoute.notification.name);
-              //   },
-              //   // icon: const Icon(Icons.notifications),
-              //   icon: Badge.count(
-              //     count: 1,
-              //     child: const Icon(Icons.notifications),
-              //   ),
-              // ),
-            ],
-            iconTheme: const IconThemeData(color: Colors.black),
-          ),
-          body: Column(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 12),
-                color: Colors.grey[200],
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate(categories.length, (index) {
-                      final isSelected = index == selectedIndex;
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: ChoiceChip(
-                          label: Text(categories[index]),
-                          selected: isSelected,
-                          onSelected: (_) {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
-                          selectedColor: categoriesColor[index],
-                          backgroundColor: Colors.white,
-                          labelStyle: TextStyle(
-                            color: isSelected ? Colors.black : Colors.grey[700],
-                            fontWeight: FontWeight.w500,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
+                child: NewsfeedWidget(
+                  selectedCategory: categories[selectedIndex],
+                  upVote: _upVote,
+                  downVote: _downVote,
+                  unVote: _unVote,
                 ),
               ),
-              Expanded(
-                child: RefreshIndicator(
-                  color: AppColors.bgPink,
-                  backgroundColor: AppColors.bgWhite,
-                  onRefresh: () async {
-                    await Future.delayed(const Duration(seconds: 1));
-                    context.read<NewsfeedBloc>().add(FetchNewsfeedEvent());
-                  },
-                  child: NewsfeedWidget(selectedCategory: categories[selectedIndex]),
-                ),
-              ),
-            ],
-          ),
-        );
-      }),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

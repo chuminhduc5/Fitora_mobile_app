@@ -12,7 +12,13 @@ class CommentInitialState extends CommentState {}
 
 class CreateCommentLoadingState extends CommentState {}
 
-class CreateCommentSuccessState extends CommentState {}
+class CreateCommentSuccessState extends CommentState {
+  final CommentEntity newComment;
+  const CreateCommentSuccessState({required this.newComment});
+
+  @override
+  List<Object?> get props => [newComment];
+}
 
 class CreateCommentFailureState extends CommentState {
   final String message;

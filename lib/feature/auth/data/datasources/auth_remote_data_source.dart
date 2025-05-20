@@ -14,6 +14,8 @@ abstract class AuthRemoteDataSource {
   Future<AuthModel> signUp(SignUpRequest model);
 
   Future<void> signOut();
+
+  // Future<void> refreshToken();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -67,8 +69,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> signOut() async {
     try {
-      await Future.delayed(const Duration(seconds: 1));
-      return;
+      await _dioClient.post(ApiUrl.signOut);
     } catch (e) {
       logger.e(e);
       throw ServerException();

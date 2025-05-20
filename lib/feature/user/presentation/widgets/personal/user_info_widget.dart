@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:fitora_mobile_app/common/widgets/avatar/app_avatar_widget.dart';
+import 'package:fitora_mobile_app/common/widgets/button/app_button_widget.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
@@ -9,8 +10,15 @@ import 'package:go_router/go_router.dart';
 
 class UserInfoWidget extends StatelessWidget {
   final UserProfileEntity profile;
+  final Function()? addFriend;
+  final bool isActionAddFriend;
 
-  const UserInfoWidget({super.key, required this.profile});
+  const UserInfoWidget({
+    super.key,
+    required this.profile,
+    this.addFriend,
+    this.isActionAddFriend = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -81,22 +89,87 @@ class UserInfoWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _button(() {}, "Thông tin", AppColors.bgPink, Colors.white),
-              const SizedBox(width: 10),
-              _button(
-                () {
-                  context.pushNamed(AppRoute.updateProfile.name,
-                      extra: profile);
-                },
-                "Chỉnh sửa",
-                Colors.white,
-                Colors.black,
-              ),
-            ],
-          ),
+          if (profile.relationship.isFriend == false) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 150,
+                  child: AppButtonWidget(
+                    onPressed: addFriend,
+                    title: isActionAddFriend ? "Hủy lời mời" : "Thêm bạn bè",
+                    bgColor: AppColors.bgPink,
+                    prefixIcon: Icon(
+                      isActionAddFriend
+                          ? Icons.person_remove_alt_1
+                          : Icons.person_add_alt_1,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 150,
+                  child: AppButtonWidget(
+                    onPressed: () {},
+                    title: "Nhắn tin",
+                    color: AppColors.black,
+                    bgColor: AppColors.bgGray,
+                    prefixIcon: const Icon(
+                      Icons.message,
+                      color: AppColors.black,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 50,
+                  child: AppButtonWidget(
+                    onPressed: () {},
+                    title: "",
+                    color: AppColors.black,
+                    bgColor: AppColors.bgGray,
+                    prefixIcon: const Icon(
+                      Icons.menu,
+                      color: AppColors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ] else ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 150,
+                  child: AppButtonWidget(
+                    onPressed: () {},
+                    title: "Bạn bè",
+                    bgColor: AppColors.bgPink,
+                    prefixIcon: const Icon(
+                      Icons.person_add_alt_1,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 150,
+                  child: AppButtonWidget(
+                    onPressed: () {},
+                    title: "Nhắn tin",
+                    color: AppColors.black,
+                    bgColor: AppColors.bgGray,
+                    prefixIcon: const Icon(
+                      Icons.message,
+                      color: AppColors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
           const SizedBox(height: 10),
           SizedBox(
             child: Column(

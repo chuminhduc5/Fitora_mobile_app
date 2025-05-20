@@ -14,14 +14,14 @@ enum Status { none, accept, deleted }
 class ReceivedFriendRequestCardWidget extends StatefulWidget {
   final FriendRequestEntity friend;
   final Function()? onTap;
-  // final void Function(String) onPressed;
+  //final void Function(String) onPressed;
   // final bool isActionInvite;
 
   const ReceivedFriendRequestCardWidget({
     super.key,
     required this.friend,
     this.onTap,
-    // required this.onPressed,
+    //required this.onPressed,
     // required this.isActionInvite,
   });
 
@@ -44,7 +44,7 @@ class _ReceivedFriendRequestCardWidgetState
   void _acceptFriend(BuildContext context) {
     // final userId = widget.friend.senderId;
     print("Call Accept Friend with userId: $friendId");
-    context.read<FriendBloc>().add(AddFriendEvent(friendId));
+    context.read<FriendBloc>().add(AcceptFriendEvent(friendId));
   }
 
   @override
@@ -53,11 +53,11 @@ class _ReceivedFriendRequestCardWidgetState
       onTap: widget.onTap,
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppAvatarWidget(imagePath: widget.friend.senderImageUrl, size: 80),
+            AppAvatarWidget(imagePath: widget.friend.senderImageUrl, size: 75),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -68,7 +68,7 @@ class _ReceivedFriendRequestCardWidgetState
                     softWrap: true,
                     maxLines: 2,
                   ),
-                  const SizedBox(height: 4),
+                  //const SizedBox(height: 4),
                   Text(
                     "${widget.friend.createDate}",
                     style: const TextStyle(color: Colors.grey, fontSize: 12),
@@ -81,6 +81,7 @@ class _ReceivedFriendRequestCardWidgetState
                     const Text('Đã xóa người dùng khỏi danh sách'),
                     const SizedBox(height: 10),
                   ],
+                  const SizedBox(height: 4),
                   if (status != Status.accept && status != Status.deleted) ...[
                     Row(
                       children: [
@@ -104,6 +105,7 @@ class _ReceivedFriendRequestCardWidgetState
                             }
                             return SizedBox(
                               width: 120,
+                              height: 40,
                               child: AppButtonWidget(
                                 onPressed: () {
                                   _acceptFriend(context);
@@ -120,6 +122,7 @@ class _ReceivedFriendRequestCardWidgetState
                         const SizedBox(width: 10),
                         SizedBox(
                           width: 120,
+                          height: 40,
                           child: AppButtonWidget(
                             onPressed: () {
                               setState(() {

@@ -1,12 +1,10 @@
-import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/achievements.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/active_status.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawer_option.dart';
-import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/style_avatar.dart';
-import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
-import 'package:fitora_mobile_app/core/navigation/app_navigation.dart';
+import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 final List<Map<String, dynamic>> _option = [
   {
@@ -57,6 +55,12 @@ final List<Map<String, dynamic>> _option = [
     "description": null,
     "route": "",
   },
+  {
+    "icon": Icons.logout,
+    "title": "Đăng xuất",
+    "description": null,
+    "route": "logout",
+  },
 ];
 
 Widget rightDrawer(BuildContext context) {
@@ -68,35 +72,35 @@ Widget rightDrawer(BuildContext context) {
     backgroundColor: AppColors.bgWhite,
     child: ListView(
       children: [
-        Stack(
-          children: [
-            Center(
-              child: SizedBox(
-                height: 250,
-                width: 220,
-                child: Image.asset(
-                  AppImages.avatar,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 10,
-              left: 10,
-              child: styleAvatar(),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(
-                child: rightDrawerOption(Icons.ac_unit_outlined, "1", "Karma", () {})),
-            Expanded(
-                child: rightDrawerOption(
-                    Icons.account_balance_wallet, "0d", "Reddit age", () {})),
-          ],
-        ),
-        achievements(),
+        // Stack(
+        //   children: [
+        //     Center(
+        //       child: SizedBox(
+        //         height: 250,
+        //         width: 220,
+        //         child: Image.asset(
+        //           AppImages.avatar,
+        //           fit: BoxFit.cover,
+        //         ),
+        //       ),
+        //     ),
+        //     Positioned(
+        //       top: 10,
+        //       left: 10,
+        //       child: styleAvatar(),
+        //     ),
+        //   ],
+        // ),
+        // Row(
+        //   children: [
+        //     Expanded(
+        //         child: rightDrawerOption(Icons.ac_unit_outlined, "1", "Karma", () {})),
+        //     Expanded(
+        //         child: rightDrawerOption(
+        //             Icons.account_balance_wallet, "0d", "Reddit age", () {})),
+        //   ],
+        // ),
+        // achievements(),
         const SizedBox(
           height: 10,
         ),
@@ -107,10 +111,19 @@ Widget rightDrawer(BuildContext context) {
             i["title"],
             i["description"],
             () {
-              if (i["route"] != null) {
+              // if (i["route"] != null) {
+              //   logger.i('Đã bấm vào: ${i["title"]}');
+              //   Navigator.pop(context);
+              //   AppNavigation.pushReplacement(context, i["route"]);
+              // }
+              if (i["route"] == "logout") {
+                // Gọi logout
+                // context.read<AuthBloc>().add(LogoutEvent());
+                //AppNavigation.pushReplacement(context, AppRoute.auth.name);
+                context.goNamed(AppRoute.auth.name);
+              } else if (i["route"] != null && i["route"].toString().isNotEmpty) {
                 logger.i('Đã bấm vào: ${i["title"]}');
-                Navigator.pop(context);
-                AppNavigation.pushReplacement(context, i["route"]);
+                // AppNavigation.pushNamed(context, i["route"]);
               }
             },
           ),

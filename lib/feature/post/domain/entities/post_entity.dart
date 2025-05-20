@@ -10,6 +10,7 @@ class PostEntity extends Equatable {
   final int votesCount;
   final int commentsCount;
   final double score;
+  final bool isCategoryFollowed;
   final int privacy;
   final DateTime createAt;
   final DateTime? updateAt;
@@ -27,6 +28,7 @@ class PostEntity extends Equatable {
     required this.votesCount,
     required this.commentsCount,
     required this.score,
+    required this.isCategoryFollowed,
     required this.privacy,
     required this.createAt,
     required this.updateAt,
@@ -46,6 +48,7 @@ class PostEntity extends Equatable {
     votesCount,
     commentsCount,
     score,
+    isCategoryFollowed,
     privacy,
     createAt,
     updateAt,

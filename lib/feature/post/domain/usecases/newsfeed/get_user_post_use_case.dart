@@ -4,11 +4,13 @@ import 'package:fitora_mobile_app/core/usecase/usecase.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
 import 'package:fitora_mobile_app/feature/post/domain/repositories/post_repository.dart';
 
-class GetPersonalUseCase extends UseCase<List<PostEntity>, NoParams> {
+class GetUserPostUseCase extends UseCase<List<PostEntity>, String> {
   final PostRepository _postRepository;
-  GetPersonalUseCase(this._postRepository);
+
+  GetUserPostUseCase(this._postRepository);
+
   @override
-  Future<Either<Failure, List<PostEntity>>> call(NoParams params) async {
-    return await _postRepository.getPersonal();
+  Future<Either<Failure, List<PostEntity>>> call(String params) async {
+    return await _postRepository.getPersonal(params);
   }
 }
