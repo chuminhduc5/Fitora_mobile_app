@@ -43,7 +43,7 @@ class NotificationScreen extends StatelessWidget {
                   final friendRequests = state.friendRequests;
                   final groupInvites = state.groupInvites;
                   if (friendRequests.isEmpty && groupInvites.isEmpty) {
-                    return const SizedBox();
+                    return const Center(child: Text('Bạn không có thông báo nào!'),);
                   }
                   return CustomScrollView(
                     slivers: [
@@ -92,7 +92,7 @@ class NotificationScreen extends StatelessWidget {
                     ],
                   );
                 }
-                return const SizedBox();
+                return const SizedBox(child: Text('Bạn không có thông báo nào!'),);
               },
             ),
           ),

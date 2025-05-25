@@ -60,9 +60,12 @@ flutter:
     - assets/svg/
     - .env
 
-#flutter_native_splash:
-#  color: "#ffffff"
-#  image: assets/logo.png
-#  fullscreen: true
-#  android: true
-#  ios: true
+flutter_native_splash:
+  color: "#ffffff" # Hoặc màu nền bạn muốn
+  image: assets/images/logo.png # Ảnh splash bạn muốn hiển thị
+#  branding: assets/images/avatar.png # (tuỳ chọn) logo nhỏ dưới splash
+  android: true
+  ios: true
+  web: false
+  android_resize_mode: contain
+  ios_content_mode: scaleAspectFit
