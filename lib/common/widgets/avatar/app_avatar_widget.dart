@@ -21,7 +21,9 @@ class AppAvatarWidget extends StatelessWidget {
       path != null && path.trim().isNotEmpty && path.startsWith('https');
 
   bool _isValidFile(String? path) =>
-      path != null && path.trim().isNotEmpty && File(path).existsSync();
+      path != null &&
+      path.trim().isNotEmpty &&
+      (path.startsWith('/data') || path.startsWith('/storage'));
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +42,6 @@ class AppAvatarWidget extends StatelessWidget {
         size: size,
       );
     } else {
-      // return ClipOval(
-      //   child: SvgPicture.asset(
-      //     fallbackSvgAsset,
-      //     width: size,
-      //     height: size,
-      //     fit: BoxFit.cover,
-      //   ),
-      // );
       return FAvatar(image: const NetworkImage(""), size: size);
     }
   }

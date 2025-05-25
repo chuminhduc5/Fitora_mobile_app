@@ -26,14 +26,14 @@ class AppRouteConf {
   GoRouter get router => _router;
 
   late final _router = GoRouter(
-    initialLocation: AppRoute.splash.path,
+    initialLocation: AppRoute.onboarding.path,
     debugLogDiagnostics: true,
     routes: [
-      GoRoute(
-        path: AppRoute.splash.path,
-        name: AppRoute.splash.name,
-        builder: (_, __) => const SplashScreen(),
-      ),
+      // GoRoute(
+      //   path: AppRoute.splash.path,
+      //   name: AppRoute.splash.name,
+      //   builder: (_, __) => const SplashScreen(),
+      // ),
       GoRoute(
         path: AppRoute.onboarding.path,
         name: AppRoute.onboarding.name,

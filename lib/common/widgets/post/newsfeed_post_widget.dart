@@ -48,11 +48,19 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
     return text.length > 200;
   }
 
+  bool _isValidNetwork(String? path) =>
+      path != null && path.trim().isNotEmpty && path.startsWith('https');
+
+  bool _isValidFile(String? path) =>
+      path != null && path.trim().isNotEmpty && File(path).existsSync();
+
   @override
   void initState() {
     userVoteType = widget.post.userVoteType;
-    _upVoteColor = widget.post.userVoteType == 1 ? AppColors.bgPink : Colors.black;
-    _downVoteColor = widget.post.userVoteType == 2 ? AppColors.bgPink : Colors.black;
+    _upVoteColor =
+        widget.post.userVoteType == 1 ? AppColors.bgPink : Colors.black;
+    _downVoteColor =
+        widget.post.userVoteType == 2 ? AppColors.bgPink : Colors.black;
     super.initState();
   }
 
@@ -164,7 +172,8 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
             child: Row(
               children: [
                 FAvatar(
-                    image: (userInfo.profilePictureUrl != null && userInfo.profilePictureUrl.isNotEmpty)
+                    image: (userInfo.profilePictureUrl != null &&
+                            userInfo.profilePictureUrl.isNotEmpty)
                         ? FileImage(File(userInfo.profilePictureUrl))
                         : const NetworkImage(""),
                     size: 25),
@@ -190,22 +199,29 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                 //   padding: EdgeInsets.zero,
                 //   constraints: const BoxConstraints(),
                 // )
-                if(post.categoryName != null && post.categoryName.isNotEmpty)...[
+                if (post.categoryName != null &&
+                    post.categoryName.isNotEmpty) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [AppColors.bgPink.withOpacity(0.2), Colors.white],
+                        colors: [
+                          AppColors.bgPink.withOpacity(0.2),
+                          Colors.white
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.bgPink.withOpacity(0.6)),
+                      border:
+                          Border.all(color: AppColors.bgPink.withOpacity(0.6)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.local_offer_rounded, size: 14, color: Colors.yellow),
+                        const Icon(Icons.local_offer_rounded,
+                            size: 14, color: Colors.yellow),
                         const SizedBox(width: 4),
                         Text(
                           post.categoryName ?? "Chủ đề",
@@ -222,10 +238,6 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
               ],
             ),
           ),
-          // Text(
-          //   post.content!,
-          //   style: const TextStyle(fontSize: 14),
-          // ),
           Text(
             post.content,
             style: const TextStyle(fontSize: 14),
@@ -237,19 +249,22 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
               onTap: () => setState(() => isExpanded = !isExpanded),
               child: Text(
                 isExpanded ? 'Ẩn bớt' : 'Xem thêm',
-                style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500),
               ),
             ),
           const SizedBox(height: 5),
-          if (post.mediaUrl != null && post.mediaUrl!.isNotEmpty) ...[
-            Image.file(
-              File(post.mediaUrl),
-              height: 300,
-              width: MediaQuery.of(context).size.width,
-              fit: BoxFit.cover,
-            ),
-          ],
-          const SizedBox(height: 10),
+          // if (post.mediaUrl != null && post.mediaUrl!.isNotEmpty) ...[
+          //   Image.file(
+          //     File(post.mediaUrl),
+          //     height: 300,
+          //     width: MediaQuery.of(context).size.width,
+          //     fit: BoxFit.cover,
+          //   ),
+          // ],
+          _buildImage(post.mediaUrl),
           Row(
             spacing: 5,
             children: <Widget>[
@@ -276,6 +291,27 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
         ],
       ),
     );
+  }
+
+  Widget _buildImage(String? imagePath) {
+    ImageProvider? imageProvider;
+
+    if (_isValidNetwork(imagePath)) {
+      imageProvider = NetworkImage(imagePath!);
+    } else if (_isValidFile(imagePath)) {
+      imageProvider = FileImage(File(imagePath!));
+    }
+
+    if (imageProvider != null) {
+      return Image(
+        image: imageProvider,
+        height: 300,
+        width: MediaQuery.of(context).size.width,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return const SizedBox();
+    }
   }
 
   Widget _buildImageLayout(BuildContext context, List<dynamic> images) {
