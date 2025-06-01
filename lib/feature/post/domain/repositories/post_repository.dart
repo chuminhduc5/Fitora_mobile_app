@@ -12,4 +12,6 @@ abstract class PostRepository {
   Future<Either<Failure, List<PostEntity>>> getPersonal(String userId);
   Future<Either<Failure, void>> savePost(SavePostParams params);
   Future<Either<Failure, List<PostEntity>>> getSavedPost();
+  Future<Either<Failure, List<PostEntity>>> getTrendingFeed();
+  Future<Either<Failure, List<PostEntity>>> getExploreFeed();
 }

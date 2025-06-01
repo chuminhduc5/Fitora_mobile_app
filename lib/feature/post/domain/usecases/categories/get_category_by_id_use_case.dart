@@ -1,0 +1,16 @@
+import 'package:dartz/dartz.dart';
+import 'package:fitora_mobile_app/core/error/failure.dart';
+import 'package:fitora_mobile_app/core/usecase/usecase.dart';
+import 'package:fitora_mobile_app/feature/post/domain/entities/category_entity.dart';
+import 'package:fitora_mobile_app/feature/post/domain/repositories/category_repository.dart';
+
+class GetCategoryByIdUseCase extends UseCase<CategoryEntity, String> {
+  final CategoryRepository _categoryRepository;
+
+  GetCategoryByIdUseCase(this._categoryRepository);
+
+  @override
+  Future<Either<Failure, CategoryEntity>> call(String params) async {
+    return await _categoryRepository.getCategoryById(params);
+  }
+}

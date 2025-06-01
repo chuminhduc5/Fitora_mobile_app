@@ -1,6 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:fitora_mobile_app/feature/auth/domain/entities/auth_token_entity.dart';
-import 'package:fitora_mobile_app/feature/auth/domain/entities/user_entity.dart';
 
 class AuthEntity extends Equatable{
   final UserEntity user;
@@ -10,4 +8,32 @@ class AuthEntity extends Equatable{
 
   @override
   List<Object?> get props => [user, token];
+}
+
+class UserEntity extends Equatable {
+  final String id;
+  final String userName;
+  final String fullName;
+
+  const UserEntity({
+    required this.id,
+    required this.userName,
+    required this.fullName,
+  });
+
+  @override
+  List<Object?> get props => [id, userName, fullName];
+}
+
+class AuthTokenEntity extends Equatable {
+  final String accessToken;
+  final String refreshToken;
+
+  const AuthTokenEntity({
+    required this.accessToken,
+    required this.refreshToken
+  });
+
+  @override
+  List<Object?> get props => [accessToken, refreshToken];
 }

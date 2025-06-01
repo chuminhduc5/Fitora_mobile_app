@@ -1,5 +1,6 @@
 import 'package:fitora_mobile_app/common/dialog/app_error_widget.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
+import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/feature/notification/presentation/blocs/notification_bloc.dart';
@@ -16,13 +17,14 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Thông báo"),
-        leading: IconButton(
-          onPressed: () {
-            context.goNamed(AppRoute.appView.name);
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
+        backgroundColor: AppColors.bgPink,
+        title: const Text("Thông báo", style: TextStyle(color: AppColors.white)),
+        // leading: IconButton(
+        //   onPressed: () {
+        //     context.goNamed(AppRoute.appView.name);
+        //   },
+        //   icon: const Icon(Icons.arrow_back),
+        // ),
       ),
       body: SafeArea(
         child: BlocProvider(

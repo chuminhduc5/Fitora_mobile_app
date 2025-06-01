@@ -23,7 +23,7 @@ abstract class GroupRemoteDataSource {
   Future<void> acceptGroupInvite(String id);
   Future<void> deleteGroupInvite(String id);
   Future<List<ManagedGroupModel>> fetchManagedGroup();
-
+  Future<List<ManagedGroupModel>> fetchJoinedGroup();
 }
 
 class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
@@ -71,7 +71,7 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
         data: request.toJson(),
       );
       final group = response.data['data'];
-      return group;
+      return GroupMemberModel.fromJson(group);
     } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
@@ -145,6 +145,21 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   Future<List<ManagedGroupModel>> fetchManagedGroup() async {
     try {
       final response = await _dioClient.get(ApiUrl.getManagedGroup);
+      final data = response.data['data'] as List<dynamic>;
+      final List<ManagedGroupModel> managedGroup = data
+          .map((i) => ManagedGroupModel.fromJson(i as Map<String, dynamic>))
+          .toList();
+      return managedGroup;
+    } on DioException catch (e) {
+      logger.e(e);
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<ManagedGroupModel>> fetchJoinedGroup() async {
+    try {
+      final response = await _dioClient.get(ApiUrl.getJoinedGroup);
       final data = response.data['data'] as List<dynamic>;
       final List<ManagedGroupModel> managedGroup = data
           .map((i) => ManagedGroupModel.fromJson(i as Map<String, dynamic>))

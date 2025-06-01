@@ -17,4 +17,5 @@ abstract class GroupRepository {
   Future<Either<Failure, void>> acceptGroupInvite(String id);
   Future<Either<Failure, void>> deleteGroupInvite(String id);
   Future<Either<Failure, List<ManagedGroupEntity>>> getManagedGroup();
+  Future<Either<Failure, List<ManagedGroupEntity>>> getJoinedGroup();
 }

@@ -9,6 +9,7 @@ import 'package:fitora_mobile_app/feature/onboarding/presentation/screens/onboar
 import 'package:fitora_mobile_app/feature/post/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
 import 'package:fitora_mobile_app/feature/search/presentation/screens/search_screen.dart';
+import 'package:fitora_mobile_app/feature/setting/presentation/screens/setting_screen.dart';
 import 'package:fitora_mobile_app/feature/splash/presentation/screens/splash_screen.dart';
 import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/create_group_screen.dart';
@@ -17,8 +18,9 @@ import 'package:fitora_mobile_app/feature/user/presentation/screens/friend_scree
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/group_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/invite_friend_group_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/personal_screen.dart';
-import 'package:fitora_mobile_app/feature/user/presentation/screens/profile_screen.dart';
-import 'package:fitora_mobile_app/feature/user/presentation/screens/update_profile_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/profile/profile_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/profile/saved_post_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/profile/update_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -175,7 +177,17 @@ class AppRouteConf {
               );
             }
           ),
+          GoRoute(
+            path: AppRoute.savedPost.path,
+            name: AppRoute.savedPost.name,
+            builder: (_, __) => const SavedPostScreen(),
+          ),
         ],
+      ),
+      GoRoute(
+        path: AppRoute.setting.path,
+        name: AppRoute.setting.name,
+        builder: (_, __) => const SettingScreen(),
       ),
       GoRoute(
         path: AppRoute.personal.path,

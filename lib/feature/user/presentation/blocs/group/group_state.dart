@@ -150,3 +150,22 @@ class FetchManagedGroupFailureState extends GroupState {
   @override
   List<Object?> get props => [message];
 }
+
+class FetchJoinedGroupLoadingState extends GroupState {}
+
+class FetchJoinedGroupSuccessState extends GroupState {
+  final List<ManagedGroupEntity> data;
+  const FetchJoinedGroupSuccessState({required this.data});
+
+  @override
+  List<Object?> get props => [data];
+}
+
+class FetchJoinedGroupFailureState extends GroupState {
+  final String message;
+
+  const FetchJoinedGroupFailureState(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

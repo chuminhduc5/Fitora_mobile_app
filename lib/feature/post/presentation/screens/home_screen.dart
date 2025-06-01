@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
+import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
@@ -30,10 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String selectedCategory = 'Tất cả';
   final List<String> categories = [
     'Tất cả',
-    'BlockChain',
-    'AI',
-    'Web',
-    'Mobile',
+    'Xu hướng',
+    'Khám phá',
   ];
 
   final List<Color> categoriesColor = [
@@ -129,6 +128,15 @@ class _HomeScreenState extends State<HomeScreen> {
     logg.i('VoteType: 3');
   }
 
+  void _savePost(String postId) {
+    context.read<PostBloc>().add(
+          SavePostEvent(
+            userId: userId,
+            postId: postId,
+          ),
+        );
+  }
+
   @override
   void dispose() {
     _timer.cancel();
@@ -146,13 +154,18 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppColors.bgWhite,
         appBar: AppBar(
           backgroundColor: AppColors.bgWhite,
-          title: const Text(
-            'Fitora',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: AppColors.bgPink,
-            ),
+          title: Row(
+            children: [
+              Image.asset(AppImages.logo, width: 30, height: 30),
+              const Text(
+                'Fitora',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.bgPink,
+                ),
+              ),
+            ],
           ),
           actions: <Widget>[
             IconButton(
@@ -206,10 +219,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             selectedIndex = index;
                           });
                         },
-                        selectedColor: categoriesColor[index],
+                        selectedColor: AppColors.bgPink,
                         backgroundColor: Colors.white,
+                        checkmarkColor: Colors.white,
                         labelStyle: TextStyle(
-                          color: isSelected ? Colors.black : Colors.grey[700],
+                          color: isSelected ? Colors.white : Colors.grey[700],
                           fontWeight: FontWeight.w500,
                         ),
                         shape: RoundedRectangleBorder(
@@ -231,9 +245,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: NewsfeedWidget(
                   selectedCategory: categories[selectedIndex],
+                  selectedIndex: selectedIndex,
                   upVote: _upVote,
                   downVote: _downVote,
                   unVote: _unVote,
+                  savePost: _savePost,
                 ),
               ),
             ),

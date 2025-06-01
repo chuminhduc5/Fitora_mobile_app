@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fitora_mobile_app/common/widgets/avatar/app_avatar_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/post/comment_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/post/favourite_widget.dart';
-import 'package:fitora_mobile_app/common/widgets/post/premium_badge_widget.dart';
+import 'package:fitora_mobile_app/common/widgets/post/save_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/post/share_widget.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
-import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +19,7 @@ class NewsfeedPostWidget extends StatefulWidget {
   final void Function(String)? upVote;
   final void Function(String)? unVote;
   final void Function(String)? downVote;
+  final void Function(String)? savePost;
 
   const NewsfeedPostWidget({
     super.key,
@@ -27,6 +28,7 @@ class NewsfeedPostWidget extends StatefulWidget {
     this.upVote,
     this.unVote,
     this.downVote,
+    this.savePost,
   });
 
   @override
@@ -41,6 +43,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
   int? userVoteType;
   Color _upVoteColor = Colors.black;
   Color _downVoteColor = Colors.black;
+  bool _actionSavedPost = false;
 
   bool isExpanded = false;
 
@@ -101,7 +104,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
     );
   }
 
-  void handleUpVote() {
+  void _handleUpVote() {
     setState(() {
       if (userVoteType == 1) {
         voteCount -= 1;
@@ -119,7 +122,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
     });
   }
 
-  void handleDownVote() {
+  void _handleDownVote() {
     setState(() {
       if (userVoteType == 2) {
         voteCount += 1;
@@ -137,7 +140,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
     });
   }
 
-  void handleUnVote() {
+  void _handleUnVote() {
     setState(() {
       if (userVoteType == 1) {
         voteCount -= 1;
@@ -148,6 +151,13 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
       _downVoteColor = Colors.black;
       userVoteType = null;
       widget.unVote?.call(widget.post.id);
+    });
+  }
+
+  void _savedPost() {
+    setState(() {
+      _actionSavedPost = true;
+      widget.savePost?.call(widget.post.id);
     });
   }
 
@@ -171,34 +181,36 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               children: [
-                FAvatar(
-                    image: (userInfo.profilePictureUrl != null &&
-                            userInfo.profilePictureUrl.isNotEmpty)
-                        ? FileImage(File(userInfo.profilePictureUrl))
-                        : const NetworkImage(""),
-                    size: 25),
+                AppAvatarWidget(imagePath: userInfo.profilePictureUrl, size: 35),
                 const SizedBox(width: 5),
-                Text(
-                  widget.post.user.lastName ?? "",
-                  style: const TextStyle(fontSize: 14),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  post.createAt != null
-                      ? DateFormat('yyyy-MM-dd HH:mm').format(post.createAt!)
-                      : "N/A",
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.post.user.username ?? "",
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          post.createAt != null
+                              ? DateFormat('yyyy-MM-dd HH:mm').format(post.createAt!)
+                              : "N/A",
+                          style: const TextStyle(fontSize: 11, color: Colors.grey),
+                        ),
+                        const SizedBox(width: 5),
+                        const Icon(Icons.circle, size: 5, color: Colors.grey),
+                        const SizedBox(width: 5),
+                        if (post.privacy == 0) const Icon(Icons.public, size: 11, color: Colors.grey),
+                        if (post.privacy == 1) const Icon(Icons.group, size: 11, color: Colors.grey),
+                        if (post.privacy == 2) const Icon(Icons.lock, size: 11, color: Colors.grey),
+                        if (post.privacy == 3) const Icon(Icons.group_work, size: 11, color: Colors.grey),
+                        if (post.privacy == 4) const Icon(Icons.tune, size: 11, color: Colors.grey),
+                      ],
+                    ),
+                  ],
                 ),
                 const Spacer(),
-                // IconButton(
-                //   onPressed: widget.onPressed,
-                //   icon: const Icon(Icons.more_vert),
-                //   style: const ButtonStyle(
-                //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                //   ),
-                //   padding: EdgeInsets.zero,
-                //   constraints: const BoxConstraints(),
-                // )
                 if (post.categoryName != null &&
                     post.categoryName.isNotEmpty) ...[
                   Container(
@@ -234,7 +246,35 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                       ],
                     ),
                   )
-                ]
+                ],
+                const SizedBox(width: 5),
+                SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: PopupMenuButton<String>(
+                      padding: EdgeInsets.zero,
+                      color: AppColors.bgWhite,
+                      icon: const Icon(Icons.more_vert),
+                      onSelected: (value) {
+                        if (value == 'edit') {
+                          // Sửa
+                        } else if (value == 'delete') {
+                          // Xóa
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'edit',
+                          child: Text('Chỉnh sửa'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'delete',
+                          child: Text('Xóa'),
+                        ),
+                      ],
+                    ),
+                ),
+
               ],
             ),
           ),
@@ -256,14 +296,6 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
               ),
             ),
           const SizedBox(height: 5),
-          // if (post.mediaUrl != null && post.mediaUrl!.isNotEmpty) ...[
-          //   Image.file(
-          //     File(post.mediaUrl),
-          //     height: 300,
-          //     width: MediaQuery.of(context).size.width,
-          //     fit: BoxFit.cover,
-          //   ),
-          // ],
           _buildImage(post.mediaUrl),
           Row(
             spacing: 5,
@@ -274,9 +306,9 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                 favouriteCount: voteCount,
                 upVoteColor: _upVoteColor,
                 downVoteColor: _downVoteColor,
-                upVote: (_) => handleUpVote(),
-                downVote: (_) => handleDownVote(),
-                unVote: (_) => handleUnVote(),
+                upVote: (_) => _handleUpVote(),
+                downVote: (_) => _handleDownVote(),
+                unVote: (_) => _handleUnVote(),
               ),
               CommentWidget(
                   commentCount: post.commentsCount,
@@ -284,7 +316,11 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                     _showBottomSheet(context, widget.post);
                   }),
               const Spacer(),
-              const PremiumBadgeWidget(),
+              // SaveWidget(
+              //   postId: post.id,
+              //   actionSavedPost: _actionSavedPost,
+              //   savePost: (_) => _savedPost(),
+              // ),
               const ShareWidget(shareCount: 0),
             ],
           ),

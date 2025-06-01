@@ -4,6 +4,8 @@ import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/auth/data/models/responses/auth_model.dart';
+import 'package:fitora_mobile_app/feature/user/data/models/responses/user_model.dart';
+import 'package:fitora_mobile_app/feature/user/data/models/responses/user_profile_model.dart';
 import '../../../../core/utils/logger.dart';
 import '../models/requests/sign_in_request.dart';
 import '../models/requests/sign_up_request.dart';
@@ -16,6 +18,8 @@ abstract class AuthRemoteDataSource {
   Future<void> signOut();
 
   // Future<void> refreshToken();
+
+  Future<UserProfileModel> fetchProfile();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -72,6 +76,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await _dioClient.post(ApiUrl.signOut);
     } catch (e) {
       logger.e(e);
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<UserProfileModel> fetchProfile() async {
+    try {
+      final response = await _dioClient.get(ApiUrl.profile);
+      final data = response.data["data"];
+      return UserProfileModel.fromJson(data);
+    } on DioException catch (e) {
+      logger.e("DioException: ${e.message}");
       throw ServerException();
     }
   }

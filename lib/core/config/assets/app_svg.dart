@@ -30,4 +30,5 @@ class AppSvg {
   static const education = '${basePath}education.svg';
   static const college = '${basePath}college_project_bro.svg';
   static const school = '${basePath}end_of_school_bro.svg';
+  static const noData = '${basePath}no_data.svg';
 }

@@ -13,6 +13,7 @@ import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/create_gro
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/delete_group_invite_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_group_by_id_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_group_member_use_case.dart';
+import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_joined_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_managed_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_received_group_invite_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/invite_new_members_use_case.dart';
@@ -33,6 +34,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
   final AcceptGroupInviteUseCase _acceptGroupInviteUseCase;
   final DeleteGroupInviteUseCase _deleteGroupInviteUseCase;
   final GetManagedGroupUseCase _getManagedGroupUseCase;
+  final GetJoinedGroupUseCase _getJoinedGroupUseCase;
 
   GroupBloc(
     this._createGroupUseCase,
@@ -43,6 +45,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     this._acceptGroupInviteUseCase,
     this._deleteGroupInviteUseCase,
     this._getManagedGroupUseCase,
+    this._getJoinedGroupUseCase,
   ) : super(GroupInitialState()) {
     on<CreateGroupEvent>(_create);
     on<FetchGroupByIdEvent>(_fetchGroupById);
@@ -52,6 +55,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     on<AcceptGroupInviteEvent>(_accept);
     on<DeleteGroupInviteEvent>(_deleteGroupInvite);
     on<FetchManagedGroupEvent>(_fetchManagedGroup);
+    on<FetchJoinedGroupEvent>(_fetchJoinedGroup);
   }
 
   Future<void> _create(CreateGroupEvent event, Emitter emit) async {
@@ -78,23 +82,27 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     final result = await _getGroupByIdUseCase.call(event.id);
 
     result.fold(
-      (failure) => emit(FetchGroupByIdFailureState(mapFailureToMessage(failure))),
+      (failure) =>
+          emit(FetchGroupByIdFailureState(mapFailureToMessage(failure))),
       (success) => emit(FetchGroupByIdSuccessState(data: success)),
     );
   }
 
-  Future<void> _fetchGroupMember(FetchGroupMemberEvent event, Emitter emit) async {
+  Future<void> _fetchGroupMember(
+      FetchGroupMemberEvent event, Emitter emit) async {
     emit(FetchGroupMemberLoadingState());
 
     final result = await _getGroupMemberUseCase.call(event.groupId);
 
     result.fold(
-      (failure) => emit(FetchGroupMemberFailureState(mapFailureToMessage(failure))),
+      (failure) =>
+          emit(FetchGroupMemberFailureState(mapFailureToMessage(failure))),
       (success) => emit(FetchGroupMemberSuccessState(data: success)),
     );
   }
 
-  Future<void> _inviteNewMember(InviteNewMembersEvent event, Emitter emit) async {
+  Future<void> _inviteNewMember(
+      InviteNewMembersEvent event, Emitter emit) async {
     emit(InviteNewMembersLoadingState());
 
     final result = await _inviteNewMembersUseCase.call(InviteNewMembersParams(
@@ -103,18 +111,21 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     ));
 
     result.fold(
-      (failure) => emit(InviteNewMembersFailureState(mapFailureToMessage(failure))),
+      (failure) =>
+          emit(InviteNewMembersFailureState(mapFailureToMessage(failure))),
       (success) => emit(InviteNewMembersSuccessState()),
     );
   }
 
-  Future<void> _fetchReceived(FetchReceivedGroupInviteEvent event, Emitter emit) async {
+  Future<void> _fetchReceived(
+      FetchReceivedGroupInviteEvent event, Emitter emit) async {
     emit(FetchReceivedGroupInviteLoadingState());
 
     final result = await _getReceivedGroupInviteUseCase.call(NoParams());
 
     result.fold(
-      (failure) => emit(FetchReceivedGroupInviteFailureState(mapFailureToMessage(failure))),
+      (failure) => emit(
+          FetchReceivedGroupInviteFailureState(mapFailureToMessage(failure))),
       (success) => emit(FetchReceivedGroupInviteSuccessState(data: success)),
     );
   }
@@ -125,36 +136,54 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     final result = await _acceptGroupInviteUseCase.call(event.id);
 
     result.fold(
-      (failure) => emit(AcceptGroupInviteFailureState(mapFailureToMessage(failure))),
+      (failure) =>
+          emit(AcceptGroupInviteFailureState(mapFailureToMessage(failure))),
       (success) => emit(AcceptGroupInviteSuccessState()),
     );
   }
 
-  Future<void> _deleteGroupInvite(DeleteGroupInviteEvent event, Emitter emit) async {
+  Future<void> _deleteGroupInvite(
+      DeleteGroupInviteEvent event, Emitter emit) async {
     emit(DeleteGroupInviteLoadingState());
 
     final result = await _acceptGroupInviteUseCase.call(event.id);
 
     result.fold(
-          (failure) => emit(DeleteGroupInviteFailureState(mapFailureToMessage(failure))),
-          (success) => emit(DeleteGroupInviteSuccessState()),
+      (failure) =>
+          emit(DeleteGroupInviteFailureState(mapFailureToMessage(failure))),
+      (success) => emit(DeleteGroupInviteSuccessState()),
     );
   }
 
-  Future<void> _fetchManagedGroup(FetchManagedGroupEvent event, Emitter emit) async {
+  Future<void> _fetchManagedGroup(
+      FetchManagedGroupEvent event, Emitter emit) async {
     emit(FetchManagedGroupLoadingState());
 
     final result = await _getManagedGroupUseCase.call(NoParams());
 
     result.fold(
-      (failure) => emit(FetchManagedGroupFailureState(mapFailureToMessage(failure))),
+      (failure) =>
+          emit(FetchManagedGroupFailureState(mapFailureToMessage(failure))),
       (success) => emit(FetchManagedGroupSuccessState(data: success)),
     );
   }
 
-  // @override
-  // Future<void> close() {
-  //   logger.i("===== CLOSE GroupBloc =====");
-  //   return super.close();
-  // }
+  Future<void> _fetchJoinedGroup(
+      FetchJoinedGroupEvent event, Emitter emit) async {
+    emit(FetchJoinedGroupLoadingState());
+
+    final result = await _getJoinedGroupUseCase.call(NoParams());
+
+    result.fold(
+      (failure) =>
+          emit(FetchJoinedGroupFailureState(mapFailureToMessage(failure))),
+      (success) => emit(FetchJoinedGroupSuccessState(data: success)),
+    );
+  }
+
+  @override
+  Future<void> close() {
+    logger.i("===== CLOSE GroupBloc =====");
+    return super.close();
+  }
 }

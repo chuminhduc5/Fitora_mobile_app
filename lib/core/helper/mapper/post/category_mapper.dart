@@ -6,16 +6,19 @@ class CategoryMapper {
     return CategoryEntity(
       id: category.id,
       name: category.name,
-      slug: category.slug,
       description: category.description,
-      sortOrder: category.sortOrder,
-      createdAt: category.createdAt,
-      updatedAt: category.updatedAt,
-      isDeleted: category.isDeleted,
-      createdBy: category.createdBy,
-      lastModified: category.lastModified,
-      lastModifiedBy: category.lastModifiedBy,
-      parentId: category.parentId,
+      slug: category.slug,
+      followerCount: category.followerCount,
+      postCount: category.postCount,
+      trendScore: category.trendScore,
+      // sortOrder: category.sortOrder,
+      // createdAt: category.createdAt,
+      // updatedAt: category.updatedAt,
+      // isDeleted: category.isDeleted,
+      // createdBy: category.createdBy,
+      // lastModified: category.lastModified,
+      // lastModifiedBy: category.lastModifiedBy,
+      // parentId: category.parentId,
     );
   }
 }

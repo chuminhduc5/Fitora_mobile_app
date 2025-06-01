@@ -146,4 +146,15 @@ class GroupRepositoryImpl implements GroupRepository {
       return Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<ManagedGroupEntity>>> getJoinedGroup() async {
+    try {
+      final result = await _groupRemoteDataSource.fetchJoinedGroup();
+      final members = result.map((i) => ManagedGroupMapper.toEntity(i)).toList();
+      return Right(members);
+    } on DioException {
+      return Left(ServerFailure());
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
+import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/enums/post/privacy_post.dart';
@@ -9,6 +9,7 @@ import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/newsfeed/newsfeed_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post_form/post_form_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/upload_file/upload_file_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/forms/post/create_post_form_data.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/widgets/post/category_dropdown_widget.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/widgets/post/post_input_widget.dart';
@@ -66,6 +67,18 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
     }
   }
 
+  Future<void> _uploadImageFile() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final file = File(pickedFile.path);
+      setState(() => _image = file);
+      context.read<UploadFileBloc>().add(UploadImageFileEvent(file));
+      logg.i("File Image Url: ${File(pickedFile.path)}");
+      logg.i("Image Url: ${pickedFile.path}");
+      logg.i("Url: $_image");
+    }
+  }
+
   void _createPost(BuildContext context) async {
     primaryFocus?.unfocus();
     final postForm = context.read<PostFormBloc>().state;
@@ -90,8 +103,15 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
   @override
   Widget build(BuildContext context) {
     bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
-    return BlocProvider(
-      create: (context) => getIt<PostFormBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<PostFormBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<UploadFileBloc>(),
+        ),
+      ],
       child: BlocConsumer<PostBloc, PostState>(
         listener: (_, state) {
           if (state is CreatePostFailureState) {
@@ -152,25 +172,38 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
                             selectedCategoryId: selectedCategoryId,
                             categories: categories,
                             onChanged: (String? id) {
-                                setState(() {
-                                  selectedCategoryId = id ?? "";
-                                });
-                                postBloc.add(PostCategoryIdChangedEvent(selectedCategoryId));
+                              setState(() {
+                                selectedCategoryId = id ?? "";
+                              });
+                              postBloc.add(PostCategoryIdChangedEvent(
+                                  selectedCategoryId));
                             },
                           ),
                         ],
                       ),
                     ),
                     const PostInputWidget(),
-                    _image != null
-                        ? Image.file(
+                    BlocBuilder<UploadFileBloc, UploadFileState>(
+                      builder: (context, state) {
+                        if (state is UploadImageFileLoadingState) {
+                          return const AppLoadingWidget();
+                        } else if(state is UploadImageFileFailureState) {
+                          AppDisplayMessage.error(context, state.message);
+                        } else if (state is UploadImageFileSuccessState){
+                          final imageUrl = state.imageUrl;
+                          logg.i("Image Url File: $imageUrl");
+                          return _image != null
+                              ? Image.file(
                             _image!,
                             width: double.infinity,
                             height: 500,
                             fit: BoxFit.cover,
                           )
-                        : const SizedBox.shrink(),
-                    //const Spacer(),
+                              : const SizedBox.shrink();
+                        }
+                        return const SizedBox();
+                      },
+                    ),
                     const SizedBox(height: 100),
                     Align(
                       alignment: Alignment.bottomCenter,
@@ -199,7 +232,8 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
           'Ảnh/video',
           Colors.green,
           () {
-            _pickImage();
+            //_pickImage();
+            _uploadImageFile();
           },
         ),
         _featureItem(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
@@ -14,11 +16,9 @@ class UploadFileRepositoryImpl implements UploadFileRepository {
   const UploadFileRepositoryImpl(this._uploadFileRemoteDataSource);
 
   @override
-  Future<Either<Failure, UploadFileEntity>> uploadFile(
-      UploadFileParams params) async {
+  Future<Either<Failure, UploadFileEntity>> uploadFile(File file) async {
     try {
-      final request = UploadFileRequest(url: params.url);
-      final result = await _uploadFileRemoteDataSource.uploadFile(request);
+      final result = await _uploadFileRemoteDataSource.uploadFile(file);
       return Right(UploadFileMapper.toEntity(result));
     } on ServerException {
       return Left(ServerFailure());

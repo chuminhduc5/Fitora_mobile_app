@@ -74,7 +74,7 @@ class PostRepositoryImpl implements PostRepository {
     try {
       final results = await _postRemoteDataSource.fetchNewsfeed();
       final newsfeed = results.map((i) => PostMapper.toEntity(i)).toList();
-      newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
+      //newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
       return Right(newsfeed);
     } on ServerException {
       return Left(ServerFailure());
@@ -111,6 +111,30 @@ class PostRepositoryImpl implements PostRepository {
       final results = await _postRemoteDataSource.fetchSavedPost();
       final posts = results.map((i) => PostMapper.toEntity(i)).toList();
       return Right(posts);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PostEntity>>> getExploreFeed() async {
+    try {
+      final results = await _postRemoteDataSource.fetchExploreFeed();
+      final exploreFeed = results.map((i) => PostMapper.toEntity(i)).toList();
+      //newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
+      return Right(exploreFeed);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PostEntity>>> getTrendingFeed() async {
+    try {
+      final results = await _postRemoteDataSource.fetchTrendingFeed();
+      final trendingFeed = results.map((i) => PostMapper.toEntity(i)).toList();
+      //newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
+      return Right(trendingFeed);
     } on ServerException {
       return Left(ServerFailure());
     }

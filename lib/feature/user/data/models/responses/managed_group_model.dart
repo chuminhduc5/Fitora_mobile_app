@@ -4,7 +4,7 @@ class ManagedGroupModel {
   final String description;
   final int privacy;
   final bool requirePostApproval;
-  final String coverImageUrl;
+  final String? coverImageUrl;
   final String avatarUrl;
   final int status;
   final int memberCount;
@@ -23,13 +23,13 @@ class ManagedGroupModel {
 
   factory ManagedGroupModel.fromJson(Map<String, dynamic> json) {
     return ManagedGroupModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String,
+      id: json['id'] ?? "",
+      name: json['name'] ?? "",
+      description: json['description'] ?? "",
       privacy: json['privacy'] as int,
       requirePostApproval: json['requirePostApproval'] as bool,
-      coverImageUrl: json['coverImageUrl'] as String,
-      avatarUrl: json['avatarUrl'] as String,
+      coverImageUrl: json['coverImageUrl'] ?? "",
+      avatarUrl: json['avatarUrl'] ?? "",
       status: json['status'] as int,
       memberCount: json['memberCount'] as int,
     );

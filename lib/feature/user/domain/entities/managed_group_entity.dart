@@ -6,7 +6,7 @@ class ManagedGroupEntity extends Equatable {
   final String description;
   final int privacy;
   final bool requirePostApproval;
-  final String coverImageUrl;
+  final String?coverImageUrl;
   final String avatarUrl;
   final int status;
   final int memberCount;
