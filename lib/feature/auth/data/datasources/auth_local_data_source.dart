@@ -3,9 +3,12 @@ import 'package:fitora_mobile_app/core/cache/secure_local_storage.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/feature/auth/domain/entities/auth_entity.dart';
+import 'package:fitora_mobile_app/feature/user/data/models/responses/user_profile_model.dart';
 
 abstract class AuthLocalDataSource {
   Future<AuthEntity> checkSignInStatus();
+  // Future<void> savedUser(UserProfileModel user);
+  // Future<UserProfileModel?> getUser();
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {

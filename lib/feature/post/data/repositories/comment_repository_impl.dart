@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:fitora_mobile_app/core/cache/hive_local_storage.dart';
+import 'package:fitora_mobile_app/core/cache/secure_local_storage.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/core/helper/mapper/post/comment_mapper.dart';
@@ -13,8 +15,14 @@ import 'package:fitora_mobile_app/feature/post/domain/usecases/usecase_params.da
 
 class CommentRepositoryImpl implements CommentRepository {
   final CommentRemoteDataSource _commentRemoteDataSource;
+  final SecureLocalStorage _secureLocalStorage;
+  final HiveLocalStorage _hiveLocalStorage;
 
-  const CommentRepositoryImpl(this._commentRemoteDataSource);
+  const CommentRepositoryImpl(
+    this._commentRemoteDataSource,
+    this._secureLocalStorage,
+    this._hiveLocalStorage,
+  );
 
   @override
   Future<Either<Failure, List<CommentEntity>>> getComment(String postId) async {
@@ -28,7 +36,8 @@ class CommentRepositoryImpl implements CommentRepository {
   }
 
   @override
-  Future<Either<Failure, CommentEntity>> createComment(CreateCommentParams params) async {
+  Future<Either<Failure, CommentEntity>> createComment(
+      CreateCommentParams params) async {
     try {
       final result = await _commentRemoteDataSource.createComment(
         CreateCommentRequest(
@@ -38,6 +47,7 @@ class CommentRepositoryImpl implements CommentRepository {
           mediaUrl: params.mediaUrl,
         ),
       );
+      final userModel = _hiveLocalStorage.load(key: "user");
       final comment = CommentMapper.toEntity(result);
       return Right(comment);
     } on ServerException {
@@ -46,7 +56,8 @@ class CommentRepositoryImpl implements CommentRepository {
   }
 
   @override
-  Future<Either<Failure, void>> updateComment(UpdateCommentParams params) async {
+  Future<Either<Failure, void>> updateComment(
+      UpdateCommentParams params) async {
     try {
       final result = await _commentRemoteDataSource.updateComment(
         UpdateCommentRequest(

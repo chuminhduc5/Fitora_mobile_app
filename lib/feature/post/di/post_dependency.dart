@@ -1,19 +1,26 @@
+import 'package:fitora_mobile_app/core/cache/hive_local_storage.dart';
+import 'package:fitora_mobile_app/core/cache/secure_local_storage.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/service/api/dio_client.dart';
 import 'package:fitora_mobile_app/feature/post/data/datasources/category_remote_data_source.dart';
 import 'package:fitora_mobile_app/feature/post/data/datasources/comment_remote_data_source.dart';
 import 'package:fitora_mobile_app/feature/post/data/datasources/interact_remote_data_source.dart';
 import 'package:fitora_mobile_app/feature/post/data/datasources/post_remote_data_source.dart';
+import 'package:fitora_mobile_app/feature/post/data/datasources/upload_file_remote_data_source.dart';
 import 'package:fitora_mobile_app/feature/post/data/repositories/category_repository_impl.dart';
 import 'package:fitora_mobile_app/feature/post/data/repositories/comment_repository_impl.dart';
 import 'package:fitora_mobile_app/feature/post/data/repositories/interact_repository_impl.dart';
 import 'package:fitora_mobile_app/feature/post/data/repositories/post_repository_impl.dart';
+import 'package:fitora_mobile_app/feature/post/data/repositories/upload_file_repository_impl.dart';
+import 'package:fitora_mobile_app/feature/post/domain/repositories/upload_file_repository.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/categories/create_category_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/create_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/get_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/update_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/interact/vote_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/interact/vote_post_use_case.dart';
+import 'package:fitora_mobile_app/feature/post/domain/usecases/newsfeed/get_explore_feed_use_case.dart';
+import 'package:fitora_mobile_app/feature/post/domain/usecases/newsfeed/get_trending_feed_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/posts/create_post_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/posts/delete_post_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/newsfeed/get_newsfeed_use_case.dart';
@@ -22,12 +29,14 @@ import 'package:fitora_mobile_app/feature/post/domain/usecases/posts/get_post_us
 import 'package:fitora_mobile_app/feature/post/domain/usecases/posts/get_saved_post_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/posts/save_post_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/posts/update_post_use_case.dart';
+import 'package:fitora_mobile_app/feature/post/domain/usecases/posts/upload_file_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/comment/comment_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/comment_form/comment_form_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/interact/interact_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/newsfeed/newsfeed_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post_form/post_form_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/upload_file/upload_file_bloc.dart';
 
 class PostDependency {
   PostDependency._();
@@ -41,11 +50,22 @@ class PostDependency {
       ),
     );
     getIt.registerFactory(() => PostFormBloc());
-    getIt.registerFactory(() => NewsfeedBloc(getIt<GetNewsfeedUseCase>()));
+    getIt.registerFactory(
+      () => NewsfeedBloc(
+        getIt<GetNewsfeedUseCase>(),
+        getIt<GetTrendingFeedUseCase>(),
+        getIt<GetExploreFeedUseCase>(),
+      ),
+    );
     getIt.registerFactory(() => InteractBloc(getIt<VotePostUseCase>()));
-    getIt.registerFactory(() =>
-        CommentBloc(getIt<CreateCommentUseCase>(), getIt<GetCommentUseCase>()));
+    getIt.registerFactory(
+      () => CommentBloc(
+        getIt<CreateCommentUseCase>(),
+        getIt<GetCommentUseCase>(),
+      ),
+    );
     getIt.registerFactory(() => CommentFormBloc());
+    getIt.registerFactory(() => UploadFileBloc(getIt<UploadFileUseCase>()));
 
     // UseCase - Post
     getIt.registerLazySingleton(
@@ -64,6 +84,10 @@ class PostDependency {
         () => SavePostUseCase(getIt<PostRepositoryImpl>()));
     getIt.registerLazySingleton(
         () => GetSavedPostUseCase(getIt<PostRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => GetTrendingFeedUseCase(getIt<PostRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => GetExploreFeedUseCase(getIt<PostRepositoryImpl>()));
 
     // UseCase - Interact
     getIt.registerLazySingleton(
@@ -83,6 +107,10 @@ class PostDependency {
     getIt.registerLazySingleton(
         () => CreateCategoryUseCase(getIt<CategoryRepositoryImpl>()));
 
+    // UseCase = UploadFile
+    getIt.registerLazySingleton(
+        () => UploadFileUseCase(getIt<UploadFileRepositoryImpl>()));
+
     // Repository - Post
     getIt.registerLazySingleton(
         () => PostRepositoryImpl(getIt<PostRemoteDataSourceImpl>()));
@@ -92,12 +120,19 @@ class PostDependency {
         () => InteractRepositoryImpl(getIt<InteractRemoteDataSourceImpl>()));
 
     // Repository - Comment
-    getIt.registerLazySingleton(
-        () => CommentRepositoryImpl(getIt<CommentRemoteDataSourceImpl>()));
+    getIt.registerLazySingleton(() => CommentRepositoryImpl(
+          getIt<CommentRemoteDataSourceImpl>(),
+          getIt<SecureLocalStorage>(),
+          getIt<HiveLocalStorage>(),
+        ));
 
     // Repository - Category
     getIt.registerLazySingleton(
         () => CategoryRepositoryImpl(getIt<CategoryRemoteDataSourceImpl>()));
+
+    // Repository - UploadFile
+    getIt.registerLazySingleton(() =>
+        UploadFileRepositoryImpl(getIt<UploadFileRemoteDataSourceImpl>()));
 
     // Datasource
     getIt.registerLazySingleton(() =>
@@ -107,6 +142,8 @@ class PostDependency {
     getIt.registerLazySingleton(() => CommentRemoteDataSourceImpl(
         getIt<DioClient>(instanceName: 'interact')));
     getIt.registerLazySingleton(() => CategoryRemoteDataSourceImpl(
+        getIt<DioClient>(instanceName: 'interact')));
+    getIt.registerLazySingleton(() => UploadFileRemoteDataSourceImpl(
         getIt<DioClient>(instanceName: 'interact')));
   }
 }

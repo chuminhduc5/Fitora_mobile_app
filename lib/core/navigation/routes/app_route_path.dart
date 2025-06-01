@@ -12,6 +12,8 @@ enum AppRoute {
   search(path: "/search"),
   profile(path: "/profile"),
   updateProfile(path: "/profile/update"),
+  setting(path: "/setting"),
+  savedPost(path: "/savedPost"),
   personal(path: "/personal"),
   notification(path: "/notification"),
   group(path: "/group"),

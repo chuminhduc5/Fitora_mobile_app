@@ -79,3 +79,5 @@ class DeleteGroupInviteEvent extends GroupEvent {
 
 // Sự kiện hiện thị danh sách nhóm
 class FetchManagedGroupEvent extends GroupEvent {}
+
+class FetchJoinedGroupEvent extends GroupEvent {}

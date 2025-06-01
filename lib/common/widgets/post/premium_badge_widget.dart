@@ -13,8 +13,7 @@ class PremiumBadgeWidget extends StatelessWidget {
       ),
       child: IconButton(
         onPressed: () {},
-        //icon: const Icon(Icons.workspace_premium, size: 20),
-        icon: const Icon(Icons.bookmarks_outlined, size: 20),
+        icon: const Icon(Icons.workspace_premium, size: 20),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:fitora_mobile_app/feature/notification/presentation/screens/noti
 import 'package:fitora_mobile_app/feature/post/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/community_screen.dart';
-import 'package:fitora_mobile_app/feature/user/presentation/screens/profile_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppView extends StatefulWidget {

@@ -12,14 +12,13 @@ class SkeletonLoading extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Avatar + Name
           Row(
             children: [
               Container(
                 width: 50,
                 height: 50,
                 margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
                 ),
@@ -33,7 +32,6 @@ class SkeletonLoading extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          // Title Placeholder
           Container(
             width: double.infinity,
             height: 20,
@@ -41,7 +39,6 @@ class SkeletonLoading extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 16),
           ),
           const SizedBox(height: 8),
-          // Content Lines
           Container(
             width: double.infinity,
             height: 14,

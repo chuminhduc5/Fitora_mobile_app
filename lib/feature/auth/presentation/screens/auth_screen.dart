@@ -1,3 +1,4 @@
+import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_in_screen.dart';
@@ -18,13 +19,19 @@ class AuthScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 40),
-              const Text(
-                'Fitora',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.bgPink,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(AppImages.logo, width: 50, height: 50),
+                  const Text(
+                    'Fitora',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.bgPink,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 10),
               const Text(

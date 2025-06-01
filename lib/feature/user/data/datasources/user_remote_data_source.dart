@@ -48,7 +48,6 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         ApiUrl.updateProfile,
         data: request.toJson(),
       );
-      return;
     } on DioException catch (e) {
       logger.e("DioException: ${e.message}");
       throw ServerException();

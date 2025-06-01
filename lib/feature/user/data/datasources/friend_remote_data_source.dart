@@ -92,7 +92,7 @@ class FriendRemoteDataSourceImpl implements FriendRemoteDataSource {
     try {
       final response = await _dioClient.get(ApiUrl.getSentFriendRequests);
       final results = response.data;
-      return results;
+      return results.map((json) => FriendRequestModel.fromJson(json));
     } on DioException catch(e) {
       logger.e(e);
       throw ServerException();

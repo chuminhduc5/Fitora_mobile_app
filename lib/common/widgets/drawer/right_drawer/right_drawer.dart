@@ -1,9 +1,11 @@
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/active_status.dart';
 import 'package:fitora_mobile_app/common/widgets/drawer/right_drawer/right_drawer_option.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
+import 'package:fitora_mobile_app/core/navigation/app_navigation.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:forui/widgets/switch.dart';
 import 'package:go_router/go_router.dart';
 
 final List<Map<String, dynamic>> _option = [
@@ -41,7 +43,7 @@ final List<Map<String, dynamic>> _option = [
     "icon": Icons.bookmarks_outlined,
     "title": "Lưu",
     "description": null,
-    "route": "",
+    "route": AppRoute.savedPost.name,
   },
   {
     "icon": Icons.history_toggle_off,
@@ -72,6 +74,64 @@ Widget rightDrawer(BuildContext context) {
     backgroundColor: AppColors.bgWhite,
     child: ListView(
       children: [
+        // FSwitch(
+        //   label: const Text('Airplane Mode'),
+        //   semanticLabel: 'Airplane Mode',
+        //   value: false,
+        //   onChange: (value) {},
+        // ),
+        // SwitchListTile(
+        //   title: Text('Chế đô tối'),
+        //   value: false,
+        //   onChanged: (value) {},
+        // ),
+        // SwitchListTile(
+        //   title: Text(
+        //     'Chế độ tối',
+        //     style: TextStyle(
+        //       fontSize: 16,
+        //       fontWeight: FontWeight.w600,
+        //     ),
+        //   ),
+        //   secondary: Icon(Icons.dark_mode, color: Colors.amber),
+        //   value: false, // bool từ state
+        //   onChanged: (value) {},
+        //   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        //   tileColor: Theme.of(context).colorScheme.surfaceVariant,
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.circular(16),
+        //   ),
+        // ),
+        // Container(
+        //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        //   decoration: BoxDecoration(
+        //     color: Theme.of(context).colorScheme.surfaceVariant,
+        //     borderRadius: BorderRadius.circular(16),
+        //   ),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Row(
+        //         children: [
+        //           Icon(Icons.dark_mode, color: Colors.amber),
+        //           SizedBox(width: 12),
+        //           Text(
+        //             'Chế độ tối',
+        //             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+        //           ),
+        //         ],
+        //       ),
+        //       Transform.scale(
+        //         scale: 0.7, // Thu nhỏ Switch
+        //         child: Switch(
+        //           value: true,
+        //           onChanged: (value) {},
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+
         // Stack(
         //   children: [
         //     Center(
@@ -121,9 +181,11 @@ Widget rightDrawer(BuildContext context) {
                 // context.read<AuthBloc>().add(LogoutEvent());
                 //AppNavigation.pushReplacement(context, AppRoute.auth.name);
                 context.goNamed(AppRoute.auth.name);
-              } else if (i["route"] != null && i["route"].toString().isNotEmpty) {
+              } else if (i["route"] != null &&
+                  i["route"].toString().isNotEmpty) {
                 logger.i('Đã bấm vào: ${i["title"]}');
-                // AppNavigation.pushNamed(context, i["route"]);
+                //ppNavigation.pushNamed(context, i["route"]);
+                context.pushNamed(i['route']);
               }
             },
           ),

@@ -142,7 +142,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                       constraints: const BoxConstraints(
                                         minHeight: 100,
                                       ),
-                                      child: UserPostListWidget(userId: userId),
+                                      child: const UserPostListWidget(),
                                     ),
                                   ),
                                   FTabEntry(

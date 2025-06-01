@@ -19,13 +19,13 @@ class Params extends Equatable {
   final String name;
   final String slug;
   final String description;
-  final String parentId;
+  final String? parentId;
 
   const Params({
     required this.name,
     required this.slug,
     required this.description,
-    required this.parentId,
+    this.parentId,
   });
 
   @override

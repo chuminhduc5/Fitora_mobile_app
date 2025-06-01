@@ -46,6 +46,7 @@ class AuthRepositoryImpl implements AuthRepository {
         password: params.password,
       );
       final response = await _authRemoteDataSource.signIn(model);
+
       final result = AuthMapper.toEntity(response);
 
       final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -54,10 +55,10 @@ class AuthRepositoryImpl implements AuthRepository {
       logg.i("Lưu Token: ${result.token.accessToken}");
       logg.i("Lưu UserId: ${result.user.id}");
 
-      // await _secureLocalStorage.save(key: "user_id", value: result.user.id);
-      // logg.i("ID Người dùng: ${result.user.id}");
-      // await _hiveLocalStorage.save(key: "user", value: result, boxName: "cache");
-      // logg.i("Thông tin người dùng: $result");
+      final user = await _authRemoteDataSource.fetchProfile();
+      await _secureLocalStorage.save(key: "user_id", value: user.userInfo.id);
+      await _hiveLocalStorage.save(key: "user", value: user, boxName: "cache");
+      logg.i("Thông tin người dùng: $user");
 
       return Right(result);
     } on AuthException {
@@ -73,8 +74,13 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final result = await _authRemoteDataSource.signOut();
 
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      await pref.remove('token');
+      logg.i("Đã xóa token");
+
       await _secureLocalStorage.delete(key: "user_id");
       await _hiveLocalStorage.delete(key: "user", boxName: "cache");
+      logg.i("Đã xóa thông tin người dùng");
 
       return Right(result);
     } catch (e) {

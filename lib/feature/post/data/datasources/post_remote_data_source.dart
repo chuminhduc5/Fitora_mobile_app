@@ -24,6 +24,8 @@ abstract class PostRemoteDataSource {
 
   Future<List<PostModel>> fetchTrendingFeed();
 
+  Future<List<PostModel>> fetchExploreFeed();
+
   Future<void> savePost(SavePostRequest request);
 
   Future<List<PostModel>> fetchSavedPost();
@@ -39,7 +41,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     try {
       var response = await _dioClient.get(ApiUrl.post);
       final post = response.data;
-      return post;
+      return PostModel.fromJson(post);
     } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
@@ -83,13 +85,12 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<List<PostModel>> fetchNewsfeed() async {
     try {
-      var response = await _dioClient.get(ApiUrl.getExplorePosts);
+      var response = await _dioClient.get("${ApiUrl.newsFeed}?FeedType=1&Limit=5");
       final data = response.data['data'];
       if (data != null && data['data'] is List) {
         final List<PostModel> newsfeed = (data['data'] as List)
             .map((json) => PostModel.fromJson(json))
             .toList();
-        // logg.i("Newsfeed: $newsfeed");
         return newsfeed;
       } else {
         throw Exception("Invalid response format");
@@ -109,7 +110,6 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         final List<PostModel> personal = (data['data'] as List)
             .map((json) => PostModel.fromJson(json))
             .toList();
-        // logg.i("Newsfeed: $newsfeed");
         return personal;
       } else {
         throw Exception("Invalid response format");
@@ -129,7 +129,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         final List<PostModel> newsfeed = (data['data'] as List)
             .map((json) => PostModel.fromJson(json))
             .toList();
-        logg.i("Newsfeed: $newsfeed");
+        //logg.i("Newsfeed: $newsfeed");
         return newsfeed;
       } else {
         throw Exception("Invalid response format");
@@ -149,7 +149,7 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         final List<PostModel> newsfeed = (data['data'] as List)
             .map((json) => PostModel.fromJson(json))
             .toList();
-        logg.i("Newsfeed: $newsfeed");
+        //logg.i("Newsfeed: $newsfeed");
         return newsfeed;
       } else {
         throw Exception("Invalid response format");
@@ -165,6 +165,25 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
     try {
       await _dioClient.post(ApiUrl.savePost, data: request.toJson());
     } on DioException catch(e) {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<PostModel>> fetchExploreFeed() async {
+    try {
+      var response = await _dioClient.get(ApiUrl.getExplorePosts);
+      final data = response.data['data'];
+      if (data != null && data['data'] is List) {
+        final List<PostModel> newsfeed = (data['data'] as List)
+            .map((json) => PostModel.fromJson(json))
+            .toList();
+        return newsfeed;
+      } else {
+        throw Exception("Invalid response format");
+      }
+    } on DioException catch (e) {
+      logger.e('Fetch Newsfeed failed: ${e.message}');
       throw ServerException();
     }
   }

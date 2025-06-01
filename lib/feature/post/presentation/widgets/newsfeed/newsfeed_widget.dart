@@ -8,16 +8,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NewsfeedWidget extends StatelessWidget {
   final String selectedCategory;
+  final int? selectedIndex;
   final void Function(String)? upVote;
   final void Function(String)? unVote;
   final void Function(String)? downVote;
+  final void Function(String)? savePost;
 
   const NewsfeedWidget({
     super.key,
     required this.selectedCategory,
+    this.selectedIndex,
     this.upVote,
     this.unVote,
     this.downVote,
+    this.savePost,
   });
 
   @override
@@ -25,7 +29,6 @@ class NewsfeedWidget extends StatelessWidget {
     return BlocBuilder<NewsfeedBloc, NewsfeedState>(
       builder: (context, state) {
         if (state is FetchNewsfeedLoadingState) {
-          //return const AppLoadingWidget();
           return ListView.builder(
             itemCount: 5,
             itemBuilder: (context, index) => const SkeletonLoading(),
@@ -50,6 +53,7 @@ class NewsfeedWidget extends StatelessWidget {
                       upVote: upVote,
                       unVote: upVote,
                       downVote: downVote,
+                      savePost: savePost,
                     );
                   },
                   childCount: filteredNewsfeeds.length,

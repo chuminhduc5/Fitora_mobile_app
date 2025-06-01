@@ -9,3 +9,7 @@ abstract class NewsfeedEvent extends Equatable {
 }
 
 class FetchNewsfeedEvent extends NewsfeedEvent {}
+
+class FetchExploreFeedEvent extends NewsfeedEvent {}
+
+class FetchTrendingFeedEvent extends NewsfeedEvent {}

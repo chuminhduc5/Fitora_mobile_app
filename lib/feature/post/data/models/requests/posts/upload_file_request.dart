@@ -1,5 +1,7 @@
+import 'dart:io';
+
 class UploadFileRequest {
-  final String url;
+  final File url;
 
   const UploadFileRequest({required this.url});
 

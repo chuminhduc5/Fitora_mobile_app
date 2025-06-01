@@ -10,6 +10,7 @@
 .svn/
 
 .env
+.env.product
 
 migrate_working_dir/
 

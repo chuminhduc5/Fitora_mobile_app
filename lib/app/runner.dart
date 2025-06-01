@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fitora_mobile_app/core/config/adapter/adapter_conf.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/utils/simple_bloc_observer.dart';
+import 'package:fitora_mobile_app/feature/user/data/models/responses/user_profile_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,23 +16,10 @@ Future<void> runnerApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await initializeDateFormatting('vi', null);
-  await dotenv.load(fileName: '.env');
-  // await Future.wait([
-  //   Hive.initFlutter(),
-  //   getTemporaryDirectory().then((path) async {
-  //     HydratedBloc.storage = await HydratedStorage.build(
-  //       storageDirectory: path,
-  //     );
-  //   })
-  // ]);
-  await Hive.initFlutter();
+  //await dotenv.load(fileName: '.env');
+  await dotenv.load(fileName: '.env.product');
 
-  // if (!kIsWeb) {
-  //   final tempDir = await getTemporaryDirectory();
-  //   HydratedBloc.storage = await HydratedStorage.build(
-  //     storageDirectory: tempDir,
-  //   );
-  // }
+  await Hive.initFlutter();
 
   late final HydratedStorage storage;
 
@@ -44,7 +32,7 @@ Future<void> runnerApp() async {
 
   HydratedBloc.storage = storage;
 
-  //configureAdapter();
+  configureAdapter();
   configureDependencies();
   Bloc.observer = SimpleBlocObserver();
   runApp(const MyApp());
