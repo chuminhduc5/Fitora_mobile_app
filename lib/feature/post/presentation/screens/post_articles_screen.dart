@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
+import 'package:fitora_mobile_app/common/widgets/avatar/app_avatar_widget.dart';
+import 'package:fitora_mobile_app/common/widgets/button/app_button_widget.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
+import 'package:fitora_mobile_app/core/enums/file/image_type.dart';
 import 'package:fitora_mobile_app/core/enums/post/privacy_post.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
@@ -13,6 +16,8 @@ import 'package:fitora_mobile_app/feature/post/presentation/blocs/upload_file/up
 import 'package:fitora_mobile_app/feature/post/presentation/forms/post/create_post_form_data.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/widgets/post/category_dropdown_widget.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/widgets/post/post_input_widget.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/widgets/post/privacy_dropdown_widget.dart';
+import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forui/forui.dart';
@@ -20,7 +25,9 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PostArticlesScreen extends StatefulWidget {
-  const PostArticlesScreen({super.key});
+  final UserProfileEntity user;
+
+  const PostArticlesScreen({super.key, required this.user});
 
   @override
   State<PostArticlesScreen> createState() => _PostArticlesScreenState();
@@ -29,9 +36,10 @@ class PostArticlesScreen extends StatefulWidget {
 class _PostArticlesScreenState extends State<PostArticlesScreen> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  late UploadFileBloc _uploadFileBloc;
 
   List<Map<String, dynamic>> categories = [
-    {"id": "", "name": "Tất cả"},
+    {"id": "", "name": "Chủ đề"},
     {"id": "08dd78b5-1e98-48bf-8765-9e922cf5713a", "name": "AI"},
     {"id": "08dd78b6-8f14-48c4-8e04-2e24d010b58b", "name": "Web"},
     {"id": "08dd7d39-8397-4b70-8e57-332e0f30c3e9", "name": "Mobile"},
@@ -40,20 +48,25 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
 
   String selectedCategoryId = "";
 
-  String selectedPrivacy = 'Công khai';
-  final List<String> privacy = [
-    'Công khai',
-    'Bạn bè',
-    'Nhóm',
-    'Chỉ Mình tôi',
+  String selectedPrivacyId = "1";
+  final List<Map<String, dynamic>> privacy = [
+    {"id": "1", "privacy": "Công khai", "icon": Icons.public},
+    {"id": "2", "privacy": "Bạn bè", "icon": Icons.people},
+    {"id": "3", "privacy": "Chỉ mình tôi", "icon": Icons.lock},
+    {"id": "4", "privacy": "Nhóm", "icon": Icons.groups},
   ];
 
-  String? selectedCommunity;
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController bodyController = TextEditingController();
-  final List<String> communities = ["Flutter", "Dart", "Programming", "Tech"];
+  @override
+  void initState() {
+    super.initState();
+    _uploadFileBloc = getIt<UploadFileBloc>();
+  }
 
-  final controller = FRadioSelectGroupController(value: PrivacyPost.Public);
+  @override
+  void dispose() {
+    _uploadFileBloc.close();
+    super.dispose();
+  }
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -72,7 +85,7 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
     if (pickedFile != null) {
       final file = File(pickedFile.path);
       setState(() => _image = file);
-      context.read<UploadFileBloc>().add(UploadImageFileEvent(file));
+      _uploadFileBloc.add(UploadImageFileEvent(url: file, type: ImageType.Image));
       logg.i("File Image Url: ${File(pickedFile.path)}");
       logg.i("Image Url: ${pickedFile.path}");
       logg.i("Url: $_image");
@@ -109,7 +122,7 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
           create: (context) => getIt<PostFormBloc>(),
         ),
         BlocProvider(
-          create: (context) => getIt<UploadFileBloc>(),
+          create: (context) => _uploadFileBloc,
         ),
       ],
       child: BlocConsumer<PostBloc, PostState>(
@@ -136,12 +149,22 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
               ),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () {
-                    _createPost(context);
-                  },
+                  style: ButtonStyle(
+                    foregroundColor: WidgetStateProperty.resolveWith<Color>(
+                          (Set<WidgetState> states) {
+                        if (states.contains(WidgetState.disabled)) {
+                          return Colors.grey; // Màu khi disable
+                        }
+                        return AppColors.bgPink; // Màu khi enable
+                      },
+                    ),
+                  ),
+                  onPressed: context.watch<PostFormBloc>().state.data.isValid
+                      ? () => _createPost(context)
+                      : null,
                   child: const Text(
                     'ĐĂNG',
-                    style: TextStyle(color: AppColors.bgPink, fontSize: 15),
+                    style: TextStyle(fontSize: 15),
                   ),
                 ),
               ],
@@ -152,10 +175,9 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
                 child: Column(
                   children: [
                     ListTile(
-                      leading: FAvatar(
-                        image: const NetworkImage(''),
-                        size: 45,
-                        fallback: const Icon(Icons.person),
+                      leading: AppAvatarWidget(
+                        imagePath: widget.user.userInfo.profilePictureUrl,
+                        size: 50,
                       ),
                       title: const Text(
                         'Minh Đức',
@@ -163,43 +185,58 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
                       ),
                       subtitle: Row(
                         children: [
-                          _optionButton(
-                              Icons.public, 'Công khai', Icons.unfold_more),
-                          // _optionButton(
-                          //     Icons.photo_album, 'Danh mục', Icons.unfold_more),
-                          //const SizedBox(width: 5),
-                          CategoryDropdownWidget(
-                            selectedCategoryId: selectedCategoryId,
-                            categories: categories,
-                            onChanged: (String? id) {
-                              setState(() {
-                                selectedCategoryId = id ?? "";
-                              });
-                              postBloc.add(PostCategoryIdChangedEvent(
-                                  selectedCategoryId));
-                            },
+                          SizedBox(
+                            width: 130,
+                            child: PrivacyDropdownWidget(
+                              selectedPrivacyId: selectedPrivacyId,
+                              privacy: privacy,
+                              onChanged: (String? id) {
+                                setState(() {
+                                  selectedPrivacyId = id ?? "";
+                                });
+                                postBloc.add(PostPrivacyChangedEvent(
+                                    int.parse(selectedPrivacyId)));
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          SizedBox(
+                            width: 120,
+                            child: CategoryDropdownWidget(
+                              selectedCategoryId: selectedCategoryId,
+                              categories: categories,
+                              onChanged: (String? id) {
+                                setState(() {
+                                  selectedCategoryId = id ?? "";
+                                });
+                                postBloc.add(PostCategoryIdChangedEvent(
+                                    selectedCategoryId));
+                              },
+                            ),
                           ),
                         ],
                       ),
                     ),
                     const PostInputWidget(),
-                    BlocBuilder<UploadFileBloc, UploadFileState>(
+                    BlocConsumer<UploadFileBloc, UploadFileState>(
+                      listener: (_, state) {
+                        if (state is UploadImageFileFailureState) {
+                          AppDisplayMessage.error(context, state.message);
+                        }
+                      },
                       builder: (context, state) {
+                        logg.i("Current upload file state: $state");
                         if (state is UploadImageFileLoadingState) {
                           return const AppLoadingWidget();
-                        } else if(state is UploadImageFileFailureState) {
-                          AppDisplayMessage.error(context, state.message);
-                        } else if (state is UploadImageFileSuccessState){
+                        } else if (state is UploadImageFileSuccessState) {
                           final imageUrl = state.imageUrl;
                           logg.i("Image Url File: $imageUrl");
-                          return _image != null
-                              ? Image.file(
-                            _image!,
+                          return Image.network(
+                            imageUrl.url,
                             width: double.infinity,
                             height: 500,
                             fit: BoxFit.cover,
-                          )
-                              : const SizedBox.shrink();
+                          );
                         }
                         return const SizedBox();
                       },
@@ -314,91 +351,6 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
             onPressed: () {},
             color: Colors.grey,
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _optionButton(IconData prefixIcon, String label, IconData suffix) {
-    return Container(
-      margin: const EdgeInsets.only(right: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        spacing: 3,
-        children: [
-          Icon(prefixIcon, size: 16, color: AppColors.bgPink),
-          Text(label,
-              style: const TextStyle(fontSize: 12, color: AppColors.bgPink)),
-          Icon(
-            suffix,
-            size: 16,
-            color: AppColors.bgPink,
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _privacy(IconData prefixIcon, String label, IconData suffix) {
-    // return Container(
-    //   margin: const EdgeInsets.only(right: 5),
-    //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    //   decoration: BoxDecoration(
-    //     color: Colors.grey.shade100,
-    //     borderRadius: BorderRadius.circular(10),
-    //   ),
-    //   child: Row(
-    //     spacing: 3,
-    //     children: [
-    //       Icon(prefixIcon, size: 16, color: AppColors.bgPink),
-    //       Text(label,
-    //           style: const TextStyle(fontSize: 12, color: AppColors.bgPink)),
-    //       Icon(
-    //         suffix,
-    //         size: 16,
-    //         color: AppColors.bgPink,
-    //       )
-    //     ],
-    //   ),
-    // );
-    return SizedBox(
-      width: 120,
-      height: 45,
-      child: FSelectMenuTile(
-        groupController: controller,
-        autoHide: true,
-        validator: (value) => value == null ? 'Select an item' : null,
-        prefixIcon: FIcon(FAssets.icons.bell, size: 15),
-        title: const Text(''),
-        details: ListenableBuilder(
-          listenable: controller,
-          builder: (context, _) => Text(
-            switch (controller.value.firstOrNull) {
-              PrivacyPost.Public => 'Công khai',
-              PrivacyPost.FriendsOnly => 'Bạn bè',
-              PrivacyPost.GroupOnly => 'Cộng đồng',
-              PrivacyPost.Private => 'Riêng tư',
-              null || PrivacyPost.Custom => 'Tùy chỉnh',
-            },
-          ),
-        ),
-        menu: [
-          FSelectTile(
-              title: const Text('Công khai', style: TextStyle(fontSize: 12)),
-              value: PrivacyPost.Public),
-          FSelectTile(
-              title: const Text('Bạn bè', style: TextStyle(fontSize: 12)),
-              value: PrivacyPost.FriendsOnly),
-          FSelectTile(
-              title: const Text('Cộng đồng', style: TextStyle(fontSize: 12)),
-              value: PrivacyPost.GroupOnly),
-          FSelectTile(
-              title: const Text('Riêng tư', style: TextStyle(fontSize: 12)),
-              value: PrivacyPost.Private),
         ],
       ),
     );

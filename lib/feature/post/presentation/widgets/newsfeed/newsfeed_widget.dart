@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class NewsfeedWidget extends StatelessWidget {
   final String selectedCategory;
   final int? selectedIndex;
+  final String? userId;
   final void Function(String)? upVote;
   final void Function(String)? unVote;
   final void Function(String)? downVote;
@@ -18,6 +19,7 @@ class NewsfeedWidget extends StatelessWidget {
     super.key,
     required this.selectedCategory,
     this.selectedIndex,
+    this.userId,
     this.upVote,
     this.unVote,
     this.downVote,
@@ -26,30 +28,70 @@ class NewsfeedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return BlocBuilder<NewsfeedBloc, NewsfeedState>(
+    //   builder: (context, state) {
+    //     if (state is FetchNewsfeedLoadingState) {
+    //       return ListView.builder(
+    //         itemCount: 5,
+    //         itemBuilder: (context, index) => const SkeletonLoading(),
+    //       );
+    //     } else if (state is FetchNewsfeedFailureState) {
+    //       return AppErrorWidget(state.message);
+    //     } else if (state is FetchNewsfeedSuccessState) {
+    //       final newsfeeds = state.data;
+    //       final filteredNewsfeeds = selectedCategory == 'Tất cả'
+    //           ? newsfeeds
+    //           : newsfeeds
+    //               .where((post) => post.categoryName == selectedCategory)
+    //               .toList();
+    //       return CustomScrollView(
+    //         slivers: [
+    //           SliverList(
+    //             delegate: SliverChildBuilderDelegate(
+    //               (context, index) {
+    //                 final newsfeed = filteredNewsfeeds[index];
+    //                 return NewsfeedPostWidget(
+    //                   post: newsfeed,
+    //                   upVote: upVote,
+    //                   unVote: upVote,
+    //                   downVote: downVote,
+    //                   savePost: savePost,
+    //                 );
+    //               },
+    //               childCount: filteredNewsfeeds.length,
+    //             ),
+    //           ),
+    //         ],
+    //       );
+    //     }
+    //     return const SizedBox();
+    //   },
+    // );
     return BlocBuilder<NewsfeedBloc, NewsfeedState>(
       builder: (context, state) {
-        if (state is FetchNewsfeedLoadingState) {
+        if (state is FetchExploreFeedLoadingState) {
           return ListView.builder(
             itemCount: 5,
             itemBuilder: (context, index) => const SkeletonLoading(),
           );
-        } else if (state is FetchNewsfeedFailureState) {
+        } else if (state is FetchExploreFeedFailureState) {
           return AppErrorWidget(state.message);
-        } else if (state is FetchNewsfeedSuccessState) {
+        } else if (state is FetchExploreFeedSuccessState) {
           final newsfeeds = state.data;
           final filteredNewsfeeds = selectedCategory == 'Tất cả'
               ? newsfeeds
               : newsfeeds
-                  .where((post) => post.categoryName == selectedCategory)
-                  .toList();
+              .where((post) => post.categoryName == selectedCategory)
+              .toList();
           return CustomScrollView(
             slivers: [
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) {
+                      (context, index) {
                     final newsfeed = filteredNewsfeeds[index];
                     return NewsfeedPostWidget(
                       post: newsfeed,
+                      userId: userId,
                       upVote: upVote,
                       unVote: upVote,
                       downVote: downVote,

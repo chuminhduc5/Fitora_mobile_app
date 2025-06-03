@@ -8,8 +8,8 @@ import 'package:fitora_mobile_app/feature/user/domain/usecases/usecase_params.da
 
 abstract class GroupRepository {
   Future<Either<Failure, GroupMemberEntity>> createGroup(CreateGroupParams params);
-  Future<Either<Failure, GroupMemberEntity>> updateGroup(UpdateGroupParams params);
-  Future<Either<Failure, void>> deleteGroup(CreateGroupParams params);
+  Future<Either<Failure, void>> updateGroup(UpdateGroupParams params);
+  Future<Either<Failure, void>> deleteGroup(String groupId);
   Future<Either<Failure, GroupResponseEntity>> getGroupById(String id);
   Future<Either<Failure, List<GroupMemberEntity>>> getGroupMembers(String groupId);
   Future<Either<Failure, void>> inviteNewMembers(InviteNewMembersParams params);

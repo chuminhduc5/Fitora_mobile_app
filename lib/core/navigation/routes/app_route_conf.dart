@@ -11,12 +11,14 @@ import 'package:fitora_mobile_app/feature/post/presentation/screens/post_article
 import 'package:fitora_mobile_app/feature/search/presentation/screens/search_screen.dart';
 import 'package:fitora_mobile_app/feature/setting/presentation/screens/setting_screen.dart';
 import 'package:fitora_mobile_app/feature/splash/presentation/screens/splash_screen.dart';
+import 'package:fitora_mobile_app/feature/user/domain/entities/managed_group_entity.dart';
 import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/create_group_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/friend_invitation_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/friend_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/group_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/invite_friend_group_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/screens/group/update_group_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/personal_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/profile/profile_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/profile/saved_post_screen.dart';
@@ -145,7 +147,10 @@ class AppRouteConf {
       GoRoute(
         path: AppRoute.post.path,
         name: AppRoute.post.name,
-        builder: (_, __) => const PostArticlesScreen(),
+        builder: (_, state) {
+          final userInfo = state.extra as UserProfileEntity;
+          return PostArticlesScreen(user: userInfo);
+        } ,
       ),
       GoRoute(
         path: AppRoute.profile.path,
@@ -214,6 +219,16 @@ class AppRouteConf {
           final groupId = state.extra as String;
           return GroupScreen(groupId: groupId);
         },
+        routes: [
+          GoRoute(
+            path: AppRoute.updateGroup.path,
+            name: AppRoute.updateGroup.name,
+            builder: (_, state) {
+              final group = state.extra as ManagedGroupEntity;
+              return UpdateGroupScreen(managedGroup: group);
+            },
+          ),
+        ]
       ),
       GoRoute(
         path: AppRoute.createGroup.path,

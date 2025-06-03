@@ -22,7 +22,7 @@ class _GroupScreenState extends State<GroupScreen> {
     context.read<GroupBloc>().add(FetchGroupByIdEvent(id: widget.groupId));
     return Scaffold(
       backgroundColor: AppColors.bgWhite,
-      appBar: AppBar(),
+      //appBar: AppBar(),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () {
@@ -47,8 +47,12 @@ class _GroupScreenState extends State<GroupScreen> {
                 logg.i("Group Role: $groupRole");
                 logg.i("Member Image Url: $memberImageUrl");
                 return groupRole == 1
-                    ? GroupMemberRoleScreen(groupInfo: groupInfo)
-                    : GroupManagementRoleScreen(groupInfo: groupInfo);
+                    ? GroupManagementRoleScreen(groupInfo: groupInfo)
+                    : GroupMemberRoleScreen(groupInfo: groupInfo);
+
+                // return groupRole == 1
+                //     ? GroupMemberRoleScreen(groupInfo: groupInfo)
+                //     : GroupManagementRoleScreen(groupInfo: groupInfo);
               }
               return const SizedBox();
             },

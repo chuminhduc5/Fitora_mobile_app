@@ -19,7 +19,24 @@ class CreateGroupEvent extends GroupEvent {
 }
 
 // Sự kiện chỉnh sửa nhóm
-class UpdateGroupEvent extends GroupEvent {}
+class UpdateGroupEvent extends GroupEvent {
+  final UpdateGroupFormData params;
+
+  const UpdateGroupEvent(this.params);
+
+  @override
+  List<Object?> get props => [params];
+}
+
+// Sự kiện xóa nhóm
+class DeleteGroupEvent extends GroupEvent {
+  final String groupId;
+
+  const DeleteGroupEvent(this.groupId);
+
+  @override
+  List<Object?> get props => [groupId];
+}
 
 // Sự kiện lấy thông tin nhóm
 class FetchGroupByIdEvent extends GroupEvent {

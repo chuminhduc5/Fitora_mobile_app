@@ -15,6 +15,7 @@ class CreateGroupLoadingState extends GroupState {}
 
 class CreateGroupSuccessState extends GroupState {
   final GroupMemberEntity data;
+
   const CreateGroupSuccessState({required this.data});
 
   @override
@@ -23,7 +24,36 @@ class CreateGroupSuccessState extends GroupState {
 
 class CreateGroupFailureState extends GroupState {
   final String message;
+
   const CreateGroupFailureState(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+// Trạng thái sự kiện chỉnh sửa nhóm
+class UpdateGroupLoadingState extends GroupState {}
+
+class UpdateGroupSuccessState extends GroupState {}
+
+class UpdateGroupFailureState extends GroupState {
+  final String message;
+
+  const UpdateGroupFailureState(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+// Trạng thái sự kiện xóa nhóm
+class DeleteGroupLoadingState extends GroupState {}
+
+class DeleteGroupSuccessState extends GroupState {}
+
+class DeleteGroupFailureState extends GroupState {
+  final String message;
+
+  const DeleteGroupFailureState(this.message);
 
   @override
   List<Object?> get props => [message];
@@ -34,6 +64,7 @@ class FetchGroupByIdLoadingState extends GroupState {}
 
 class FetchGroupByIdSuccessState extends GroupState {
   final GroupResponseEntity data;
+
   const FetchGroupByIdSuccessState({required this.data});
 
   @override
@@ -42,6 +73,7 @@ class FetchGroupByIdSuccessState extends GroupState {
 
 class FetchGroupByIdFailureState extends GroupState {
   final String message;
+
   const FetchGroupByIdFailureState(this.message);
 
   @override
@@ -136,6 +168,7 @@ class FetchManagedGroupLoadingState extends GroupState {}
 
 class FetchManagedGroupSuccessState extends GroupState {
   final List<ManagedGroupEntity> data;
+
   const FetchManagedGroupSuccessState({required this.data});
 
   @override
@@ -155,6 +188,7 @@ class FetchJoinedGroupLoadingState extends GroupState {}
 
 class FetchJoinedGroupSuccessState extends GroupState {
   final List<ManagedGroupEntity> data;
+
   const FetchJoinedGroupSuccessState({required this.data});
 
   @override

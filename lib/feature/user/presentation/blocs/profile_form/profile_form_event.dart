@@ -29,7 +29,14 @@ class ProfileFormLastNameChangedEvent extends ProfileFormEvent {
 }
 
 // Sự kiện người dùng thay đổi BirthDate
-class ProfileFormBirthDateChangedEvent extends ProfileFormEvent {}
+class ProfileFormBirthDateChangedEvent extends ProfileFormEvent {
+  final DateTime date;
+
+  const ProfileFormBirthDateChangedEvent(this.date);
+
+  @override
+  List<Object?> get props => [date];
+}
 
 // Sự kiện người dùng thay đổi Gender
 class ProfileFormGenderChangedEvent extends ProfileFormEvent {

@@ -5,15 +5,18 @@ import 'package:fitora_mobile_app/feature/user/presentation/screens/group/group_
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/group_event_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/group_introduction_screen.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/screens/group/group_member_screen.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/widgets/group/group_avatar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 
 class GroupManagementRoleScreen extends StatefulWidget {
   final GroupResponseEntity groupInfo;
+
   const GroupManagementRoleScreen({super.key, required this.groupInfo});
 
   @override
-  State<GroupManagementRoleScreen> createState() => _GroupManagementRoleScreenState();
+  State<GroupManagementRoleScreen> createState() =>
+      _GroupManagementRoleScreenState();
 }
 
 class _GroupManagementRoleScreenState extends State<GroupManagementRoleScreen> {
@@ -21,18 +24,52 @@ class _GroupManagementRoleScreenState extends State<GroupManagementRoleScreen> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
+        SliverAppBar(
+          pinned: true,
+          floating: false,
+          expandedHeight: kToolbarHeight,
+          backgroundColor: AppColors.bgWhite,
+          elevation: 0,
+          // title: _showTitle
+          //     ? Text(
+          //         "${profile.userInfo.firstName} ${profile.userInfo.lastName}",
+          //       )
+          //     : null,
+          // centerTitle: true,
+          actions: [
+            PopupMenuButton<String>(
+              padding: EdgeInsets.zero,
+              color: AppColors.bgWhite,
+              icon: const Icon(Icons.menu),
+              onSelected: (value) {
+                if (value == 'setting') {
+
+                }
+              },
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'setting',
+                  child: Row(
+                    children: [
+                      Icon(Icons.settings, size: 20),
+                      SizedBox(width: 3),
+                      Text(
+                        'Cài đặt',
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
         SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                child: Image.file(
-                  File(widget.groupInfo.group.avatarUrl),
-                  width: MediaQuery.of(context).size.width,
-                  height: 220,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              GroupBackgroundWidget(
+                  imagePath: widget.groupInfo.group.avatarUrl),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
@@ -58,7 +95,7 @@ class _GroupManagementRoleScreenState extends State<GroupManagementRoleScreen> {
               const SizedBox(height: 20),
               FTabs(
                 style: FTabsStyle(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
                   indicatorSize: FTabBarIndicatorSize.tab,
                   decoration: const BoxDecoration(color: AppColors.bgWhite),
                   selectedLabelTextStyle: const TextStyle(
@@ -68,10 +105,10 @@ class _GroupManagementRoleScreenState extends State<GroupManagementRoleScreen> {
                     color: Colors.black,
                   ),
                   indicatorDecoration: const BoxDecoration(
-                    // color: AppColors.bgPink,
-                    // border: Border.all(color: AppColors.bgPink),
-                    // borderRadius: BorderRadius.circular(50),
-                  ),
+                      // color: AppColors.bgPink,
+                      // border: Border.all(color: AppColors.bgPink),
+                      // borderRadius: BorderRadius.circular(50),
+                      ),
                   focusedOutlineStyle: FFocusedOutlineStyle(
                     color: Colors.green,
                     borderRadius: BorderRadius.circular(50),
@@ -82,7 +119,8 @@ class _GroupManagementRoleScreenState extends State<GroupManagementRoleScreen> {
                     label: const Text("Giới thiệu"),
                     content: Container(
                       width: double.infinity,
-                      child: const GroupIntroductionScreen(),
+                      child:
+                          GroupIntroductionScreen(groupInfo: widget.groupInfo),
                     ),
                   ),
                   FTabEntry(

@@ -6,6 +6,7 @@ import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/user/domain/entities/group_entity.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/widgets/group/group_avatar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
@@ -23,7 +24,7 @@ class _GroupMemberRoleScreenState extends State<GroupMemberRoleScreen> {
   int selectedIndex = 0;
   final List<String> tags = [
     'Dành cho bạn',
-    'Nhóm của bạn',
+    'Đáng chú ý',
     'Bài viết',
     'Khám phá',
   ];
@@ -36,13 +37,7 @@ class _GroupMemberRoleScreenState extends State<GroupMemberRoleScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.file(
-                File(widget.groupInfo.group.avatarUrl),
-                width: MediaQuery.of(context).size.width,
-                height: 220,
-                fit: BoxFit.cover,
-                // alignment: Alignment.topCenter,
-              ),
+              GroupBackgroundWidget(imagePath: widget.groupInfo.group.avatarUrl),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
@@ -59,7 +54,10 @@ class _GroupMemberRoleScreenState extends State<GroupMemberRoleScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.lock, size: 16, color: Colors.grey),
+                        if (widget.groupInfo.group.privacy == 1)
+                          const Icon(Icons.public, size: 16, color: Colors.grey),
+                        if (widget.groupInfo.group.privacy == 2)
+                          const Icon(Icons.lock, size: 16, color: Colors.grey),
                         const SizedBox(width: 4),
                         Text(
                           "Nhóm Riêng tư · ${widget.groupInfo.group.memberCount} thành viên",

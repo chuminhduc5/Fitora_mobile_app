@@ -1,23 +1,23 @@
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class CategoryDropdownWidget extends StatelessWidget {
-  final String selectedCategoryId;
-  final List<Map<String, dynamic>> categories;
+class PrivacyDropdownWidget extends StatelessWidget {
+  final String selectedPrivacyId;
+  final List<Map<String, dynamic>> privacy;
   final ValueChanged<String?> onChanged;
 
-  const CategoryDropdownWidget({
+  const PrivacyDropdownWidget({
     super.key,
-    required this.selectedCategoryId,
-    required this.categories,
+    required this.selectedPrivacyId,
+    required this.privacy,
     required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    final selectedCategory = categories.firstWhere(
-          (cat) => cat['id'] == selectedCategoryId,
-      orElse: () => categories.first, // fallback nếu không tìm thấy
+    final selectedPrivacy = privacy.firstWhere(
+          (cat) => cat['id'] == selectedPrivacyId,
+      orElse: () => privacy.first,
     );
 
     return Container(
@@ -29,7 +29,7 @@ class CategoryDropdownWidget extends StatelessWidget {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          value: selectedCategory['id'],
+          value: selectedPrivacy['id'],
           onChanged: onChanged,
           icon: const Icon(
             Icons.unfold_more,
@@ -42,14 +42,14 @@ class CategoryDropdownWidget extends StatelessWidget {
             color: AppColors.bgPink,
             fontWeight: FontWeight.w500,
           ),
-          items: categories.map((category) {
+          items: privacy.map((privacy) {
             return DropdownMenuItem<String>(
-              value: category['id'],
+              value: privacy['id'],
               child: Row(
                 children: [
-                  //const Icon(Icons.photo_album, size: 16, color: AppColors.black),
+                  Icon(privacy['icon'], size: 16, color: AppColors.black),
                   const SizedBox(width: 4),
-                  Text(category['name'], style: const TextStyle(color: AppColors.black),),
+                  Text(privacy['privacy'], style: const TextStyle(color: AppColors.black),),
                 ],
               ),
             );
@@ -59,4 +59,3 @@ class CategoryDropdownWidget extends StatelessWidget {
     );
   }
 }
-

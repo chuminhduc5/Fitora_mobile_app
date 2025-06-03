@@ -14,8 +14,8 @@ import 'package:fitora_mobile_app/feature/user/data/models/responses/received_gr
 
 abstract class GroupRemoteDataSource {
   Future<GroupMemberModel> createGroup(CreateGroupRequest request);
-  Future<GroupMemberModel> updateGroup(UpdateGroupRequest request);
-  Future<void> deleteGroup(CreateGroupRequest request);
+  Future<void> updateGroup(UpdateGroupRequest request);
+  Future<void> deleteGroup(String groupId);
   Future<GroupResponseModel> fetchGroupById(String id);
   Future<List<GroupMemberModel>> fetchGroupMembers(String groupId);
   Future<void> inviteNewMembers(InviteNewMembersRequest request);
@@ -47,9 +47,13 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   }
 
   @override
-  Future<void> deleteGroup(CreateGroupRequest request) async {
-    // TODO: implement deleteGroup
-    throw UnimplementedError();
+  Future<void> deleteGroup(String groupId) async {
+    try {
+      await _dioClient.delete('${ApiUrl.deleteGroup}?id=$groupId');
+    } on DioException catch(e) {
+      logger.e("Failed to load data: $e");
+      throw ServerException();
+    }
   }
 
   @override
@@ -64,14 +68,12 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   }
 
   @override
-  Future<GroupMemberModel> updateGroup(UpdateGroupRequest request) async {
+  Future<void> updateGroup(UpdateGroupRequest request) async {
     try {
-      final response = await _dioClient.put(
+      await _dioClient.put(
         ApiUrl.updateGroup,
         data: request.toJson(),
       );
-      final group = response.data['data'];
-      return GroupMemberModel.fromJson(group);
     } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
