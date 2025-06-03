@@ -8,9 +8,11 @@ import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/enums/file/image_type.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/upload_file/upload_file_bloc.dart';
+import 'package:fitora_mobile_app/feature/user/domain/entities/managed_group_entity.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/group/group_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/group_form/group_form_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/forms/group/create_group_form_data.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/forms/group/update_group_form_data.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/widgets/group/dropdown_privacy_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,20 +20,26 @@ import 'package:forui/widgets/text_field.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CreateGroupScreen extends StatefulWidget {
-  const CreateGroupScreen({super.key});
+class UpdateGroupScreen extends StatefulWidget {
+  final ManagedGroupEntity managedGroup;
+
+  const UpdateGroupScreen({super.key, required this.managedGroup});
 
   @override
-  State<CreateGroupScreen> createState() => _CreateGroupScreenState();
+  State<UpdateGroupScreen> createState() => _UpdateGroupScreenState();
 }
 
-class _CreateGroupScreenState extends State<CreateGroupScreen> {
+class _UpdateGroupScreenState extends State<UpdateGroupScreen> {
   final TextEditingController _nameController = TextEditingController();
   late UploadFileBloc _uploadFileBloc;
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  late File? _avatar;
   File? _avatarImage;
+
+  String? _backgroundImageUrl;
+  String? _avatarImageUrl;
 
   @override
   void initState() {
@@ -65,23 +73,51 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     }
   }
 
-  void _createGroup(BuildContext context) {
+  void _updateGroup(BuildContext context) {
     primaryFocus?.unfocus();
     final formBloc = context.read<GroupFormBloc>().state;
-    logg.i("Name: ${formBloc.data.name}");
-    logg.i("Description: ${formBloc.data.description}");
-    logg.i("Privacy: ${formBloc.data.privacy}");
-    logg.i("BgImage: ${formBloc.data.coverImageUrl}");
-    logg.i("Avatar: ${formBloc.data.avatarUrl}");
+    final originalGroup = widget.managedGroup;
+
+    final updatedName =
+        (formBloc.data.name == null || formBloc.data.name!.trim().isEmpty)
+            ? originalGroup.name
+            : formBloc.data.name!;
+
+    final updatedDescription = (formBloc.data.description == null ||
+            formBloc.data.description!.trim().isEmpty)
+        ? originalGroup.description
+        : formBloc.data.description!;
+
+    final updatedPrivacy = (formBloc.data.privacy == null)
+        ? originalGroup.privacy
+        : formBloc.data.privacy;
+
+    final updatedCoverImageUrl = (formBloc.data.coverImageUrl == null ||
+            formBloc.data.coverImageUrl!.trim().isEmpty)
+        ? originalGroup.coverImageUrl ?? ''
+        : formBloc.data.coverImageUrl!;
+
+    final updatedAvatarUrl = (formBloc.data.avatarUrl == null ||
+            formBloc.data.avatarUrl!.trim().isEmpty)
+        ? originalGroup.avatarUrl ?? ''
+        : formBloc.data.avatarUrl!;
+
+    logg.i("Id: ${widget.managedGroup.id}");
+    logg.i("Name: $updatedName");
+    logg.i("Description: $updatedDescription");
+    logg.i("Privacy: $updatedPrivacy");
+    logg.i("BgImage: $updatedCoverImageUrl");
+    logg.i("Avatar: $updatedAvatarUrl");
     context.read<GroupBloc>().add(
-          CreateGroupEvent(
-            CreateGroupFormData(
-              name: formBloc.data.name,
-              description: formBloc.data.description,
-              privacy: formBloc.data.privacy,
+          UpdateGroupEvent(
+            UpdateGroupFormData(
+              id: widget.managedGroup.id,
+              name: updatedName,
+              description: updatedDescription,
+              privacy: updatedPrivacy,
               requirePostApproval: true,
-              coverImageUrl: formBloc.data.coverImageUrl,
-              avatarUrl: formBloc.data.avatarUrl,
+              coverImageUrl: updatedCoverImageUrl,
+              avatarUrl: updatedAvatarUrl,
             ),
           ),
         );
@@ -104,7 +140,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           final formBloc = context.read<GroupFormBloc>();
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Tạo nhóm'),
+              title: const Text('Chỉnh sửa nhóm'),
               leading: const CloseButton(),
             ),
             body: SingleChildScrollView(
@@ -119,6 +155,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         if (state is UploadImageFileFailureState &&
                             state.type == ImageType.Background) {
                           AppDisplayMessage.error(context, state.message);
+                        } else if (state is UploadImageFileSuccessState &&
+                            state.type == ImageType.Background) {
+                          setState(() {
+                            _backgroundImageUrl = state.imageUrl.url;
+                          });
+                          formBloc.add(GroupCoverImageUrlChangeEvent(
+                              state.imageUrl.url));
                         }
                       },
                       builder: (context, state) {
@@ -134,12 +177,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 color: Colors.white,
                               ),
                               child: const AppLoadingWidget());
-                        } else if (state is UploadImageFileSuccessState &&
-                            state.type == ImageType.Background) {
-                          final imageUrl = state.imageUrl;
-                          logg.i("Image Url File: $imageUrl");
-                          formBloc
-                              .add(GroupCoverImageUrlChangeEvent(imageUrl.url));
+                        }
+
+                        if (_backgroundImageUrl != null) {
                           return Container(
                             height: 180,
                             width: double.infinity,
@@ -151,7 +191,29 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Image.network(
-                                imageUrl.url,
+                                _backgroundImageUrl!,
+                                width: double.infinity,
+                                height: 180,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        }
+
+                        if (widget.managedGroup.coverImageUrl != null &&
+                            widget.managedGroup.avatarUrl.isNotEmpty) {
+                          return Container(
+                            height: 180,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.white,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                widget.managedGroup.coverImageUrl!,
                                 width: double.infinity,
                                 height: 180,
                                 fit: BoxFit.cover,
@@ -194,6 +256,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         if (state is UploadImageFileFailureState &&
                             state.type == ImageType.Avatar) {
                           AppDisplayMessage.error(context, state.message);
+                        } else if (state is UploadImageFileSuccessState &&
+                            state.type == ImageType.Avatar) {
+                          setState(() {
+                            _avatarImageUrl = state.imageUrl.url;
+                          });
+                          formBloc.add(
+                              GroupAvatarUrlChangeEvent(state.imageUrl.url));
                         }
                       },
                       builder: (context, state) {
@@ -211,16 +280,23 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 ),
                                 child: const AppLoadingWidget()),
                           );
-                        } else if (state is UploadImageFileSuccessState &&
-                            state.type == ImageType.Avatar) {
-                          final imageUrl = state.imageUrl;
-                          logg.i("Image Url File: $imageUrl");
-                          formBloc.add(GroupAvatarUrlChangeEvent(imageUrl.url));
+                        }
+                        if (_avatarImageUrl != null) {
                           return Center(
                             child: AppAvatarWidget(
-                                imagePath: imageUrl.url, size: 150),
+                                imagePath: _avatarImageUrl, size: 150),
                           );
                         }
+
+                        if (widget.managedGroup.avatarUrl != null &&
+                            widget.managedGroup.avatarUrl.isNotEmpty) {
+                          return Center(
+                            child: AppAvatarWidget(
+                                imagePath: widget.managedGroup.avatarUrl,
+                                size: 150),
+                          );
+                        }
+
                         return Center(
                           child: Container(
                             width: 150,
@@ -259,11 +335,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     enabled: true,
                     label: const Text('Tên nhóm'),
                     hint: "",
+                    initialValue: widget.managedGroup.name,
                     keyboardType: TextInputType.name,
                     textCapitalization: TextCapitalization.none,
                     maxLines: 1,
-                    onChange: (value) {
-                      formBloc.add(GroupNameChangeEvent(value));
+                    onChange: (val) {
+                      formBloc.add(GroupNameChangeEvent(val));
                     },
                   ),
                   const SizedBox(height: 16),
@@ -271,11 +348,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     enabled: true,
                     label: const Text('Mô tả'),
                     hint: "",
+                    initialValue: widget.managedGroup.description,
                     keyboardType: TextInputType.name,
                     textCapitalization: TextCapitalization.none,
                     maxLines: 1,
-                    onChange: (value) {
-                      formBloc.add(GroupDescriptionChangeEvent(value));
+                    onChange: (val) {
+                      formBloc.add(GroupDescriptionChangeEvent(val));
                     },
                   ),
                   const SizedBox(height: 16),
@@ -291,26 +369,26 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   const SizedBox(height: 24),
                   BlocConsumer<GroupBloc, GroupState>(
                     listener: (context, state) {
-                      if (state is CreateGroupFailureState) {
+                      if (state is UpdateGroupFailureState) {
                         AppDisplayMessage.error(context, state.message);
-                      } else if (state is CreateGroupSuccessState) {
+                      } else if (state is UpdateGroupSuccessState) {
                         context.pop();
                         context.read<GroupBloc>().add(FetchManagedGroupEvent());
                         AppDisplayMessage.success(
-                            context, "Tạo nhóm thành công");
+                            context, "Cập nhật nhóm thành công");
                       }
                     },
                     builder: (context, state) {
-                      if (state is CreateGroupLoadingState){
+                      if (state is UpdateGroupLoadingState){
                         return const AppLoadingWidget();
                       }
                       return SizedBox(
                         width: double.infinity,
                         child: AppButtonWidget(
                           onPressed: () {
-                            _createGroup(context);
+                            _updateGroup(context);
                           },
-                          title: "Tạo nhóm",
+                          title: "Cập nhật",
                           bgColor: AppColors.bgPink,
                           paddingTop: 15,
                           paddingBottom: 15,

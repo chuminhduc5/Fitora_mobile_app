@@ -11,14 +11,17 @@ import 'package:fitora_mobile_app/feature/user/domain/entities/received_group_in
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/accept_group_invite_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/create_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/delete_group_invite_use_case.dart';
+import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/delete_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_group_by_id_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_group_member_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_joined_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_managed_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_received_group_invite_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/invite_new_members_use_case.dart';
+import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/update_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/usecase_params.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/forms/group/create_group_form_data.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/forms/group/update_group_form_data.dart';
 import 'package:meta/meta.dart';
 
 part 'group_event.dart';
@@ -27,6 +30,8 @@ part 'group_state.dart';
 
 class GroupBloc extends Bloc<GroupEvent, GroupState> {
   final CreateGroupUseCase _createGroupUseCase;
+  final UpdateGroupUseCase _updateGroupUseCase;
+  final DeleteGroupUseCase _deleteGroupUseCase;
   final GetGroupByIdUseCase _getGroupByIdUseCase;
   final GetGroupMemberUseCase _getGroupMemberUseCase;
   final InviteNewMembersUseCase _inviteNewMembersUseCase;
@@ -38,6 +43,8 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
 
   GroupBloc(
     this._createGroupUseCase,
+    this._updateGroupUseCase,
+    this._deleteGroupUseCase,
     this._getGroupByIdUseCase,
     this._getGroupMemberUseCase,
     this._inviteNewMembersUseCase,
@@ -48,6 +55,8 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     this._getJoinedGroupUseCase,
   ) : super(GroupInitialState()) {
     on<CreateGroupEvent>(_create);
+    on<UpdateGroupEvent>(_update);
+    on<DeleteGroupEvent>(_delete);
     on<FetchGroupByIdEvent>(_fetchGroupById);
     on<FetchGroupMemberEvent>(_fetchGroupMember);
     on<InviteNewMembersEvent>(_inviteNewMember);
@@ -73,6 +82,36 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     result.fold(
       (failure) => emit(CreateGroupFailureState(mapFailureToMessage(failure))),
       (success) => emit(CreateGroupSuccessState(data: success)),
+    );
+  }
+
+  Future<void> _update(UpdateGroupEvent event, Emitter emit) async {
+    emit(UpdateGroupLoadingState());
+
+    final result = await _updateGroupUseCase.call(UpdateGroupParams(
+      id: event.params.id,
+      name: event.params.name,
+      description: event.params.description,
+      privacy: event.params.privacy,
+      requirePostApproval: event.params.requirePostApproval,
+      coverImageUrl: event.params.coverImageUrl,
+      avatarUrl: event.params.avatarUrl,
+    ));
+
+    result.fold(
+      (failure) => emit(UpdateGroupFailureState(mapFailureToMessage(failure))),
+      (success) => emit(UpdateGroupSuccessState()),
+    );
+  }
+
+  Future<void> _delete(DeleteGroupEvent event, Emitter emit) async {
+    emit(DeleteGroupLoadingState());
+
+    final result = await _deleteGroupUseCase.call(event.groupId);
+
+    result.fold(
+      (failure) => emit(DeleteGroupFailureState(mapFailureToMessage(failure))),
+      (success) => emit(DeleteGroupSuccessState()),
     );
   }
 

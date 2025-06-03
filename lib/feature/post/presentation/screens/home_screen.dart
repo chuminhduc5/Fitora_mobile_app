@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
+import 'package:fitora_mobile_app/core/cache/hive_local_storage.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
+import 'package:fitora_mobile_app/core/helper/mapper/user/user_profile_mapper.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/network/network_checker.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
@@ -12,6 +14,7 @@ import 'package:fitora_mobile_app/feature/post/presentation/blocs/interact/inter
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/newsfeed/newsfeed_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/widgets/newsfeed/newsfeed_widget.dart';
+import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final String userId;
+  UserProfileEntity? userInfo;
   int selectedIndex = 0;
 
   String selectedCategory = 'Tất cả';
@@ -46,12 +50,18 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> articlesByCategory = [];
 
   late NewsfeedBloc _newsfeedBloc;
+  late NewsfeedBloc _exploreFeedBloc;
+  late NewsfeedBloc _trendingFeedBloc;
   late Timer _timer;
+  final _hiveLocalStorage = HiveLocalStorage();
 
   @override
   void initState() {
     _getUserId();
+    _loadUser();
     _newsfeedBloc = getIt<NewsfeedBloc>()..add(FetchNewsfeedEvent());
+    _exploreFeedBloc = getIt<NewsfeedBloc>()..add(FetchExploreFeedEvent());
+    _trendingFeedBloc = getIt<NewsfeedBloc>()..add(FetchTrendingFeedEvent());
     final network = getIt<NetworkChecker>();
     _timer = Timer.periodic(const Duration(seconds: 30), (_) {
       //_checkInternetConnection(network);
@@ -64,6 +74,17 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       userId = pref.getString('userId')!;
     });
+  }
+
+  void _loadUser() async {
+    final userModel = await _hiveLocalStorage.load(key: "user", boxName: "cache");
+    if (userModel != null) {
+      logg.i("Người dùng đã lưu: $userModel");
+      final userEntity = UserProfileMapper.toEntity(userModel);
+      setState(() {
+        userInfo = userEntity;
+      });
+    }
   }
 
   // void _checkInternetConnection(NetworkChecker network) {
@@ -147,7 +168,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => _newsfeedBloc),
+        //BlocProvider(create: (_) => _newsfeedBloc),
+        BlocProvider(create: (_) => _exploreFeedBloc),
+        //BlocProvider(create: (_) => _trendingFeedBloc),
         BlocProvider(create: (_) => getIt<AuthBloc>()),
       ],
       child: Scaffold(
@@ -170,7 +193,10 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: <Widget>[
             IconButton(
               onPressed: () async {
-                final result = await context.pushNamed(AppRoute.post.name);
+                final result = await context.pushNamed(
+                  AppRoute.post.name,
+                  extra: userInfo,
+                );
                 if (result == true) {
                   context
                       .read<NewsfeedBloc>()
@@ -246,6 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: NewsfeedWidget(
                   selectedCategory: categories[selectedIndex],
                   selectedIndex: selectedIndex,
+                  userId: userId,
                   upVote: _upVote,
                   downVote: _downVote,
                   unVote: _unVote,

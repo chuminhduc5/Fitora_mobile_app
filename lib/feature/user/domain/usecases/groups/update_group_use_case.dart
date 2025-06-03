@@ -5,12 +5,12 @@ import 'package:fitora_mobile_app/core/usecase/usecase.dart';
 import 'package:fitora_mobile_app/feature/user/domain/entities/group_member_entity.dart';
 import 'package:fitora_mobile_app/feature/user/domain/repositories/group_repository.dart';
 
-class UpdateGroupUseCase extends UseCase<GroupMemberEntity, Params> {
+class UpdateGroupUseCase extends UseCase<void, Params> {
   final GroupRepository _groupRepository;
   UpdateGroupUseCase(this._groupRepository);
 
   @override
-  Future<Either<Failure, GroupMemberEntity>> call(Params params) async {
+  Future<Either<Failure, void>> call(Params params) async {
     return await _groupRepository.updateGroup(params);
   }
 }

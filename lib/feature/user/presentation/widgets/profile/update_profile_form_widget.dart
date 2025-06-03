@@ -14,7 +14,8 @@ class UpdateProfileFormWidget extends StatefulWidget {
   const UpdateProfileFormWidget({super.key, required this.profile});
 
   @override
-  State<UpdateProfileFormWidget> createState() => _UpdateProfileFormWidgetState();
+  State<UpdateProfileFormWidget> createState() =>
+      _UpdateProfileFormWidgetState();
 }
 
 class _UpdateProfileFormWidgetState extends State<UpdateProfileFormWidget> {
@@ -30,6 +31,28 @@ class _UpdateProfileFormWidgetState extends State<UpdateProfileFormWidget> {
     }
   }
 
+  int genderToGenderId(Gender gender) {
+    return switch (gender) {
+      Gender.Male => 1,
+      Gender.Female => 2,
+      Gender.Other => 3,
+      Gender.Unknown => 0,
+    };
+  }
+
+  Gender genderIdToGender(int? genderId) {
+    switch (genderId) {
+      case 1:
+        return Gender.Male;
+      case 2:
+        return Gender.Female;
+      case 3:
+        return Gender.Other;
+      default:
+        return Gender.Unknown;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = FRadioSelectGroupController(value: Gender.Unknown);
@@ -39,57 +62,37 @@ class _UpdateProfileFormWidgetState extends State<UpdateProfileFormWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ProfileTextFieldWidget(
-          //   label: "Tên",
-          //   hintText: "Ví dụ: A",
-          //   initialValue: userInfo.lastName,
-          //   onChanged: (val) {
-          //     fromBloc.add(ProfileFormLastNameChangedEvent(val));
-          //   },
-          //   inputType: TextInputType.text,
-          // ),
-          // FTextField(
-          //   enabled: true,
-          //   label: const Text('Email'),
-          //   hint: "yourname@gmail.com",
-          //   initialValue: widget.profile.email,
-          //   keyboardType: TextInputType.emailAddress,
-          //   textCapitalization: TextCapitalization.none,
-          //   maxLines: 1,
-          //   onChange: (val) {,
-          //   validator: (val) {
-          //     if (val == null) {
-          //       return "Email không được dể trống";
-          //     }
-          //     return null;
-          //   },
-          // ),
-          // 10.hS,
           FTextField(
             enabled: true,
             label: const Text('Họ'),
             hint: "Ví dụ: Nguyễn",
-            initialValue: widget.profile.userInfo.firstName,
+            initialValue: userInfo.firstName,
             keyboardType: TextInputType.name,
             textCapitalization: TextCapitalization.none,
             maxLines: 1,
+            onChange: (value) {
+              fromBloc.add(ProfileFormFirstNameChangedEvent(value));
+            },
           ),
           10.hS,
           FTextField(
             enabled: true,
             label: const Text('Tên'),
             hint: "Ví dụ: A",
-            initialValue: widget.profile.userInfo.lastName,
+            initialValue: userInfo.lastName,
             keyboardType: TextInputType.name,
             textCapitalization: TextCapitalization.none,
             maxLines: 1,
-            onChange: (val) {
-              fromBloc.add(ProfileFormLastNameChangedEvent(val));
+            onChange: (value) {
+              fromBloc.add(ProfileFormLastNameChangedEvent(value));
             },
           ),
           10.hS,
-          const FDatePicker(
-            label: Text('Ngày sinh'),
+          FDatePicker(
+            label: const Text('Ngày sinh'),
+            onSubmit: (value) {
+              fromBloc.add(ProfileFormBirthDateChangedEvent(value));
+            },
           ),
           10.hS,
           const Text(
@@ -100,6 +103,9 @@ class _UpdateProfileFormWidgetState extends State<UpdateProfileFormWidget> {
             groupController: controller,
             autoHide: true,
             title: const Text('Giới tính'),
+            initialValue: userInfo.gender != null
+                ? {genderIdToGender(userInfo.gender)}
+                : null,
             details: ListenableBuilder(
               listenable: controller,
               builder: (context, _) => Text(
@@ -116,33 +122,49 @@ class _UpdateProfileFormWidgetState extends State<UpdateProfileFormWidget> {
               FSelectTile(title: const Text('Nữ'), value: Gender.Female),
               FSelectTile(title: const Text('Khác'), value: Gender.Other),
             ],
+            onSaved: (value) {
+              final gender = value!.firstOrNull;
+              if (gender != null) {
+                final genderId = genderToGenderId(gender);
+                fromBloc.add(ProfileFormGenderChangedEvent(genderId));
+              }
+            },
           ),
           10.hS,
           FTextField(
             enabled: true,
             label: const Text('Địa chỉ'),
-            initialValue: widget.profile.userInfo.address,
+            initialValue: userInfo.address,
             keyboardType: TextInputType.text,
             textCapitalization: TextCapitalization.none,
             maxLines: 1,
+            onChange: (value) {
+              fromBloc.add(ProfileFormAddressChangedEvent(value));
+            },
           ),
           10.hS,
           FTextField(
             enabled: true,
             label: const Text('Số điện thoại'),
-            initialValue: widget.profile.userInfo.phoneNumber,
+            initialValue: userInfo.phoneNumber,
             keyboardType: TextInputType.phone,
             textCapitalization: TextCapitalization.none,
             maxLines: 1,
+            onChange: (value) {
+              fromBloc.add(ProfileFormPhoneNumberChangedEvent(value));
+            },
           ),
           10.hS,
           FTextField(
             enabled: true,
             label: const Text('Tiểu sử '),
             keyboardType: TextInputType.text,
-            initialValue: widget.profile.userInfo.bio,
+            initialValue: userInfo.bio,
             textCapitalization: TextCapitalization.none,
             maxLines: 3,
+            onChange: (value) {
+              fromBloc.add(ProfileFormBioChangedEvent(value));
+            },
           ),
         ],
       ),

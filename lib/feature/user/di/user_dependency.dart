@@ -17,12 +17,14 @@ import 'package:fitora_mobile_app/feature/user/domain/usecases/friends/unfriend_
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/accept_group_invite_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/create_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/delete_group_invite_use_case.dart';
+import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/delete_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_group_by_id_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_group_member_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_joined_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_managed_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/get_received_group_invite_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/invite_new_members_use_case.dart';
+import 'package:fitora_mobile_app/feature/user/domain/usecases/groups/update_group_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/users/get_personal_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/users/get_profile_use_case.dart';
 import 'package:fitora_mobile_app/feature/user/domain/usecases/users/get_users_use_case.dart';
@@ -53,6 +55,8 @@ class UserDependency {
     getIt.registerFactory(() => PersonalBloc(getIt<GetPersonalUseCase>()));
     getIt.registerFactory(() => GroupBloc(
           getIt<CreateGroupUseCase>(),
+          getIt<UpdateGroupUseCase>(),
+          getIt<DeleteGroupUseCase>(),
           getIt<GetGroupByIdUseCase>(),
           getIt<GetGroupMemberUseCase>(),
           getIt<InviteNewMembersUseCase>(),
@@ -90,6 +94,10 @@ class UserDependency {
     // UseCase - Group
     getIt.registerLazySingleton(
         () => CreateGroupUseCase(getIt<GroupRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => UpdateGroupUseCase(getIt<GroupRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => DeleteGroupUseCase(getIt<GroupRepositoryImpl>()));
     getIt.registerLazySingleton(
         () => GetGroupByIdUseCase(getIt<GroupRepositoryImpl>()));
     getIt.registerLazySingleton(

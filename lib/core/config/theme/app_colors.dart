@@ -27,7 +27,8 @@ class AppColors {
   // Background Color
   static const Color bgAppbar = Color(0xFFFF5147);
   static Color bgColor = Colors.grey[100]!;
-  static const Color bgGreen = Color(0xFF22BB22);
+  //static const Color bgGreen = Color(0xFF22BB22);
+  static const Color bgGreen = Color(0xFF4CAF50);
   static const Color bgBlue = Color(0xFF079DD9);
   static const Color bgRed = Color(0xFFFF5147);
   static const Color bgInfoDelivery = Color(0xFFE8F5E9);

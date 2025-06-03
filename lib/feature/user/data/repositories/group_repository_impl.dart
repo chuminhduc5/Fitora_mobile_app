@@ -43,9 +43,13 @@ class GroupRepositoryImpl implements GroupRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteGroup(CreateGroupParams params) async {
-    // TODO: implement deleteGroup
-    throw UnimplementedError();
+  Future<Either<Failure, void>> deleteGroup(String groupId) async {
+    try {
+      final result = await _groupRemoteDataSource.deleteGroup(groupId);
+      return Right(result);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
   }
 
   @override
@@ -60,7 +64,7 @@ class GroupRepositoryImpl implements GroupRepository {
   }
 
   @override
-  Future<Either<Failure, GroupMemberEntity>> updateGroup(
+  Future<Either<Failure, void>> updateGroup(
       UpdateGroupParams params) async {
     try {
       final model = UpdateGroupRequest(
@@ -73,8 +77,7 @@ class GroupRepositoryImpl implements GroupRepository {
         avatarUrl: params.avatarUrl,
       );
       final result = await _groupRemoteDataSource.updateGroup(model);
-      final group = GroupMemberMapper.toEntity(result);
-      return Right(group);
+      return Right(result);
     } on ServerException {
       return Left(ServerFailure());
     }

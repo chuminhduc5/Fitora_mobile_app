@@ -8,14 +8,18 @@ import 'package:fitora_mobile_app/common/widgets/post/share_widget.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/interact/interact_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/comment_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:forui/forui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NewsfeedPostWidget extends StatefulWidget {
   final PostEntity post;
   final String? category;
+  final String? userId;
   final void Function(String)? upVote;
   final void Function(String)? unVote;
   final void Function(String)? downVote;
@@ -25,6 +29,7 @@ class NewsfeedPostWidget extends StatefulWidget {
     super.key,
     required this.post,
     this.category,
+    this.userId,
     this.upVote,
     this.unVote,
     this.downVote,
@@ -181,7 +186,8 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               children: [
-                AppAvatarWidget(imagePath: userInfo.profilePictureUrl, size: 35),
+                AppAvatarWidget(
+                    imagePath: userInfo.profilePictureUrl, size: 35),
                 const SizedBox(width: 5),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,18 +200,30 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                       children: [
                         Text(
                           post.createAt != null
-                              ? DateFormat('yyyy-MM-dd HH:mm').format(post.createAt!)
+                              ? DateFormat('yyyy-MM-dd HH:mm')
+                                  .format(post.createAt!)
                               : "N/A",
-                          style: const TextStyle(fontSize: 11, color: Colors.grey),
+                          style:
+                              const TextStyle(fontSize: 11, color: Colors.grey),
                         ),
                         const SizedBox(width: 5),
                         const Icon(Icons.circle, size: 5, color: Colors.grey),
                         const SizedBox(width: 5),
-                        if (post.privacy == 0) const Icon(Icons.public, size: 11, color: Colors.grey),
-                        if (post.privacy == 1) const Icon(Icons.group, size: 11, color: Colors.grey),
-                        if (post.privacy == 2) const Icon(Icons.lock, size: 11, color: Colors.grey),
-                        if (post.privacy == 3) const Icon(Icons.group_work, size: 11, color: Colors.grey),
-                        if (post.privacy == 4) const Icon(Icons.tune, size: 11, color: Colors.grey),
+                        if (post.privacy == 0)
+                          const Icon(
+                            Icons.public,
+                            size: 11,
+                            color: Colors.grey,
+                          ),
+                        if (post.privacy == 1)
+                          const Icon(Icons.people, size: 11, color: Colors.grey),
+                        if (post.privacy == 2)
+                          const Icon(Icons.lock, size: 11, color: Colors.grey),
+                        if (post.privacy == 3)
+                          const Icon(Icons.groups,
+                              size: 11, color: Colors.grey),
+                        if (post.privacy == 4)
+                          const Icon(Icons.tune, size: 11, color: Colors.grey),
                       ],
                     ),
                   ],
@@ -214,20 +232,22 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                 if (post.categoryName != null &&
                     post.categoryName.isNotEmpty) ...[
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppColors.bgPink.withOpacity(0.2),
-                          Colors.white
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                      // gradient: LinearGradient(
+                      //   colors: [
+                      //     AppColors.bgPink.withOpacity(0.2),
+                      //     Colors.white
+                      //   ],
+                      //   begin: Alignment.topLeft,
+                      //   end: Alignment.bottomRight,
+                      // ),
+                      color: AppColors.bgGreen,
                       borderRadius: BorderRadius.circular(20),
-                      border:
-                          Border.all(color: AppColors.bgPink.withOpacity(0.6)),
+                      //border:Border.all(color: AppColors.bgPink.withOpacity(0.6)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -240,7 +260,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.bgPink,
+                            color: AppColors.white,
                           ),
                         ),
                       ],
@@ -248,10 +268,11 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                   )
                 ],
                 const SizedBox(width: 5),
-                SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: PopupMenuButton<String>(
+                if (widget.post.user.id == widget.userId)
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: PopupMenuButton<String>(
                       padding: EdgeInsets.zero,
                       color: AppColors.bgWhite,
                       icon: const Icon(Icons.more_vert),
@@ -260,6 +281,8 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                           // Sửa
                         } else if (value == 'delete') {
                           // Xóa
+                        } else if (value == 'save') {
+                          // Lưu
                         }
                       },
                       itemBuilder: (context) => [
@@ -269,12 +292,42 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                         ),
                         const PopupMenuItem(
                           value: 'delete',
-                          child: Text('Xóa'),
+                          child: Text('Xóa bài viết'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'save',
+                          child: Text('Lưu bài viết'),
                         ),
                       ],
                     ),
-                ),
-
+                  )
+                else
+                  SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: PopupMenuButton<String>(
+                      padding: EdgeInsets.zero,
+                      color: AppColors.bgWhite,
+                      icon: const Icon(Icons.more_vert),
+                      onSelected: (value) {
+                        if (value == 'follow') {
+                          // Theo dõi
+                        } else if (value == 'save') {
+                          // Lưu
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'follow',
+                          child: Text('Theo dõi danh mục'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'save',
+                          child: Text('Lưu bài viết'),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),

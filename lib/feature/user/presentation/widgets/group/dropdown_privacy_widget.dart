@@ -3,19 +3,19 @@ import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class DropdownPrivacyWidget extends StatefulWidget {
-  const DropdownPrivacyWidget({super.key});
+  final void Function(int)? onChanged;
+  const DropdownPrivacyWidget({super.key, this.onChanged});
 
   @override
   State<DropdownPrivacyWidget> createState() => _DropdownPrivacyWidgetState();
 }
 
 class _DropdownPrivacyWidgetState extends State<DropdownPrivacyWidget> {
-  final Map<String, String> bankNamesWithIds = {
-    "Công khai": "1",
-    "Riêng tư": "2",
+  final Map<String, int> bankNamesWithIds = {
+    "Công khai": 1,
+    "Riêng tư": 2,
   };
 
-  bool _isLocked = false;
   String? selectedValue = "Công khai"; // ✅ Mặc định là Công khai
 
   @override
@@ -45,13 +45,16 @@ class _DropdownPrivacyWidgetState extends State<DropdownPrivacyWidget> {
           ))
               .toList(),
           value: selectedValue,
-          onChanged: _isLocked
-              ? null
-              : (String? value) {
+          onChanged: (String? value) {
             setState(() {
               selectedValue = value;
             });
-            //widget.onChanged(bankNamesWithIds[value]);
+            if (value != null) {
+              final selectedId = bankNamesWithIds[value];
+              if (selectedId != null) {
+                widget.onChanged?.call(selectedId);
+              }
+            }
           },
           buttonStyleData: ButtonStyleData(
             height: 45,

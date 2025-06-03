@@ -10,8 +10,9 @@ abstract class UploadFileEvent extends Equatable{
 
 class UploadImageFileEvent extends UploadFileEvent {
   final File url;
+  final ImageType type;
 
-  const UploadImageFileEvent(this.url);
+  const UploadImageFileEvent({required this.url, required this.type});
 
   @override
   List<Object?> get props => [url];

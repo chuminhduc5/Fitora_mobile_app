@@ -1,8 +1,12 @@
+import 'package:fitora_mobile_app/common/widgets/avatar/app_avatar_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/textfield/app_text_field_widget.dart';
+import 'package:fitora_mobile_app/feature/user/domain/entities/group_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:forui/forui.dart';
 
 class GroupIntroductionScreen extends StatefulWidget {
-  const GroupIntroductionScreen({super.key});
+  final GroupResponseEntity groupInfo;
+  const GroupIntroductionScreen({super.key, required this.groupInfo});
 
   @override
   State<GroupIntroductionScreen> createState() =>
@@ -28,12 +32,28 @@ class _GroupIntroductionScreenState extends State<GroupIntroductionScreen> {
             padding: const EdgeInsets.symmetric(vertical: 15),
             child: Column(
               children: [
-                const AppTextFieldWidget(
-                  hinText: "Bạn đang nghĩ gì",
-                  prefixIcon: const Icon(Icons.account_circle, color: Colors.black),
-                  obscureText: false,
-                  keyboardType: TextInputType.text,
-                  borderRadius: 5,
+                Padding(
+                  padding: EdgeInsets.zero,
+                  child: Row(
+                    children: [
+                      AppAvatarWidget(
+                        imagePath: widget.groupInfo.groupMember.profilePictureUrl,
+                        size: 45,
+                      ),
+                      const SizedBox(width: 10),
+                      const Expanded(
+                        child: FTextField(
+                          enabled: true,
+                          hint: "Bạn đang nghĩ gì?",
+                          keyboardType: TextInputType.name,
+                          textCapitalization: TextCapitalization.none,
+                          maxLines: 1,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      const Icon(Icons.image, color: Colors.green),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Row(

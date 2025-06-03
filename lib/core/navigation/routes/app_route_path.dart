@@ -18,6 +18,7 @@ enum AppRoute {
   notification(path: "/notification"),
   group(path: "/group"),
   createGroup(path: "/createGroup"),
+  updateGroup(path: "/updateGroup"),
   inviteFriendGroup(path: "/inviteFriendGroup"),
   friends(path: "/friends"),
   friendInvitation(path: "/friendInvitation");
