@@ -2,6 +2,7 @@ import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/button/app_button_widget.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
+import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,6 +58,7 @@ class _PostDeleteConfirmWidgetState extends State<PostDeleteConfirmWidget> {
                     const SizedBox(width: 10),
                     AppButtonWidget(
                       onPressed: () {
+                        logger.i("PostId ${widget.postId}");
                         context.read<PostBloc>().add(DeletePostEvent(postId: widget.postId));
                       },
                       title: "Xóa",

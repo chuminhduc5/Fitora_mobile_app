@@ -46,35 +46,19 @@ class SettingScreen extends StatelessWidget {
                 children: [
                   SettingOptionWidget(
                     icon: Icons.person,
-                    title: 'Thông tin cá nhân',
+                    title: 'Chỉnh sửa thông tin cá nhân',
                     onTap: () {
 
                     },
                     color: Colors.blue,
                   ),
                   SettingOptionWidget(
-                    icon: Icons.calendar_today,
-                    title: 'Lịch thi, sự kiện sắp tới',
-                    onTap: () {
-                      // Handle tap
-                    },
-                    color: Colors.red,
-                  ),
-                  SettingOptionWidget(
-                    icon: Icons.feedback,
-                    title: 'Đang chờ phản hồi',
+                    icon: Icons.bookmarks,
+                    title: 'Bài viết đã lưu',
                     onTap: () {
                       // Handle tap
                     },
                     color: Colors.orange,
-                  ),
-                  SettingOptionWidget(
-                    icon: Icons.people,
-                    title: 'Mạng xã hội DNU',
-                    onTap: () {
-                      // Handle tap
-                    },
-                    color: Colors.green,
                   ),
                 ],
               ),

@@ -22,3 +22,18 @@ class InteractPostEvent extends InteractEvent {
   @override
   List<Object?> get props => [userId, postId, voteType];
 }
+
+class InteractCommentEvent extends InteractEvent {
+  final String userId;
+  final String commentId;
+  final int voteType;
+
+  const InteractCommentEvent({
+    required this.userId,
+    required this.commentId,
+    required this.voteType,
+  });
+
+  @override
+  List<Object?> get props => [userId, commentId, voteType];
+}

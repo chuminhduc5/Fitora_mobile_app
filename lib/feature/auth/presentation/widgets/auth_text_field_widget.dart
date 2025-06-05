@@ -54,6 +54,7 @@ class _AuthTextFieldWidgetState<T> extends State<AuthTextFieldWidget<T>> {
         cursorColor: Colors.purple,
         onChanged: widget.onChanged,
         inputFormatters: widget.inputFormat,
+        textInputAction: TextInputAction.next,
         validator: (val) {
           if (formBloc is AuthSignInFormBloc) {
             if (widget.label == "Email" && val == "") {

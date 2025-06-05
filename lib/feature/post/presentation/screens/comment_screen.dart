@@ -1,6 +1,7 @@
 import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
 import 'package:fitora_mobile_app/common/dialog/app_error_widget.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
+import 'package:fitora_mobile_app/common/widgets/button/app_button_widget.dart';
 import 'package:fitora_mobile_app/core/cache/hive_local_storage.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
@@ -96,7 +97,7 @@ class _CommentScreenState extends State<CommentScreen> {
     logg.i("Content: ${_commentController.text}");
     logg.i("MediaUrl: ");
     context.read<CommentBloc>().add(
-          CreateCommentEvent(
+          CreateRepliesCommentEvent(
             params: CreateCommentFormData(
               postId: widget.post.id,
               parentCommentId: parentCommentId,
@@ -117,7 +118,8 @@ class _CommentScreenState extends State<CommentScreen> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<CommentFormBloc>()),
-        BlocProvider(create: (_) => _commentBloc),
+        // BlocProvider(create: (_) => _commentBloc),
+        BlocProvider.value(value: _commentBloc),
       ],
       child: Scaffold(
         resizeToAvoidBottomInset: true,
@@ -128,143 +130,164 @@ class _CommentScreenState extends State<CommentScreen> {
             style: TextStyle(fontSize: 20),
           ),
         ),
-        body: Container(
-          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-          child: Column(
-            children: [
-              Expanded(
-                child: BlocBuilder<CommentBloc, CommentState>(
-                  builder: (context, state) {
-                    final bloc = context.read<CommentBloc>();
+        body: RefreshIndicator(
+          color: AppColors.bgPink,
+          backgroundColor: AppColors.bgWhite,
+          onRefresh: () async {
+            await Future.delayed(const Duration(seconds: 1));
+            context.read<CommentBloc>().add(
+                  FetchCommentEvent(postId: widget.post.id),
+                );
+          },
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+            child: Column(
+              children: [
+                Expanded(
+                  child: BlocBuilder<CommentBloc, CommentState>(
+                    builder: (context, state) {
+                      final bloc = context.read<CommentBloc>();
 
-                    if (state is FetchCommentLoadingState) {
-                      return const AppLoadingWidget();
-                    }
+                      if (userInfo == null) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                    if (state is FetchCommentFailureState) {
-                      return AppErrorWidget(state.message);
-                    }
+                      if (state is FetchCommentLoadingState) {
+                        return const AppLoadingWidget();
+                      }
 
-                    // Nếu không phải đang loading hoặc lỗi khi fetch comment chính
-                    final comments = bloc.comments;
-                    final repliesComment = bloc.repliesMap;
+                      if (state is FetchCommentFailureState) {
+                        return AppErrorWidget(state.message);
+                      }
 
-                    return CustomScrollView(
-                      slivers: [
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final comment = comments[index];
-                              final replies = repliesComment[comment.id] ?? [];
-                              return CommentWidget(
-                                comment: comment,
-                                callback: _focusCommentInput,
-                                userInfo: userInfo!,
-                                onPressed: (value) {
-                                  setState(() {
-                                    parentCommentId = value;
-                                    logger.i("Comment Id: $parentCommentId");
-                                  });
-                                },
-                              );
-                            },
-                            childCount: comments.length,
+                      final comments = bloc.comments;
+                      //logger.e("Comment update: ${comments.length}");
+                      final repliesComment = bloc.repliesMap;
+                      logger.e("RepliesComment update: ${repliesComment.length}");
+
+                      return CustomScrollView(
+                        slivers: [
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final comment = comments[index];
+                                final replies =
+                                    repliesComment[comment.id] ?? [];
+                                return CommentWidget(
+                                  postId: widget.post.id,
+                                  comment: comment,
+                                  callback: _focusCommentInput,
+                                  userInfo: userInfo!,
+                                  onPressed: (value) {
+                                    setState(() {
+                                      parentCommentId = value;
+                                      logger.i("Comment Id: $parentCommentId");
+                                    });
+                                  },
+                                );
+                              },
+                              childCount: comments.length,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                // Nếu bàn phím mở, thanh TextField sẽ luôn nằm trên bàn phím
+                if (isKeyboardOpen) ...[
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextFieldCommentWidget(
+                            controller: _commentController,
+                            focusNode: _commentFocusNode,
                           ),
                         ),
+                        const SizedBox(width: 6),
+                        BlocConsumer<CommentBloc, CommentState>(
+                          listener: (context, state) {
+                            if (state is CreateCommentFailureState || state is CreateRepliesCommentFailureState) {
+                              AppDisplayMessage.error(context, "Tạo comment không thành công!");
+                            } else if (state is CreateCommentSuccessState || state is CreateRepliesCommentSuccessState) {
+                              logg.i(
+                                  "Bình luận đã được gửi: ${_commentController.text}");
+                              _commentController.clear();
+                            }
+                          },
+                          builder: (context, state) {
+                            if (state is CreateCommentLoadingState) {
+                              const AppLoadingWidget();
+                            }
+                            return IconButton(
+                              icon: const Icon(Icons.send),
+                              onPressed: () {
+                                if (parentCommentId != null) {
+                                  logger.i("Tạo Replies Comment");
+                                  _createRepliesComment(context);
+                                } else {
+                                  logger.i("Tạo Comment");
+                                  _createComment(context);
+                                }
+                              },
+                            );
+                          },
+                        ),
                       ],
-                    );
-                  },
-                ),
-              ),
-              // Nếu bàn phím mở, thanh TextField sẽ luôn nằm trên bàn phím
-              if (isKeyboardOpen) ...[
-                Padding(
-                  padding: const EdgeInsets.all(0.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextFieldCommentWidget(
-                          controller: _commentController,
-                          focusNode: _commentFocusNode,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      BlocConsumer<CommentBloc, CommentState>(
-                        listener: (context, state) {
-                          if (state is CreateCommentFailureState) {
-                            AppDisplayMessage.error(context, state.message);
-                          } else if (state is CreateCommentSuccessState) {
-                            logg.i(
-                                "Bình luận đã được gửi: ${_commentController.text}");
-                            _commentController.clear();
-                          }
-                        },
-                        builder: (context, state) {
-                          if (state is CreateCommentLoadingState) {
-                            const AppLoadingWidget();
-                          }
-                          return IconButton(
-                            icon: const Icon(Icons.send),
-                            onPressed: () {
-                              if (parentCommentId != null) {
-                                _createRepliesComment(context);
-                              } else {
-                                _createComment(context);
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ]
-              // Nếu bàn phím đóng, thanh TextField sẽ nằm ở dưới cùng của màn hình
-              else ...[
-                Padding(
-                  padding: const EdgeInsets.all(0.0),
-                  child: Row(
-                    children: [
-                      //AppAvatarWidget(imagePath: imagePath, size: size)
-                      //const SizedBox(width: 8),
-                      Expanded(
-                        child: TextFieldCommentWidget(
-                          controller: _commentController,
-                          focusNode: _commentFocusNode,
+                ]
+                // Nếu bàn phím đóng, thanh TextField sẽ nằm ở dưới cùng của màn hình
+                else ...[
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Row(
+                      children: [
+                        //AppAvatarWidget(imagePath: imagePath, size: size)
+                        //const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFieldCommentWidget(
+                            controller: _commentController,
+                            focusNode: _commentFocusNode,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 6),
-                      BlocConsumer<CommentBloc, CommentState>(
-                        listener: (context, state) {
-                          if (state is CreateCommentFailureState) {
-                            AppDisplayMessage.error(context, state.message);
-                          } else if (state is CreateCommentSuccessState) {
-                            logg.i(
-                                "Bình luận đã được gửi: ${_commentController.text}");
-                            _commentController.clear();
-                          }
-                        },
-                        builder: (context, state) {
-                          if (state is CreateCommentLoadingState) {
-                            const AppLoadingWidget();
-                          }
-                          return IconButton(
-                            icon: const Icon(Icons.send),
-                            onPressed: () {
-                              if (parentCommentId != null) {
-                                _createRepliesComment(context);
-                              } else {
-                                _createComment(context);
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ],
+                        const SizedBox(width: 6),
+                        BlocConsumer<CommentBloc, CommentState>(
+                          listener: (context, state) {
+                            if (state is CreateCommentFailureState || state is CreateRepliesCommentFailureState) {
+                              AppDisplayMessage.error(context, "Tạo comment không thành công!");
+                            } else if (state is CreateCommentSuccessState) {
+                              logg.i(
+                                  "Bình luận đã được gửi: ${_commentController.text}");
+                              _commentController.clear();
+                            }
+                          },
+                          builder: (context, state) {
+                            if (state is CreateCommentLoadingState) {
+                              const AppLoadingWidget();
+                            }
+                            return IconButton(
+                              icon: const Icon(Icons.send),
+                              onPressed: () {
+                                if (parentCommentId != null) {
+                                  logger.i("Tạo Replies Comment");
+                                  _createRepliesComment(context);
+                                } else {
+                                  logger.i("Tạo Comment");
+                                  _createComment(context);
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

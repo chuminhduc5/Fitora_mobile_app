@@ -70,7 +70,14 @@ class CreateRepliesCommentFailureState extends CommentState {
   List<Object?> get props => [message];
 }
 
-class FetchRepliesCommentLoadingState extends CommentState {}
+class FetchRepliesCommentLoadingState extends CommentState {
+  final String parentCommentId;
+
+  const FetchRepliesCommentLoadingState({required this.parentCommentId});
+
+  @override
+  List<Object?> get props => [parentCommentId];
+}
 
 class FetchRepliesCommentSuccessState extends CommentState {
   final String parentCommentId;
@@ -86,12 +93,23 @@ class FetchRepliesCommentSuccessState extends CommentState {
 }
 
 class FetchRepliesCommentFailureState extends CommentState {
+  final String parentCommentId;
   final String message;
 
-  const FetchRepliesCommentFailureState(this.message);
+  const FetchRepliesCommentFailureState(this.parentCommentId, this.message);
+
+  @override
+  List<Object?> get props => [parentCommentId, message];
+}
+
+class DeleteCommentLoadingState extends CommentState {}
+
+class DeleteCommentSuccessState extends CommentState {}
+
+class DeleteCommentFailureState extends CommentState {
+  final String message;
+  const DeleteCommentFailureState(this.message);
 
   @override
   List<Object?> get props => [message];
 }
-
-

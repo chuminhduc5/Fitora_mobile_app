@@ -10,9 +10,12 @@ class ChatScreen extends StatelessWidget {
       backgroundColor: AppColors.bgWhite,
       appBar: AppBar(
         backgroundColor: AppColors.bgPink,
-        title: const Text("Trò chuyện", style: TextStyle(color: AppColors.white)),
+        title:
+            const Text("Trò chuyện", style: TextStyle(color: AppColors.white)),
       ),
-      body: SingleChildScrollView(),
+      body: const Center(
+        child: Text("Bạn chưa có cuộc trò chuyện nào!"),
+      ),
     );
   }
 }

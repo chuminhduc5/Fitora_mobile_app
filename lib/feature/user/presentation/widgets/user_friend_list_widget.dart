@@ -6,6 +6,7 @@ import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/feature/user/domain/entities/friend_entity.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/friend/friend_bloc.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/widgets/profile/friend_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -42,7 +43,7 @@ class _UserFriendListWidgetState extends State<UserFriendListWidget> {
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: friends.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               crossAxisSpacing: 8,
               mainAxisSpacing: 10,
@@ -57,24 +58,7 @@ class _UserFriendListWidgetState extends State<UserFriendListWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ClipRRect(
-                    //   borderRadius: BorderRadius.circular(12),
-                    //   child: FileImage(
-                    //     friend.profilePictureUrl,
-                    //     width: 115,
-                    //     height: 115,
-                    //     fit: BoxFit.cover,
-                    //   ),
-                    // ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.file(
-                        File(friend.profilePictureUrl),
-                        width: 115,
-                        height: 115,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    FriendCardWidget(imagePath: friend.profilePictureUrl),
                     Text(
                       friend.username,
                       style: const TextStyle(color: Colors.black, fontSize: 12),
@@ -92,74 +76,4 @@ class _UserFriendListWidgetState extends State<UserFriendListWidget> {
       }),
     );
   }
-
-  // Widget _buildLayoutImage(FriendEntity friend) {
-  //   final bool hasLongUsername = friend.username.any((text) => text.length >= 18);
-  //   final double aspectRatio = hasLongUsername ? 0.8 : 0.9;
-  //
-  //   return GridView.builder(
-  //     shrinkWrap: true,
-  //     padding: EdgeInsets.zero,
-  //     physics: const NeverScrollableScrollPhysics(),
-  //     itemCount: imageUrls.length,
-  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //       crossAxisCount: 3,
-  //       crossAxisSpacing: 8,
-  //       mainAxisSpacing: 10,
-  //       childAspectRatio: aspectRatio,
-  //     ),
-  //     itemBuilder: (context, index) {
-  //       return InkWell(
-  //         onTap: () {
-  //           context.pushNamed(AppRoute.personal.name);
-  //         },
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             ClipRRect(
-  //               borderRadius: BorderRadius.circular(12),
-  //               child: Image.asset(
-  //                 imageUrls[index],
-  //                 width: 115,
-  //                 height: 115,
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //             Text(
-  //               username[index],
-  //               style: const TextStyle(color: Colors.black, fontSize: 12),
-  //               softWrap: true,
-  //               maxLines: 2,
-  //               overflow: TextOverflow.ellipsis,
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-// Widget _buildFriendCard(>) {
-//   return Column(
-//     crossAxisAlignment: CrossAxisAlignment.start,
-//     children: [
-//       ClipRRect(
-//         borderRadius: BorderRadius.circular(12),
-//         child: Image.asset(
-//           imageUrls[index],
-//           width: 115,
-//           height: 115,
-//           fit: BoxFit.cover,
-//         ),
-//       ),
-//       Text(
-//         username[index],
-//         style: const TextStyle(color: Colors.black, fontSize: 12),
-//         softWrap: true,
-//         maxLines: 2,
-//         overflow: TextOverflow.ellipsis,
-//       ),
-//     ],
-//   );
-// }
 }

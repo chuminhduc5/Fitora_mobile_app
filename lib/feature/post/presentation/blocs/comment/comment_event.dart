@@ -46,8 +46,9 @@ class FetchRepliesCommentEvent extends CommentEvent {
 
 class DeleteCommentEvent extends CommentEvent {
   final String id;
-  const DeleteCommentEvent(this.id);
+  final String postId;
+  const DeleteCommentEvent({required this.id, required this.postId});
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [id, postId];
 }
