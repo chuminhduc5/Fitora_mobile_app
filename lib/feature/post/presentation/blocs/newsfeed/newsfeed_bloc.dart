@@ -44,8 +44,8 @@ class NewsfeedBloc extends Bloc<NewsfeedEvent, NewsfeedState> {
     final result = await _getTrendingFeedUseCase.call(NoParams());
 
     result.fold(
-          (error) => emit(FetchTrendingFeedFailureState(mapFailureToMessage(error))),
-          (data) => emit(FetchTrendingFeedSuccessState(data: data)),
+      (error) => emit(FetchTrendingFeedFailureState(mapFailureToMessage(error))),
+      (data) => emit(FetchTrendingFeedSuccessState(data: data)),
     );
   }
 
@@ -55,8 +55,8 @@ class NewsfeedBloc extends Bloc<NewsfeedEvent, NewsfeedState> {
     final result = await _getExploreFeedUseCase.call(NoParams());
 
     result.fold(
-          (error) => emit(FetchExploreFeedFailureState(mapFailureToMessage(error))),
-          (data) => emit(FetchExploreFeedSuccessState(data: data)),
+      (error) => emit(FetchExploreFeedFailureState(mapFailureToMessage(error))),
+      (data) => emit(FetchExploreFeedSuccessState(data: data)),
     );
   }
 }

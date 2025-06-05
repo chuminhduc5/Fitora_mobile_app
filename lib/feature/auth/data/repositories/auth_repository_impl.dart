@@ -55,10 +55,10 @@ class AuthRepositoryImpl implements AuthRepository {
       logg.i("Lưu Token: ${result.token.accessToken}");
       logg.i("Lưu UserId: ${result.user.id}");
 
-      final user = await _authRemoteDataSource.fetchProfile();
-      await _secureLocalStorage.save(key: "user_id", value: user.userInfo.id);
-      await _hiveLocalStorage.save(key: "user", value: user, boxName: "cache");
-      logg.i("Thông tin người dùng: $user");
+      // final user = await _authRemoteDataSource.fetchProfile();
+      // await _secureLocalStorage.save(key: "user_id", value: user.userInfo.id);
+      // await _hiveLocalStorage.save(key: "user", value: user, boxName: "cache");
+      // logg.i("Thông tin người dùng: $user");
 
       return Right(result);
     } on AuthException {

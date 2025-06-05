@@ -8,6 +8,7 @@ import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/create
 import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/save_post_request.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/update_post_request.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/responses/post_model.dart';
+import 'package:fitora_mobile_app/feature/user/data/models/responses/user_profile_model.dart';
 
 abstract class PostRemoteDataSource {
   Future<PostModel> fetchPost();
@@ -29,6 +30,8 @@ abstract class PostRemoteDataSource {
   Future<void> savePost(SavePostRequest request);
 
   Future<List<PostModel>> fetchSavedPost();
+
+  Future<UserProfileModel> fetchProfile();
 }
 
 class PostRemoteDataSourceImpl implements PostRemoteDataSource {
@@ -102,15 +105,15 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   }
 
   @override
-  Future<List<PostModel>> fetchPersonal(String userId) async {
+  Future<List<PostModel>> fetchExploreFeed() async {
     try {
-      var response = await _dioClient.get('${ApiUrl.personal}?Id=$userId');
+      var response = await _dioClient.get(ApiUrl.getExplorePosts);
       final data = response.data['data'];
       if (data != null && data['data'] is List) {
-        final List<PostModel> personal = (data['data'] as List)
+        final List<PostModel> newsfeed = (data['data'] as List)
             .map((json) => PostModel.fromJson(json))
             .toList();
-        return personal;
+        return newsfeed;
       } else {
         throw Exception("Invalid response format");
       }
@@ -131,6 +134,25 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
             .toList();
         //logg.i("Newsfeed: $newsfeed");
         return newsfeed;
+      } else {
+        throw Exception("Invalid response format");
+      }
+    } on DioException catch (e) {
+      logger.e('Fetch Newsfeed failed: ${e.message}');
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<PostModel>> fetchPersonal(String userId) async {
+    try {
+      var response = await _dioClient.get('${ApiUrl.personal}?Id=$userId');
+      final data = response.data['data'];
+      if (data != null && data['data'] is List) {
+        final List<PostModel> personal = (data['data'] as List)
+            .map((json) => PostModel.fromJson(json))
+            .toList();
+        return personal;
       } else {
         throw Exception("Invalid response format");
       }
@@ -164,26 +186,19 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   Future<void> savePost(SavePostRequest request) async {
     try {
       await _dioClient.post(ApiUrl.savePost, data: request.toJson());
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       throw ServerException();
     }
   }
 
   @override
-  Future<List<PostModel>> fetchExploreFeed() async {
+  Future<UserProfileModel> fetchProfile() async {
     try {
-      var response = await _dioClient.get(ApiUrl.getExplorePosts);
-      final data = response.data['data'];
-      if (data != null && data['data'] is List) {
-        final List<PostModel> newsfeed = (data['data'] as List)
-            .map((json) => PostModel.fromJson(json))
-            .toList();
-        return newsfeed;
-      } else {
-        throw Exception("Invalid response format");
-      }
+      final response = await _dioClient.get(ApiUrl.profile);
+      final data = response.data["data"];
+      return UserProfileModel.fromJson(data);
     } on DioException catch (e) {
-      logger.e('Fetch Newsfeed failed: ${e.message}');
+      logger.e("DioException: ${e.message}");
       throw ServerException();
     }
   }

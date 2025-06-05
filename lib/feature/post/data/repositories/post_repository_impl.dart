@@ -1,7 +1,10 @@
 import 'package:dartz/dartz.dart';
+import 'package:fitora_mobile_app/core/cache/hive_local_storage.dart';
+import 'package:fitora_mobile_app/core/cache/secure_local_storage.dart';
 import 'package:fitora_mobile_app/core/error/exceptions.dart';
 import 'package:fitora_mobile_app/core/error/failure.dart';
 import 'package:fitora_mobile_app/core/helper/mapper/post/post_mapper.dart';
+import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/post/data/datasources/post_remote_data_source.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/create_post_request.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/requests/posts/save_post_request.dart';
@@ -12,8 +15,14 @@ import 'package:fitora_mobile_app/feature/post/domain/usecases/usecase_params.da
 
 class PostRepositoryImpl implements PostRepository {
   final PostRemoteDataSource _postRemoteDataSource;
+  final SecureLocalStorage _secureLocalStorage;
+  final HiveLocalStorage _hiveLocalStorage;
 
-  const PostRepositoryImpl(this._postRemoteDataSource);
+  const PostRepositoryImpl(
+    this._postRemoteDataSource,
+    this._secureLocalStorage,
+    this._hiveLocalStorage,
+  );
 
   @override
   Future<Either<Failure, PostEntity>> getPost() async {
@@ -51,6 +60,7 @@ class PostRepositoryImpl implements PostRepository {
         content: params.content,
         mediaUrl: params.mediaUrl,
         privacy: params.privacy,
+        isApproved: params.isApproved,
       );
       final result = await _postRemoteDataSource.updatePost(request);
       return Right(result);
@@ -75,7 +85,43 @@ class PostRepositoryImpl implements PostRepository {
       final results = await _postRemoteDataSource.fetchNewsfeed();
       final newsfeed = results.map((i) => PostMapper.toEntity(i)).toList();
       //newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
+
+      final user = await _postRemoteDataSource.fetchProfile();
+      await _secureLocalStorage.save(key: "user_id", value: user.userInfo.id);
+      await _hiveLocalStorage.save(key: "user", value: user, boxName: "cache");
+      logg.i("Thông tin người dùng: $user");
+
       return Right(newsfeed);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PostEntity>>> getExploreFeed() async {
+    try {
+      final results = await _postRemoteDataSource.fetchExploreFeed();
+      final exploreFeed = results.map((i) => PostMapper.toEntity(i)).toList();
+      //newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
+
+      final user = await _postRemoteDataSource.fetchProfile();
+      await _secureLocalStorage.save(key: "user_id", value: user.userInfo.id);
+      await _hiveLocalStorage.save(key: "user", value: user, boxName: "cache");
+      logg.i("Thông tin người dùng: $user");
+
+      return Right(exploreFeed);
+    } on ServerException {
+      return Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PostEntity>>> getTrendingFeed() async {
+    try {
+      final results = await _postRemoteDataSource.fetchTrendingFeed();
+      final trendingFeed = results.map((i) => PostMapper.toEntity(i)).toList();
+      //newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
+      return Right(trendingFeed);
     } on ServerException {
       return Left(ServerFailure());
     }
@@ -111,30 +157,6 @@ class PostRepositoryImpl implements PostRepository {
       final results = await _postRemoteDataSource.fetchSavedPost();
       final posts = results.map((i) => PostMapper.toEntity(i)).toList();
       return Right(posts);
-    } on ServerException {
-      return Left(ServerFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<PostEntity>>> getExploreFeed() async {
-    try {
-      final results = await _postRemoteDataSource.fetchExploreFeed();
-      final exploreFeed = results.map((i) => PostMapper.toEntity(i)).toList();
-      //newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
-      return Right(exploreFeed);
-    } on ServerException {
-      return Left(ServerFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, List<PostEntity>>> getTrendingFeed() async {
-    try {
-      final results = await _postRemoteDataSource.fetchTrendingFeed();
-      final trendingFeed = results.map((i) => PostMapper.toEntity(i)).toList();
-      //newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
-      return Right(trendingFeed);
     } on ServerException {
       return Left(ServerFailure());
     }

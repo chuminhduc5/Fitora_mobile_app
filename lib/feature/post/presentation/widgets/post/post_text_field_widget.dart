@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostTextFieldWidget<T> extends StatefulWidget {
+  final String? initialValue;
   final void Function(String)? onChanged;
-  const PostTextFieldWidget({super.key, required this.onChanged});
+
+  const PostTextFieldWidget({
+    super.key,
+    this.initialValue,
+    required this.onChanged,
+  });
 
   @override
   State<PostTextFieldWidget<T>> createState() => _PostTextFieldWidgetState<T>();
@@ -17,6 +23,7 @@ class _PostTextFieldWidgetState<T> extends State<PostTextFieldWidget<T>> {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: TextFormField(
         onChanged: widget.onChanged,
+        initialValue: widget.initialValue,
         decoration: const InputDecoration(
           hintText: 'Bạn đang nghĩ gì?',
           border: InputBorder.none,

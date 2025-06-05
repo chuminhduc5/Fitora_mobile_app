@@ -25,8 +25,32 @@ class CreatePostFailureState extends PostState {
 }
 
 // State Update Post
+class UpdatePostLoadingState extends PostState {}
+
+class UpdatePostSuccessState extends PostState {}
+
+class UpdatePostFailureState extends PostState {
+  final String message;
+
+  const UpdatePostFailureState(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
 
 // State Delete Post
+class DeletePostLoadingState extends PostState {}
+
+class DeletePostSuccessState extends PostState {}
+
+class DeletePostFailureState extends PostState {
+  final String message;
+
+  const DeletePostFailureState(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
 
 // State Save Post
 class SavePostLoadingState extends PostState {}

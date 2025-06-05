@@ -2,21 +2,19 @@ import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/button/app_button_widget.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
-import 'package:fitora_mobile_app/feature/user/presentation/blocs/group/group_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class GroupDeleteConfirmDialogWidget extends StatefulWidget {
-  final String groupId;
-  const GroupDeleteConfirmDialogWidget({super.key, required this.groupId});
+class PostDeleteConfirmWidget extends StatefulWidget {
+  final String postId;
+  const PostDeleteConfirmWidget({super.key, required this.postId});
 
   @override
-  State<GroupDeleteConfirmDialogWidget> createState() =>
-      _GroupDeleteConfirmDialogWidgetState();
+  State<PostDeleteConfirmWidget> createState() => _PostDeleteConfirmWidgetState();
 }
 
-class _GroupDeleteConfirmDialogWidgetState
-    extends State<GroupDeleteConfirmDialogWidget> {
+class _PostDeleteConfirmWidgetState extends State<PostDeleteConfirmWidget> {
   @override
   Widget build(BuildContext context) {
     return StatefulBuilder(
@@ -31,20 +29,21 @@ class _GroupDeleteConfirmDialogWidgetState
             borderRadius: BorderRadius.circular(10),
           ),
           title: const Text(
-            'Bạn có chắc chắn muốn xóa nhóm?',
+            'Bạn có chắc chắn muốn xóa bài viết?',
             style: TextStyle(fontSize: 22),
           ),
           actions: <Widget>[
-            BlocConsumer<GroupBloc, GroupState>(
+            BlocConsumer<PostBloc, PostState>(
               listener: (context, state) {
-                if (state is DeleteGroupFailureState) {
+                if (state is DeletePostFailureState) {
                   AppDisplayMessage.error(context, state.message);
-                } else if (state is DeleteGroupSuccessState) {
+                } else if (state is DeletePostSuccessState) {
+                  Navigator.of(context).pop();
                   return AppDisplayMessage.success(context, "Nhóm đã bị xóa");
                 }
               },
               builder: (context, state) {
-                if (state is DeleteGroupLoadingState) {
+                if (state is DeletePostLoadingState) {
                   return const AppLoadingWidget();
                 }
                 return Row(
@@ -58,7 +57,7 @@ class _GroupDeleteConfirmDialogWidgetState
                     const SizedBox(width: 10),
                     AppButtonWidget(
                       onPressed: () {
-                        context.read<GroupBloc>().add(DeleteGroupEvent(widget.groupId));
+                        context.read<PostBloc>().add(DeletePostEvent(postId: widget.postId));
                       },
                       title: "Xóa",
                       bgColor: AppColors.bgPink,
@@ -73,3 +72,4 @@ class _GroupDeleteConfirmDialogWidgetState
     );
   }
 }
+

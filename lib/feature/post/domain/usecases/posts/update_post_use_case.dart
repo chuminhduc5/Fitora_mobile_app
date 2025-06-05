@@ -20,14 +20,16 @@ class Params extends Equatable {
   final String content;
   final String mediaUrl;
   final int privacy;
+  final bool isApproved;
 
   const Params({
     required this.id,
     required this.content,
     required this.mediaUrl,
     required this.privacy,
+    required this.isApproved,
   });
 
   @override
-  List<Object?> get props => [content, mediaUrl, privacy];
+  List<Object?> get props => [content, mediaUrl, privacy, isApproved];
 }

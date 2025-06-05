@@ -8,6 +8,8 @@ enum AppRoute {
   appView(path: "/appView"),
   home(path: "/home"),
   post(path: "/post"),
+  updatePost(path: "/updatePost"),
+  comment(path: "/comment"),
   chat(path: "/chat"),
   search(path: "/search"),
   profile(path: "/profile"),

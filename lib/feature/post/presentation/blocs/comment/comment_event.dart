@@ -25,3 +25,29 @@ class FetchCommentEvent extends CommentEvent {
   @override
   List<Object?> get props => [postId];
 }
+
+class CreateRepliesCommentEvent extends CommentEvent {
+  final CreateCommentFormData params;
+
+  const CreateRepliesCommentEvent({required this.params});
+
+  @override
+  List<Object?> get props => [params];
+}
+
+class FetchRepliesCommentEvent extends CommentEvent {
+  final String parentCommentId;
+
+  const FetchRepliesCommentEvent({required this.parentCommentId});
+
+  @override
+  List<Object?> get props => [parentCommentId];
+}
+
+class DeleteCommentEvent extends CommentEvent {
+  final String id;
+  const DeleteCommentEvent(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}

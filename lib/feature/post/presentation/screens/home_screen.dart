@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
-import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
 import 'package:fitora_mobile_app/core/cache/hive_local_storage.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
@@ -8,6 +7,7 @@ import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/helper/mapper/user/user_profile_mapper.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/network/network_checker.dart';
+import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/interact/interact_bloc.dart';
@@ -55,13 +55,21 @@ class _HomeScreenState extends State<HomeScreen> {
   late Timer _timer;
   final _hiveLocalStorage = HiveLocalStorage();
 
+  // Future<void> _getUserId() async {
+  //   final SharedPreferences pref = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     userId = pref.getString('userId')!;
+  //   });
+  //   logger.i("UserId: $userId");
+  // }
+
   @override
   void initState() {
     _getUserId();
     _loadUser();
-    _newsfeedBloc = getIt<NewsfeedBloc>()..add(FetchNewsfeedEvent());
+    // _newsfeedBloc = getIt<NewsfeedBloc>()..add(FetchNewsfeedEvent());
     _exploreFeedBloc = getIt<NewsfeedBloc>()..add(FetchExploreFeedEvent());
-    _trendingFeedBloc = getIt<NewsfeedBloc>()..add(FetchTrendingFeedEvent());
+    // _trendingFeedBloc = getIt<NewsfeedBloc>()..add(FetchTrendingFeedEvent());
     final network = getIt<NetworkChecker>();
     _timer = Timer.periodic(const Duration(seconds: 30), (_) {
       //_checkInternetConnection(network);
@@ -118,44 +126,44 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _upVote(String postId) {
     context.read<InteractBloc>().add(
-          InteractPostEvent(
-            userId: userId,
-            postId: postId,
-            voteType: 1,
-          ),
-        );
+      InteractPostEvent(
+        userId: userId,
+        postId: postId,
+        voteType: 1,
+      ),
+    );
     logg.i('VoteType: 1');
   }
 
   void _downVote(String postId) {
     context.read<InteractBloc>().add(
-          InteractPostEvent(
-            userId: userId,
-            postId: postId,
-            voteType: 2,
-          ),
-        );
+      InteractPostEvent(
+        userId: userInfo!.userInfo.id,
+        postId: postId,
+        voteType: 2,
+      ),
+    );
     logg.i('VoteType: 2');
   }
 
   void _unVote(String postId) {
     context.read<InteractBloc>().add(
-          InteractPostEvent(
-            userId: userId,
-            postId: postId,
-            voteType: 3,
-          ),
-        );
+      InteractPostEvent(
+        userId: userInfo!.userInfo.id,
+        postId: postId,
+        voteType: 3,
+      ),
+    );
     logg.i('VoteType: 3');
   }
 
   void _savePost(String postId) {
     context.read<PostBloc>().add(
-          SavePostEvent(
-            userId: userId,
-            postId: postId,
-          ),
-        );
+      SavePostEvent(
+        userId: userInfo!.userInfo.id,
+        postId: postId,
+      ),
+    );
   }
 
   @override
@@ -267,12 +275,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: AppColors.bgWhite,
                 onRefresh: () async {
                   await Future.delayed(const Duration(seconds: 1));
-                  context.read<NewsfeedBloc>().add(FetchNewsfeedEvent());
+                  //context.read<NewsfeedBloc>().add(FetchNewsfeedEvent());
+                  context.read<NewsfeedBloc>().add(FetchExploreFeedEvent());
                 },
                 child: NewsfeedWidget(
                   selectedCategory: categories[selectedIndex],
                   selectedIndex: selectedIndex,
-                  userId: userId,
+                  userInfo: userInfo,
                   upVote: _upVote,
                   downVote: _downVote,
                   unVote: _unVote,

@@ -6,8 +6,11 @@ import 'package:fitora_mobile_app/feature/auth/presentation/screens/sign_up_scre
 import 'package:fitora_mobile_app/feature/chat/presentation/screens/chat_screen.dart';
 import 'package:fitora_mobile_app/feature/notification/presentation/screens/notification_screen.dart';
 import 'package:fitora_mobile_app/feature/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/screens/comment_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/home_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/post_articles_screen.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/screens/update_post_screen.dart';
 import 'package:fitora_mobile_app/feature/search/presentation/screens/search_screen.dart';
 import 'package:fitora_mobile_app/feature/setting/presentation/screens/setting_screen.dart';
 import 'package:fitora_mobile_app/feature/splash/presentation/screens/splash_screen.dart';
@@ -30,7 +33,7 @@ class AppRouteConf {
   GoRouter get router => _router;
 
   late final _router = GoRouter(
-    initialLocation: AppRoute.onboarding.path,
+    initialLocation: AppRoute.auth.path,
     debugLogDiagnostics: true,
     routes: [
       // GoRoute(
@@ -150,6 +153,22 @@ class AppRouteConf {
         builder: (_, state) {
           final userInfo = state.extra as UserProfileEntity;
           return PostArticlesScreen(user: userInfo);
+        } ,
+      ),
+      GoRoute(
+        path: AppRoute.updatePost.path,
+        name: AppRoute.updatePost.name,
+        builder: (_, state) {
+          final post = state.extra as PostEntity;
+          return UpdatePostScreen(post: post);
+        } ,
+      ),
+      GoRoute(
+        path: AppRoute.comment.path,
+        name: AppRoute.comment.name,
+        builder: (_, state) {
+          final post = state.extra as PostEntity;
+          return CommentScreen(post: post);
         } ,
       ),
       GoRoute(

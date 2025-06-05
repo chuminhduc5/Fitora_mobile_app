@@ -1,17 +1,19 @@
 import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
 import 'package:fitora_mobile_app/common/dialog/app_error_widget.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
-import 'package:fitora_mobile_app/common/widgets/avatar/app_avatar_widget.dart';
-import 'package:fitora_mobile_app/common/widgets/textfield/app_text_field_widget.dart';
+import 'package:fitora_mobile_app/core/cache/hive_local_storage.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
+import 'package:fitora_mobile_app/core/helper/mapper/user/user_profile_mapper.dart';
+import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/comment/comment_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/comment_form/comment_form_bloc.dart';
-import 'package:fitora_mobile_app/feature/post/presentation/forms/comment/comment_form_data.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/forms/comment/create_comment_form_data.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/widgets/comment/comment_widget.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/widgets/comment/text_field_comment_widget.dart';
+import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,22 +27,44 @@ class CommentScreen extends StatefulWidget {
 }
 
 class _CommentScreenState extends State<CommentScreen> {
-  final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
+  final TextEditingController _commentController = TextEditingController();
+  final FocusNode _commentFocusNode = FocusNode();
+  UserProfileEntity? userInfo;
+  final _hiveLocalStorage = HiveLocalStorage();
+  String? parentCommentId;
+
+  late CommentBloc _commentBloc;
+  late CommentBloc _repliesCommentBloc;
 
   @override
   void initState() {
     super.initState();
+    _loadUser();
     // Tự động focus khi widget được mount
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(_focusNode);
+      FocusScope.of(context).requestFocus(_commentFocusNode);
     });
+    _commentBloc = getIt<CommentBloc>()
+      ..add(FetchCommentEvent(postId: widget.post.id));
+    //_repliesCommentBloc = getIt<CommentBloc>()..add(FetchRepliesCommentEvent(parentCommentId: parentCommentId))
+  }
+
+  void _loadUser() async {
+    final userModel =
+        await _hiveLocalStorage.load(key: "user", boxName: "cache");
+    if (userModel != null) {
+      logg.i("Người dùng đã lưu: $userModel");
+      final userEntity = UserProfileMapper.toEntity(userModel);
+      setState(() {
+        userInfo = userEntity;
+      });
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
+    _commentController.dispose();
+    _commentFocusNode.dispose();
     super.dispose();
   }
 
@@ -50,18 +74,41 @@ class _CommentScreenState extends State<CommentScreen> {
     final formData = formState.data;
     logg.i("PostId: ${widget.post.id}");
     logg.i("ParentCommentId: ${formState.data.parentCommentId}");
-    logg.i("Content: ${_controller.text}");
+    logg.i("Content: ${_commentController.text}");
     logg.i("MediaUrl: ");
     context.read<CommentBloc>().add(
           CreateCommentEvent(
             params: CreateCommentFormData(
               postId: widget.post.id,
-              parentCommentId: formData.parentCommentId,
-              content: _controller.text,
+              parentCommentId: null,
+              content: _commentController.text,
               mediaUrl: "",
             ),
           ),
         );
+  }
+
+  void _createRepliesComment(BuildContext context) async {
+    primaryFocus?.unfocus();
+    final formState = context.read<CommentFormBloc>().state;
+    logg.i("PostId: ${widget.post.id}");
+    logg.i("ParentCommentId: $parentCommentId");
+    logg.i("Content: ${_commentController.text}");
+    logg.i("MediaUrl: ");
+    context.read<CommentBloc>().add(
+          CreateCommentEvent(
+            params: CreateCommentFormData(
+              postId: widget.post.id,
+              parentCommentId: parentCommentId,
+              content: _commentController.text,
+              mediaUrl: "",
+            ),
+          ),
+        );
+  }
+
+  void _focusCommentInput() {
+    FocusScope.of(context).requestFocus(_commentFocusNode);
   }
 
   @override
@@ -70,43 +117,62 @@ class _CommentScreenState extends State<CommentScreen> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<CommentFormBloc>()),
-        BlocProvider(
-          create: (_) => getIt<CommentBloc>()
-            ..add(
-              FetchCommentEvent(postId: widget.post.id),
-            ),
-        ),
+        BlocProvider(create: (_) => _commentBloc),
       ],
       child: Scaffold(
         resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          backgroundColor: AppColors.bgWhite,
+          title: const Text(
+            "Bình luận",
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
         body: Container(
-          padding: const EdgeInsets.fromLTRB(10, 50, 10, 10),
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
           child: Column(
             children: [
               Expanded(
                 child: BlocBuilder<CommentBloc, CommentState>(
                   builder: (context, state) {
+                    final bloc = context.read<CommentBloc>();
+
                     if (state is FetchCommentLoadingState) {
                       return const AppLoadingWidget();
-                    } else if (state is FetchCommentFailureState) {
-                      return AppErrorWidget(state.message);
-                    } else if (state is FetchCommentSuccessState) {
-                      final comments = state.data;
-                      return CustomScrollView(
-                        slivers: [
-                          SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                final comment = comments[index];
-                                return CommentWidget(comment: comment);
-                              },
-                              childCount: comments.length,
-                            ),
-                          ),
-                        ],
-                      );
                     }
-                    return const SizedBox();
+
+                    if (state is FetchCommentFailureState) {
+                      return AppErrorWidget(state.message);
+                    }
+
+                    // Nếu không phải đang loading hoặc lỗi khi fetch comment chính
+                    final comments = bloc.comments;
+                    final repliesComment = bloc.repliesMap;
+
+                    return CustomScrollView(
+                      slivers: [
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final comment = comments[index];
+                              final replies = repliesComment[comment.id] ?? [];
+                              return CommentWidget(
+                                comment: comment,
+                                callback: _focusCommentInput,
+                                userInfo: userInfo!,
+                                onPressed: (value) {
+                                  setState(() {
+                                    parentCommentId = value;
+                                    logger.i("Comment Id: $parentCommentId");
+                                  });
+                                },
+                              );
+                            },
+                            childCount: comments.length,
+                          ),
+                        ),
+                      ],
+                    );
                   },
                 ),
               ),
@@ -116,31 +182,10 @@ class _CommentScreenState extends State<CommentScreen> {
                   padding: const EdgeInsets.all(0.0),
                   child: Row(
                     children: [
-                      //AppAvatarWidget(imagePath: imagePath, size: size)
-                      //const SizedBox(width: 8),
                       Expanded(
-                        child: TextField(
-                          controller: _controller,
-                          focusNode: _focusNode,
-                          decoration: InputDecoration(
-                            hintText: "Viết bình luận...",
-                            filled: true,
-                            fillColor: Colors.grey.shade100,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 10,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          textInputAction: TextInputAction.send,
-                          onSubmitted: (text) {
-                            // Xử lý gửi comment
-                            print('Gửi bình luận: $text');
-                            _controller.clear();
-                          },
+                        child: TextFieldCommentWidget(
+                          controller: _commentController,
+                          focusNode: _commentFocusNode,
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -149,8 +194,9 @@ class _CommentScreenState extends State<CommentScreen> {
                           if (state is CreateCommentFailureState) {
                             AppDisplayMessage.error(context, state.message);
                           } else if (state is CreateCommentSuccessState) {
-                            logg.i("Bình luận đã được gửi: ${_controller.text}");
-                            _controller.clear();
+                            logg.i(
+                                "Bình luận đã được gửi: ${_commentController.text}");
+                            _commentController.clear();
                           }
                         },
                         builder: (context, state) {
@@ -160,9 +206,11 @@ class _CommentScreenState extends State<CommentScreen> {
                           return IconButton(
                             icon: const Icon(Icons.send),
                             onPressed: () {
-                              _createComment(context);
-                              print('Gửi bình luận: ${_controller.text}');
-                              _controller.clear();
+                              if (parentCommentId != null) {
+                                _createRepliesComment(context);
+                              } else {
+                                _createComment(context);
+                              }
                             },
                           );
                         },
@@ -180,28 +228,9 @@ class _CommentScreenState extends State<CommentScreen> {
                       //AppAvatarWidget(imagePath: imagePath, size: size)
                       //const SizedBox(width: 8),
                       Expanded(
-                        child: TextField(
-                          controller: _controller,
-                          focusNode: _focusNode,
-                          decoration: InputDecoration(
-                            hintText: "Viết bình luận...",
-                            filled: true,
-                            fillColor: Colors.grey.shade100,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 10,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          textInputAction: TextInputAction.send,
-                          onSubmitted: (text) {
-                            // Xử lý gửi comment
-                            print('Gửi bình luận: $text');
-                            _controller.clear();
-                          },
+                        child: TextFieldCommentWidget(
+                          controller: _commentController,
+                          focusNode: _commentFocusNode,
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -210,8 +239,9 @@ class _CommentScreenState extends State<CommentScreen> {
                           if (state is CreateCommentFailureState) {
                             AppDisplayMessage.error(context, state.message);
                           } else if (state is CreateCommentSuccessState) {
-                            logg.i("Bình luận đã được gửi: ${_controller.text}");
-                            _controller.clear();
+                            logg.i(
+                                "Bình luận đã được gửi: ${_commentController.text}");
+                            _commentController.clear();
                           }
                         },
                         builder: (context, state) {
@@ -221,9 +251,11 @@ class _CommentScreenState extends State<CommentScreen> {
                           return IconButton(
                             icon: const Icon(Icons.send),
                             onPressed: () {
-                              _createComment(context);
-                              print('Gửi bình luận: ${_controller.text}');
-                              _controller.clear();
+                              if (parentCommentId != null) {
+                                _createRepliesComment(context);
+                              } else {
+                                _createComment(context);
+                              }
                             },
                           );
                         },
