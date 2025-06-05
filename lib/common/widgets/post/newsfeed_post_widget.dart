@@ -1,25 +1,26 @@
 import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fitora_mobile_app/common/widgets/avatar/app_avatar_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/post/comment_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/post/favourite_widget.dart';
-import 'package:fitora_mobile_app/common/widgets/post/save_widget.dart';
+import 'package:fitora_mobile_app/common/widgets/post/image_view_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/post/share_widget.dart';
 import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
+import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
-import 'package:fitora_mobile_app/feature/post/presentation/blocs/interact/interact_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/comment_screen.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/widgets/post/post_delete_confirm_widget.dart';
+import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:forui/forui.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:go_router/go_router.dart';
 
 class NewsfeedPostWidget extends StatefulWidget {
   final PostEntity post;
   final String? category;
-  final String? userId;
+  final UserProfileEntity? userInfo;
   final void Function(String)? upVote;
   final void Function(String)? unVote;
   final void Function(String)? downVote;
@@ -29,7 +30,7 @@ class NewsfeedPostWidget extends StatefulWidget {
     super.key,
     required this.post,
     this.category,
-    this.userId,
+    this.userInfo,
     this.upVote,
     this.unVote,
     this.downVote,
@@ -42,8 +43,6 @@ class NewsfeedPostWidget extends StatefulWidget {
 
 class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
     with SingleTickerProviderStateMixin {
-  // bool _isLiked = false;
-  // bool _isCheckNetwork = true;
   late int voteCount = widget.post.votesCount;
   int? userVoteType;
   Color _upVoteColor = Colors.black;
@@ -76,25 +75,6 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
   void dispose() {
     super.dispose();
   }
-
-  // void _showBottomSheet(BuildContext context) {
-  //   showBottomSheet(
-  //     context: context,
-  //     shape: const RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
-  //     builder: (BuildContext context) {
-  //       return CommentScreen();
-  //       // return Container(
-  //       //   height: MediaQuery.of(context).size.height,
-  //       //   width: MediaQuery.of(context).size.width,
-  //       //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-  //       //   child: const Column(
-  //       //     children: <Widget>[],
-  //       //   ),
-  //       // );
-  //     },
-  //   );
-  // }
 
   void _showBottomSheet(BuildContext context, PostEntity post) {
     showModalBottomSheet(
@@ -216,7 +196,8 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                             color: Colors.grey,
                           ),
                         if (post.privacy == 1)
-                          const Icon(Icons.people, size: 11, color: Colors.grey),
+                          const Icon(Icons.people,
+                              size: 11, color: Colors.grey),
                         if (post.privacy == 2)
                           const Icon(Icons.lock, size: 11, color: Colors.grey),
                         if (post.privacy == 3)
@@ -237,22 +218,15 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      // gradient: LinearGradient(
-                      //   colors: [
-                      //     AppColors.bgPink.withOpacity(0.2),
-                      //     Colors.white
-                      //   ],
-                      //   begin: Alignment.topLeft,
-                      //   end: Alignment.bottomRight,
-                      // ),
                       color: AppColors.bgGreen,
                       borderRadius: BorderRadius.circular(20),
-                      //border:Border.all(color: AppColors.bgPink.withOpacity(0.6)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.local_offer_rounded,
+                        // const Icon(Icons.local_offer_rounded,
+                        //     size: 14, color: Colors.yellow),
+                        const Icon(Icons.star_outlined,
                             size: 14, color: Colors.yellow),
                         const SizedBox(width: 4),
                         Text(
@@ -268,7 +242,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                   )
                 ],
                 const SizedBox(width: 5),
-                if (widget.post.user.id == widget.userId)
+                if (widget.post.user.id == widget.userInfo?.userInfo.userId)
                   SizedBox(
                     height: 24,
                     width: 24,
@@ -278,12 +252,17 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                       icon: const Icon(Icons.more_vert),
                       onSelected: (value) {
                         if (value == 'edit') {
-                          // Sửa
+                          context.pushNamed(
+                            AppRoute.updatePost.name,
+                            extra: widget.post,
+                          );
                         } else if (value == 'delete') {
-                          // Xóa
+                          PostDeleteConfirmWidget(postId: widget.post.id);
+                        } else if (value == 'add-category') {
                         } else if (value == 'save') {
-                          // Lưu
-                        }
+                          _savedPost();
+                        } else if (value == 'report-post') {
+                        } else if (value == 'report-user') {}
                       },
                       itemBuilder: (context) => [
                         const PopupMenuItem(
@@ -295,8 +274,20 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                           child: Text('Xóa bài viết'),
                         ),
                         const PopupMenuItem(
+                          value: 'add-category',
+                          child: Text('Thêm danh mục'),
+                        ),
+                        const PopupMenuItem(
                           value: 'save',
                           child: Text('Lưu bài viết'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'report-post',
+                          child: Text('Báo cáo bài viết'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'report-user',
+                          child: Text('Báo cáo người dùng'),
                         ),
                       ],
                     ),
@@ -313,8 +304,9 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                         if (value == 'follow') {
                           // Theo dõi
                         } else if (value == 'save') {
-                          // Lưu
-                        }
+                          _savedPost();
+                        } else if (value == 'report-post') {
+                        } else if (value == 'report-user') {}
                       },
                       itemBuilder: (context) => [
                         const PopupMenuItem(
@@ -324,6 +316,14 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                         const PopupMenuItem(
                           value: 'save',
                           child: Text('Lưu bài viết'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'report-post',
+                          child: Text('Báo cáo bài viết'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'report-user',
+                          child: Text('Báo cáo người dùng'),
                         ),
                       ],
                     ),
@@ -350,6 +350,7 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
             ),
           const SizedBox(height: 5),
           _buildImage(post.mediaUrl),
+          const SizedBox(height: 5),
           Row(
             spacing: 5,
             children: <Widget>[
@@ -366,14 +367,9 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
               CommentWidget(
                   commentCount: post.commentsCount,
                   onPressed: () {
-                    _showBottomSheet(context, widget.post);
+                    context.pushNamed(AppRoute.comment.name, extra: post);
                   }),
               const Spacer(),
-              // SaveWidget(
-              //   postId: post.id,
-              //   actionSavedPost: _actionSavedPost,
-              //   savePost: (_) => _savedPost(),
-              // ),
               const ShareWidget(shareCount: 0),
             ],
           ),
@@ -392,11 +388,20 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
     }
 
     if (imageProvider != null) {
-      return Image(
-        image: imageProvider,
-        height: 300,
-        width: MediaQuery.of(context).size.width,
-        fit: BoxFit.cover,
+      return GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ImageViewWidget(imageProvider: imageProvider!),
+            ),
+          );
+        },
+        child: Image(
+          image: imageProvider,
+          height: 300,
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.cover,
+        ),
       );
     } else {
       return const SizedBox();

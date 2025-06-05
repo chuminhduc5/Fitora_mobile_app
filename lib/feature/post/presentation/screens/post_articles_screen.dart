@@ -2,11 +2,9 @@ import 'dart:io';
 import 'package:fitora_mobile_app/common/dialog/app_display_message.dart';
 import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/avatar/app_avatar_widget.dart';
-import 'package:fitora_mobile_app/common/widgets/button/app_button_widget.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/enums/file/image_type.dart';
-import 'package:fitora_mobile_app/core/enums/post/privacy_post.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/newsfeed/newsfeed_bloc.dart';
@@ -20,7 +18,6 @@ import 'package:fitora_mobile_app/feature/post/presentation/widgets/post/privacy
 import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forui/forui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -85,7 +82,8 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
     if (pickedFile != null) {
       final file = File(pickedFile.path);
       setState(() => _image = file);
-      _uploadFileBloc.add(UploadImageFileEvent(url: file, type: ImageType.Image));
+      _uploadFileBloc
+          .add(UploadImageFileEvent(url: file, type: ImageType.Image));
       logg.i("File Image Url: ${File(pickedFile.path)}");
       logg.i("Image Url: ${pickedFile.path}");
       logg.i("Url: $_image");
@@ -141,6 +139,7 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
             context.goNamed(AppRoute.appView.name);
           }
           return Scaffold(
+            resizeToAvoidBottomInset: true,
             appBar: AppBar(
               backgroundColor: AppColors.bgWhite,
               title: const Text(
@@ -151,7 +150,7 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
                 TextButton(
                   style: ButtonStyle(
                     foregroundColor: WidgetStateProperty.resolveWith<Color>(
-                          (Set<WidgetState> states) {
+                      (Set<WidgetState> states) {
                         if (states.contains(WidgetState.disabled)) {
                           return Colors.grey; // Màu khi disable
                         }
@@ -171,7 +170,7 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
             ),
             backgroundColor: AppColors.bgWhite,
             body: SingleChildScrollView(
-              child: SizedBox(
+              child: Container(
                 child: Column(
                   children: [
                     ListTile(
@@ -242,15 +241,11 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
                       },
                     ),
                     const SizedBox(height: 100),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        child: isKeyboardOpen
-                            ? _buildFeatureItemHorizontal()
-                            : _buildFeatureItemVertical(),
-                      ),
-                    ),
+                    if (isKeyboardOpen) ...[
+                      _buildFeatureItemHorizontal()
+                    ] else ...[
+                      _buildFeatureItemVertical()
+                    ]
                   ],
                 ),
               ),
@@ -291,67 +286,41 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
           Colors.red,
           () {},
         ),
-        _featureItem(
-          Icons.videocam,
-          'Video trực tiếp',
-          Colors.pink,
-          () {},
-        ),
-        _featureItem(
-          Icons.format_paint,
-          'Màu nền',
-          Colors.teal,
-          () {},
-        ),
-        _featureItem(
-          Icons.camera_alt,
-          'Camera',
-          Colors.blueAccent,
-          () {},
-        ),
-        _featureItem(
-          Icons.gif,
-          'File GIF',
-          Colors.green,
-          () {},
-        ),
       ],
     );
   }
 
   Widget _buildFeatureItemHorizontal() {
-    return Container(
+    return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-      color: Colors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.image),
-            onPressed: () {},
-            color: Colors.green,
-          ),
-          IconButton(
-            icon: const Icon(Icons.person_add),
-            onPressed: () {},
-            color: Colors.blue,
-          ),
-          IconButton(
-            icon: const Icon(Icons.emoji_emotions),
-            onPressed: () {},
-            color: Colors.orange,
-          ),
-          IconButton(
-            icon: const Icon(Icons.location_on),
-            onPressed: () {},
-            color: Colors.red,
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_horiz),
-            onPressed: () {},
-            color: Colors.grey,
-          ),
-        ],
+      child: Expanded(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.image),
+              onPressed: () {
+                _uploadImageFile();
+              },
+              color: Colors.green,
+            ),
+            IconButton(
+              icon: const Icon(Icons.person_add),
+              onPressed: () {},
+              color: Colors.blue,
+            ),
+            IconButton(
+              icon: const Icon(Icons.emoji_emotions),
+              onPressed: () {},
+              color: Colors.orange,
+            ),
+            IconButton(
+              icon: const Icon(Icons.location_on),
+              onPressed: () {},
+              color: Colors.red,
+            ),
+          ],
+        ),
       ),
     );
   }

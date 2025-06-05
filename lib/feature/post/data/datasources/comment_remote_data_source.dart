@@ -6,7 +6,6 @@ import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/requests/comments/create_comment_request.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/requests/comments/update_comment_request.dart';
 import 'package:fitora_mobile_app/feature/post/data/models/responses/comment_model.dart';
-import 'package:fitora_mobile_app/feature/post/data/models/responses/comment_response_model.dart';
 
 abstract class CommentRemoteDataSource {
   Future<List<CommentModel>> fetchComment(String postId);
@@ -14,6 +13,10 @@ abstract class CommentRemoteDataSource {
   Future<CommentModel> createComment(CreateCommentRequest request);
 
   Future<void> updateComment(UpdateCommentRequest request);
+
+  Future<void> deleteComment(String id);
+
+  Future<List<CommentModel>> fetchRepliesComment(String parentCommentId);
 }
 
 class CommentRemoteDataSourceImpl implements CommentRemoteDataSource {
@@ -24,7 +27,8 @@ class CommentRemoteDataSourceImpl implements CommentRemoteDataSource {
   @override
   Future<List<CommentModel>> fetchComment(String postId) async {
     try {
-      final response = await _dioClient.get('${ApiUrl.getCommentByPost}?PostId=$postId');
+      final response =
+          await _dioClient.get('${ApiUrl.getCommentByPost}?PostId=$postId');
       final List<dynamic> data = response.data['data']['data'];
 
       final comments = data.map((e) => CommentModel.fromJson(e)).toList();
@@ -55,6 +59,32 @@ class CommentRemoteDataSourceImpl implements CommentRemoteDataSource {
   Future<void> updateComment(UpdateCommentRequest request) async {
     try {
       await _dioClient.put(ApiUrl.createComment, data: request.toJson());
+    } on DioException catch (e) {
+      logger.e(e);
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<void> deleteComment(String id) async {
+    try {
+      await _dioClient.delete('${ApiUrl.deleteComment}?id=$id');
+    } on DioException catch (e) {
+      logger.e(e);
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<CommentModel>> fetchRepliesComment(String parentCommentId) async {
+    try {
+      final response =
+          await _dioClient.get('${ApiUrl.getCommentReplies}?ParentCommentId=$parentCommentId');
+      final List<dynamic> data = response.data['data']['data'];
+
+      final comments = data.map((e) => CommentModel.fromJson(e)).toList();
+
+      return comments;
     } on DioException catch (e) {
       logger.e(e);
       throw ServerException();

@@ -1,12 +1,10 @@
-class UpdatePostRequest {
-  final String id;
+class UpdatePostFormData {
   final String content;
   final String mediaUrl;
   final int privacy;
   final bool isApproved;
 
-  const UpdatePostRequest({
-    required this.id,
+  const UpdatePostFormData({
     required this.content,
     required this.mediaUrl,
     required this.privacy,
@@ -15,10 +13,10 @@ class UpdatePostRequest {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      "content": content,
-      "mediaUrl": mediaUrl,
-      "privacy": privacy,
-      "isApproved": isApproved,
+      'content': content,
+      'mediaUrl': mediaUrl,
+      'privacy': privacy,
+      'isApproved': isApproved,
     };
   }
 }

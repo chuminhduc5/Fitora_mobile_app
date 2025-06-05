@@ -38,15 +38,15 @@ class DioClient {
     );
 
     // 👇 Bypass chứng chỉ SSL tự ký (self-signed cert) khi gọi https://10.0.2.2
-    // (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
-    //   client.badCertificateCallback =
-    //       (X509Certificate cert, String host, int port) {
-    //     // In thêm log nếu cần kiểm tra chứng chỉ
-    //     logg.w("Bypassing SSL certificate for host: $host");
-    //     return true;
-    //   };
-    //   return client;
-    // };
+    (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) {
+        // In thêm log nếu cần kiểm tra chứng chỉ
+        logg.w("Bypassing SSL certificate for host: $host");
+        return true;
+      };
+      return client;
+    };
   }
 
   // TODO: GET METHOD

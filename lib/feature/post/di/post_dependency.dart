@@ -12,10 +12,10 @@ import 'package:fitora_mobile_app/feature/post/data/repositories/comment_reposit
 import 'package:fitora_mobile_app/feature/post/data/repositories/interact_repository_impl.dart';
 import 'package:fitora_mobile_app/feature/post/data/repositories/post_repository_impl.dart';
 import 'package:fitora_mobile_app/feature/post/data/repositories/upload_file_repository_impl.dart';
-import 'package:fitora_mobile_app/feature/post/domain/repositories/upload_file_repository.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/categories/create_category_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/create_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/get_comment_use_case.dart';
+import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/get_replies_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/update_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/interact/vote_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/interact/vote_post_use_case.dart';
@@ -46,6 +46,8 @@ class PostDependency {
     getIt.registerFactory(
       () => PostBloc(
         getIt<CreatePostUseCase>(),
+        getIt<UpdatePostUseCase>(),
+        getIt<DeletePostUseCase>(),
         getIt<SavePostUseCase>(),
       ),
     );
@@ -58,10 +60,19 @@ class PostDependency {
       ),
     );
     getIt.registerFactory(() => InteractBloc(getIt<VotePostUseCase>()));
+    // getIt.registerFactoryParam<InteractBloc, int, int?>(
+    //       (voteCount, userVoteType) => InteractBloc(
+    //     votePostUseCase: getIt<VotePostUseCase>(),
+    //     initialVoteCount: voteCount,
+    //     initialUserVoteType: userVoteType,
+    //   ),
+    // );
+
     getIt.registerFactory(
       () => CommentBloc(
         getIt<CreateCommentUseCase>(),
         getIt<GetCommentUseCase>(),
+        getIt<GetRepliesCommentUseCase>(),
       ),
     );
     getIt.registerFactory(() => CommentFormBloc());
@@ -99,6 +110,8 @@ class PostDependency {
     getIt.registerLazySingleton(
         () => GetCommentUseCase(getIt<CommentRepositoryImpl>()));
     getIt.registerLazySingleton(
+        () => GetRepliesCommentUseCase(getIt<CommentRepositoryImpl>()));
+    getIt.registerLazySingleton(
         () => CreateCommentUseCase(getIt<CommentRepositoryImpl>()));
     getIt.registerLazySingleton(
         () => UpdateCommentUseCase(getIt<CommentRepositoryImpl>()));
@@ -113,7 +126,12 @@ class PostDependency {
 
     // Repository - Post
     getIt.registerLazySingleton(
-        () => PostRepositoryImpl(getIt<PostRemoteDataSourceImpl>()));
+      () => PostRepositoryImpl(
+        getIt<PostRemoteDataSourceImpl>(),
+        getIt<SecureLocalStorage>(),
+        getIt<HiveLocalStorage>(),
+      ),
+    );
 
     // Repository - Interact
     getIt.registerLazySingleton(

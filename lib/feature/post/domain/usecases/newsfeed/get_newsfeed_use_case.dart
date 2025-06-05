@@ -6,7 +6,9 @@ import 'package:fitora_mobile_app/feature/post/domain/repositories/post_reposito
 
 class GetNewsfeedUseCase extends UseCase<List<PostEntity>, NoParams> {
   final PostRepository _postRepository;
+
   GetNewsfeedUseCase(this._postRepository);
+
   @override
   Future<Either<Failure, List<PostEntity>>> call(NoParams params) async {
     return await _postRepository.getNewsFeed();

@@ -17,7 +17,15 @@ class CreatePostEvent extends PostEvent {
   List<Object?> get props => [params];
 }
 
-class UpdatePostEvent extends PostEvent {}
+class UpdatePostEvent extends PostEvent {
+  final String id;
+  final UpdatePostFormData params;
+
+  const UpdatePostEvent({required this.id, required this.params});
+
+  @override
+  List<Object?> get props => [id];
+}
 
 class DeletePostEvent extends PostEvent {
   final String postId;

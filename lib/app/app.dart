@@ -9,17 +9,16 @@ import 'package:fitora_mobile_app/feature/post/presentation/blocs/comment/commen
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/interact/interact_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/newsfeed/newsfeed_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/post_form/post_form_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/upload_file/upload_file_bloc.dart';
 import 'package:fitora_mobile_app/feature/search/presentation/blocs/search_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/friend/friend_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/group/group_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/personal/personal_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/profile/profile_bloc.dart';
-import 'package:fitora_mobile_app/feature/user/presentation/blocs/saved_post/saved_post_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -44,6 +43,7 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider(create: (_) => getIt<NewsfeedBloc>()),
             BlocProvider(create: (_) => getIt<PostBloc>()),
+            BlocProvider(create: (_) => getIt<PostFormBloc>()),
             //BlocProvider(create: (_) => getIt<SavedPostBloc>()),
             BlocProvider(create: (_) => getIt<InteractBloc>()),
             BlocProvider(create: (_) => getIt<CommentBloc>()),
@@ -55,26 +55,11 @@ class MyApp extends StatelessWidget {
             BlocProvider(create: (_) => getIt<GroupBloc>()),
             BlocProvider(create: (_) => getIt<SearchBloc>()),
           ],
-          // child: BlocBuilder<ThemeBloc, ThemeState>(
-          //   builder: (context, state) {
-          //     return MaterialApp.router(
-          //       debugShowCheckedModeBanner: false,
-          //       routerConfig: router,
-          //       theme: AppTheme.lightMode,
-          //     );
-          //   },
-          // ),
           child: BlocListener<AuthBloc, AuthState>(
             listenWhen: (_, current) =>
-                current is AuthCheckSignInStatusLoadingState,
+                current is AuthCheckSignInStatusSuccessState,
             listener: (_, state) {
               if (state is AuthCheckSignInStatusSuccessState) {
-                final user = state.data;
-                final userMap = {
-                  "user_id": user.user.id ?? "",
-                  "username": user.user.userName ?? "",
-                  "fullName": user.user.fullName ?? "",
-                };
                 router.pushReplacementNamed(AppRoute.appView.name);
               }
             },

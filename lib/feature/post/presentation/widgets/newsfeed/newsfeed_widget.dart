@@ -3,13 +3,14 @@ import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
 import 'package:fitora_mobile_app/common/loader/skeleton_loading.dart';
 import 'package:fitora_mobile_app/common/widgets/post/newsfeed_post_widget.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/newsfeed/newsfeed_bloc.dart';
+import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NewsfeedWidget extends StatelessWidget {
   final String selectedCategory;
   final int? selectedIndex;
-  final String? userId;
+  final UserProfileEntity? userInfo;
   final void Function(String)? upVote;
   final void Function(String)? unVote;
   final void Function(String)? downVote;
@@ -19,7 +20,7 @@ class NewsfeedWidget extends StatelessWidget {
     super.key,
     required this.selectedCategory,
     this.selectedIndex,
-    this.userId,
+    this.userInfo,
     this.upVote,
     this.unVote,
     this.downVote,
@@ -52,10 +53,7 @@ class NewsfeedWidget extends StatelessWidget {
     //                 final newsfeed = filteredNewsfeeds[index];
     //                 return NewsfeedPostWidget(
     //                   post: newsfeed,
-    //                   upVote: upVote,
-    //                   unVote: upVote,
-    //                   downVote: downVote,
-    //                   savePost: savePost,
+    //                   userId: userId,
     //                 );
     //               },
     //               childCount: filteredNewsfeeds.length,
@@ -67,6 +65,7 @@ class NewsfeedWidget extends StatelessWidget {
     //     return const SizedBox();
     //   },
     // );
+
     return BlocBuilder<NewsfeedBloc, NewsfeedState>(
       builder: (context, state) {
         if (state is FetchExploreFeedLoadingState) {
@@ -91,7 +90,7 @@ class NewsfeedWidget extends StatelessWidget {
                     final newsfeed = filteredNewsfeeds[index];
                     return NewsfeedPostWidget(
                       post: newsfeed,
-                      userId: userId,
+                      userInfo: userInfo,
                       upVote: upVote,
                       unVote: upVote,
                       downVote: downVote,
