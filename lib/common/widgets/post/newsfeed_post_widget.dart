@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fitora_mobile_app/common/loader/app_loading_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/avatar/app_avatar_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/post/comment_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/post/favourite_widget.dart';
@@ -190,16 +192,16 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                         const Icon(Icons.circle, size: 5, color: Colors.grey),
                         const SizedBox(width: 5),
                         if (post.privacy == 0)
+                          const Icon(Icons.lock, size: 11, color: Colors.grey),
+                        if (post.privacy == 1)
+                          const Icon(Icons.people,
+                              size: 11, color: Colors.grey),
+                        if (post.privacy == 2)
                           const Icon(
                             Icons.public,
                             size: 11,
                             color: Colors.grey,
                           ),
-                        if (post.privacy == 1)
-                          const Icon(Icons.people,
-                              size: 11, color: Colors.grey),
-                        if (post.privacy == 2)
-                          const Icon(Icons.lock, size: 11, color: Colors.grey),
                         if (post.privacy == 3)
                           const Icon(Icons.groups,
                               size: 11, color: Colors.grey),
@@ -257,7 +259,11 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                             extra: widget.post,
                           );
                         } else if (value == 'delete') {
-                          PostDeleteConfirmWidget(postId: widget.post.id);
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return PostDeleteConfirmWidget(postId: widget.post.id);
+                              });
                         } else if (value == 'add-category') {
                         } else if (value == 'save') {
                           _savedPost();
@@ -396,8 +402,19 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
             ),
           );
         },
-        child: Image(
-          image: imageProvider,
+        // child: Image(
+        //   image: imageProvider,
+        //   height: 300,
+        //   width: MediaQuery.of(context).size.width,
+        //   fit: BoxFit.cover,
+        // ),
+        child: CachedNetworkImage(
+          imageUrl: imagePath!,
+          placeholder: (context, url) => const SizedBox(
+            height: 300,
+            child: AppLoadingWidget(),
+          ),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
           height: 300,
           width: MediaQuery.of(context).size.width,
           fit: BoxFit.cover,

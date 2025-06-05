@@ -23,6 +23,21 @@ class InteractPostFailureState extends InteractState {
   List<Object?> get props => [message];
 }
 
+class InteractCommentInitialState extends InteractState {}
+
+class InteractCommentLoadingState extends InteractState {}
+
+class InteractCommentSuccessState extends InteractState {}
+
+class InteractCommentFailureState extends InteractState {
+  final String message;
+
+  const InteractCommentFailureState(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
 // class InteractState extends Equatable {
 //   final int voteCount;
 //   final int? userVoteType;

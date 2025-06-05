@@ -6,6 +6,7 @@ import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/friend/friend_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/blocs/personal/personal_bloc.dart';
+import 'package:fitora_mobile_app/feature/user/presentation/blocs/user_post/user_post_bloc.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/widgets/user_friend_list_widget.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/widgets/personal/user_info_widget.dart';
 import 'package:fitora_mobile_app/feature/user/presentation/widgets/profile/profile_info_widget.dart';
@@ -28,12 +29,18 @@ class PersonalScreen extends StatefulWidget {
 
 class _PersonalScreenState extends State<PersonalScreen> {
   bool _showTitle = false;
+  late PersonalBloc _personalBloc;
+  late UserPostBloc _userPostBloc;
 
   //late PersonalBloc _personal;
 
   @override
   void initState() {
     logg.i("Id Người dùng: ${widget.userId}");
+    _personalBloc = getIt<PersonalBloc>()
+      ..add(FetchPersonalEvent(userId: widget.userId));
+    _userPostBloc = getIt<UserPostBloc>()
+      ..add(FetchUserPostEvent(userId: widget.userId));
     super.initState();
   }
 
@@ -44,9 +51,15 @@ class _PersonalScreenState extends State<PersonalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          getIt<PersonalBloc>()..add(FetchPersonalEvent(userId: widget.userId)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => _personalBloc,
+        ),
+        BlocProvider(
+          create: (context) => _userPostBloc,
+        ),
+      ],
       child: Scaffold(
         backgroundColor: AppColors.bgWhite,
         body: RefreshIndicator(
@@ -54,7 +67,8 @@ class _PersonalScreenState extends State<PersonalScreen> {
             return Future.delayed(
               const Duration(seconds: 1),
             ).then(
-              (value) => context.read<PersonalBloc>().add(
+                  (value) =>
+                  context.read<PersonalBloc>().add(
                     FetchPersonalEvent(userId: widget.userId),
                   ),
             );
@@ -97,14 +111,14 @@ class _PersonalScreenState extends State<PersonalScreen> {
                         ],
                         title: _showTitle
                             ? Text(
-                                "${profile.userInfo.firstName} ${profile.userInfo.lastName}",
-                              )
+                          "${profile.userInfo.firstName} ${profile.userInfo
+                              .lastName}",
+                        )
                             : null,
                         centerTitle: true,
                       ),
                       SliverToBoxAdapter(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: SizedBox(
                           child: Column(
                             children: [
                               UserInfoWidget(
@@ -142,13 +156,15 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                       constraints: const BoxConstraints(
                                         minHeight: 100,
                                       ),
-                                      child: const UserPostListWidget(),
+                                      child: UserPostListWidget(userInfo: profile,),
+                                      //child: const UserPhotoListWidget(),
                                     ),
                                   ),
                                   FTabEntry(
                                     label: const Text("Ảnh"),
                                     content: Container(
                                       width: double.infinity,
+                                      padding: const EdgeInsets.symmetric(horizontal: 15),
                                       constraints: const BoxConstraints(
                                         minHeight: 100,
                                       ),
@@ -159,12 +175,14 @@ class _PersonalScreenState extends State<PersonalScreen> {
                                       label: const Text("Video"),
                                       content: Container(
                                         width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(horizontal: 15),
                                         child: const UserVideoListWidget(),
                                       )),
                                   FTabEntry(
                                       label: const Text("Bạn bè"),
                                       content: Container(
                                         width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(horizontal: 15),
                                         child: const UserFriendListWidget(),
                                       )),
                                 ],

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:fitora_mobile_app/common/widgets/avatar/app_avatar_widget.dart';
 import 'package:fitora_mobile_app/common/widgets/button/app_button_widget.dart';
+import 'package:fitora_mobile_app/core/config/assets/app_images.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
@@ -16,72 +17,96 @@ class ProfileInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      //padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
+            alignment: Alignment.bottomLeft,
+            clipBehavior: Clip.none,
             children: [
-              Column(
-                children: [
-                  Center(
-                    child: AppAvatarWidget(
-                      imagePath: profile.userInfo.profilePictureUrl,
-                      size: 130,
-                    ),
+              // Cover Photo
+              Container(
+                height: 200,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(AppImages.bgImage),
+                    fit: BoxFit.cover,
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    profile.username,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+              ),
+
+              // Avatar (nằm ngoài Positioned, nhưng đè nhờ Positioned hoặc transform)
+              Positioned(
+                bottom: -50, // đẩy avatar ra khỏi stack để đè xuống dưới
+                left: 16,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 8,
+                      ),
+                    ],
                   ),
-                  // const Text(
-                  //   "Trở thành 1 lập trình viên mobile app!",
-                  //   textAlign: TextAlign.center,
-                  //   style: TextStyle(color: Colors.black),
-                  // ),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 12,
-                          spreadRadius: 0,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildInFoItem("Công việc", ""),
-                        _buildInFoItem("Năm sinh", ""),
-                        _buildInFoItem("Quê Quán", ""),
-                      ],
-                    ),
+                  child: AppAvatarWidget(
+                    imagePath: profile.userInfo.profilePictureUrl,
+                    size: 120,
                   ),
-                ],
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _statItem("0", "Followers"),
-              _buildVerticalLine(),
-              _statItem("0", "Following"),
-              _buildVerticalLine(),
-              _statItem("0", "Bạn bè")
-            ],
+          const SizedBox(height: 55),
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Text(
+              profile.username,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
+          const SizedBox(height: 16),
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildInFoItem("Đã follow", profile.followingCount.toString()),
+                _buildInFoItem("Follower", profile.followerCount.toString()),
+                _buildInFoItem("Bạn bè", ""),
+              ],
+            ),
+          ),
+          // const SizedBox(height: 10),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: [
+          //     _statItem("0", "Followers"),
+          //     _buildVerticalLine(),
+          //     _statItem("0", "Following"),
+          //     _buildVerticalLine(),
+          //     _statItem("0", "Bạn bè")
+          //   ],
+          // ),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -100,13 +125,14 @@ class ProfileInfoWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          SizedBox(
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _sectionTitle("Về tôi"),
                 const Text(
-                  "I believe that no one should ever have to choose between a career we love and living our lives with authenticity and integrity",
+                  "Trở thành 1 lập trình viên Mobile Developer!",
                   textAlign: TextAlign.start,
                   style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
@@ -125,7 +151,7 @@ class ProfileInfoWidget extends StatelessWidget {
   Widget _buildInFoItem(String title, String value) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           title,

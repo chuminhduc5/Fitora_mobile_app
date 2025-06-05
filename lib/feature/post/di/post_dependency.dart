@@ -14,6 +14,7 @@ import 'package:fitora_mobile_app/feature/post/data/repositories/post_repository
 import 'package:fitora_mobile_app/feature/post/data/repositories/upload_file_repository_impl.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/categories/create_category_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/create_comment_use_case.dart';
+import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/delete_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/get_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/get_replies_comment_use_case.dart';
 import 'package:fitora_mobile_app/feature/post/domain/usecases/comments/update_comment_use_case.dart';
@@ -59,7 +60,12 @@ class PostDependency {
         getIt<GetExploreFeedUseCase>(),
       ),
     );
-    getIt.registerFactory(() => InteractBloc(getIt<VotePostUseCase>()));
+    getIt.registerFactory(
+      () => InteractBloc(
+        getIt<VotePostUseCase>(),
+        getIt<VoteCommentUseCase>(),
+      ),
+    );
     // getIt.registerFactoryParam<InteractBloc, int, int?>(
     //       (voteCount, userVoteType) => InteractBloc(
     //     votePostUseCase: getIt<VotePostUseCase>(),
@@ -73,6 +79,7 @@ class PostDependency {
         getIt<CreateCommentUseCase>(),
         getIt<GetCommentUseCase>(),
         getIt<GetRepliesCommentUseCase>(),
+        getIt<DeleteCommentUseCase>(),
       ),
     );
     getIt.registerFactory(() => CommentFormBloc());
@@ -115,6 +122,8 @@ class PostDependency {
         () => CreateCommentUseCase(getIt<CommentRepositoryImpl>()));
     getIt.registerLazySingleton(
         () => UpdateCommentUseCase(getIt<CommentRepositoryImpl>()));
+    getIt.registerLazySingleton(
+        () => DeleteCommentUseCase(getIt<CommentRepositoryImpl>()));
 
     // UseCase - Category
     getIt.registerLazySingleton(

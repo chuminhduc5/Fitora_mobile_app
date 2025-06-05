@@ -9,20 +9,6 @@ import 'dart:io';
 class DioClient {
   late final Dio _dio;
 
-  // DioClient({required String baseUrl})
-  //     : _dio = Dio(
-  //         BaseOptions(
-  //           baseUrl: baseUrl,
-  //           headers: {"Content-Type": "application/json; charset=utf-8"},
-  //           responseType: ResponseType.json,
-  //           sendTimeout: const Duration(seconds: 10),
-  //           receiveTimeout: const Duration(seconds: 10),
-  //         ),
-  //       )..interceptors.addAll(
-  //           [AuthorizationInterceptor(), LoggerInterceptor()],
-  //         );
-
-
   DioClient({required String baseUrl}) {
     _dio = Dio(
       BaseOptions(
@@ -36,17 +22,6 @@ class DioClient {
     )..interceptors.addAll(
       [AuthorizationInterceptor(), LoggerInterceptor()],
     );
-
-    // 👇 Bypass chứng chỉ SSL tự ký (self-signed cert) khi gọi https://10.0.2.2
-    (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) {
-        // In thêm log nếu cần kiểm tra chứng chỉ
-        logg.w("Bypassing SSL certificate for host: $host");
-        return true;
-      };
-      return client;
-    };
   }
 
   // TODO: GET METHOD
@@ -140,7 +115,7 @@ class DioClient {
         options: options,
         cancelToken: cancelToken,
       );
-      return response.data;
+      return response;
     } on DioException catch (e) {
       //_handleDioError(e);
       rethrow;

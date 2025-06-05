@@ -68,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _getUserId();
     _loadUser();
     // _newsfeedBloc = getIt<NewsfeedBloc>()..add(FetchNewsfeedEvent());
-    _exploreFeedBloc = getIt<NewsfeedBloc>()..add(FetchExploreFeedEvent());
-    // _trendingFeedBloc = getIt<NewsfeedBloc>()..add(FetchTrendingFeedEvent());
+    // _exploreFeedBloc = getIt<NewsfeedBloc>()..add(FetchExploreFeedEvent());
+    _trendingFeedBloc = getIt<NewsfeedBloc>()..add(FetchTrendingFeedEvent());
     final network = getIt<NetworkChecker>();
     _timer = Timer.periodic(const Duration(seconds: 30), (_) {
       //_checkInternetConnection(network);
@@ -85,7 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _loadUser() async {
-    final userModel = await _hiveLocalStorage.load(key: "user", boxName: "cache");
+    final userModel =
+        await _hiveLocalStorage.load(key: "user", boxName: "cache");
     if (userModel != null) {
       logg.i("Người dùng đã lưu: $userModel");
       final userEntity = UserProfileMapper.toEntity(userModel);
@@ -126,44 +127,44 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _upVote(String postId) {
     context.read<InteractBloc>().add(
-      InteractPostEvent(
-        userId: userId,
-        postId: postId,
-        voteType: 1,
-      ),
-    );
+          InteractPostEvent(
+            userId: userId,
+            postId: postId,
+            voteType: 1,
+          ),
+        );
     logg.i('VoteType: 1');
   }
 
   void _downVote(String postId) {
     context.read<InteractBloc>().add(
-      InteractPostEvent(
-        userId: userInfo!.userInfo.id,
-        postId: postId,
-        voteType: 2,
-      ),
-    );
+          InteractPostEvent(
+            userId: userId,
+            postId: postId,
+            voteType: 2,
+          ),
+        );
     logg.i('VoteType: 2');
   }
 
   void _unVote(String postId) {
     context.read<InteractBloc>().add(
-      InteractPostEvent(
-        userId: userInfo!.userInfo.id,
-        postId: postId,
-        voteType: 3,
-      ),
-    );
+          InteractPostEvent(
+            userId: userId,
+            postId: postId,
+            voteType: 3,
+          ),
+        );
     logg.i('VoteType: 3');
   }
 
   void _savePost(String postId) {
     context.read<PostBloc>().add(
-      SavePostEvent(
-        userId: userInfo!.userInfo.id,
-        postId: postId,
-      ),
-    );
+          SavePostEvent(
+            userId: userId,
+            postId: postId,
+          ),
+        );
   }
 
   @override
@@ -177,8 +178,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return MultiBlocProvider(
       providers: [
         //BlocProvider(create: (_) => _newsfeedBloc),
-        BlocProvider(create: (_) => _exploreFeedBloc),
-        //BlocProvider(create: (_) => _trendingFeedBloc),
+        //BlocProvider(create: (_) => _exploreFeedBloc),
+        BlocProvider(create: (_) => _trendingFeedBloc),
         BlocProvider(create: (_) => getIt<AuthBloc>()),
       ],
       child: Scaffold(
@@ -232,64 +233,72 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
           iconTheme: const IconThemeData(color: Colors.black),
         ),
-        body: Column(
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 12),
-              color: Colors.grey[200],
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(categories.length, (index) {
-                    final isSelected = index == selectedIndex;
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: ChoiceChip(
-                        label: Text(categories[index]),
-                        selected: isSelected,
-                        onSelected: (_) {
-                          setState(() {
-                            selectedIndex = index;
-                          });
-                        },
-                        selectedColor: AppColors.bgPink,
-                        backgroundColor: Colors.white,
-                        checkmarkColor: Colors.white,
-                        labelStyle: TextStyle(
-                          color: isSelected ? Colors.white : Colors.grey[700],
-                          fontWeight: FontWeight.w500,
+        body: BlocListener<PostBloc, PostState>(
+          listener: (context, state) {
+            if (state is SavePostSuccessState) {
+              return AppDisplayMessage.success(context, 'Đã lưu bài viết');
+            }
+          },
+          child: Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 12),
+                color: Colors.grey[200],
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(categories.length, (index) {
+                      final isSelected = index == selectedIndex;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ChoiceChip(
+                          label: Text(categories[index]),
+                          selected: isSelected,
+                          onSelected: (_) {
+                            setState(() {
+                              selectedIndex = index;
+                            });
+                          },
+                          selectedColor: AppColors.bgPink,
+                          backgroundColor: Colors.white,
+                          checkmarkColor: Colors.white,
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.white : Colors.grey[700],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    );
-                  }),
+                      );
+                    }),
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: RefreshIndicator(
-                color: AppColors.bgPink,
-                backgroundColor: AppColors.bgWhite,
-                onRefresh: () async {
-                  await Future.delayed(const Duration(seconds: 1));
-                  //context.read<NewsfeedBloc>().add(FetchNewsfeedEvent());
-                  context.read<NewsfeedBloc>().add(FetchExploreFeedEvent());
-                },
-                child: NewsfeedWidget(
-                  selectedCategory: categories[selectedIndex],
-                  selectedIndex: selectedIndex,
-                  userInfo: userInfo,
-                  upVote: _upVote,
-                  downVote: _downVote,
-                  unVote: _unVote,
-                  savePost: _savePost,
+              Expanded(
+                child: RefreshIndicator(
+                  color: AppColors.bgPink,
+                  backgroundColor: AppColors.bgWhite,
+                  onRefresh: () async {
+                    await Future.delayed(const Duration(seconds: 1));
+                    //context.read<NewsfeedBloc>().add(FetchNewsfeedEvent());
+                    context.read<NewsfeedBloc>().add(FetchExploreFeedEvent());
+                  },
+                  child: NewsfeedWidget(
+                    selectedCategory: categories[selectedIndex],
+                    selectedIndex: selectedIndex,
+                    userInfo: userInfo,
+                    upVote: _upVote,
+                    downVote: _downVote,
+                    unVote: _unVote,
+                    savePost: _savePost,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

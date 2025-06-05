@@ -37,10 +37,12 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
 
   List<Map<String, dynamic>> categories = [
     {"id": "", "name": "Chủ đề"},
-    {"id": "08dd78b5-1e98-48bf-8765-9e922cf5713a", "name": "AI"},
-    {"id": "08dd78b6-8f14-48c4-8e04-2e24d010b58b", "name": "Web"},
-    {"id": "08dd7d39-8397-4b70-8e57-332e0f30c3e9", "name": "Mobile"},
-    {"id": "08dd7d3c-ddba-4fb1-8bf8-cbb45a87642d", "name": "BlockChain"},
+    {"id": "08dd7006-1fa5-41f4-8ad5-205a44354035", "name": "CNTT"},
+    {"id": "08dd7672-1b59-47de-8d05-6ea4b00a184a", "name": "AI"},
+    {"id": "08dd7672-f518-466d-8f97-5edbc92f5d64", "name": "BE"},
+    {"id": "08dd7d86-4d3c-4d18-83dd-b6202fd39886", "name": "FE"},
+    {"id": "08dda29b-9f73-46c0-848e-559a45b3766e", "name": "DSA"},
+    {"id": "08dda29d-16f1-4a3a-8389-2063d1a50e89", "name": "INTERN"},
   ];
 
   String selectedCategoryId = "";

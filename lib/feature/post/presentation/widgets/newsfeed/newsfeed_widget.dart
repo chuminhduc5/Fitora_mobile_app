@@ -29,6 +29,7 @@ class NewsfeedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Todo: Newsfeed
     // return BlocBuilder<NewsfeedBloc, NewsfeedState>(
     //   builder: (context, state) {
     //     if (state is FetchNewsfeedLoadingState) {
@@ -40,20 +41,66 @@ class NewsfeedWidget extends StatelessWidget {
     //       return AppErrorWidget(state.message);
     //     } else if (state is FetchNewsfeedSuccessState) {
     //       final newsfeeds = state.data;
-    //       final filteredNewsfeeds = selectedCategory == 'Tất cả'
-    //           ? newsfeeds
-    //           : newsfeeds
-    //               .where((post) => post.categoryName == selectedCategory)
-    //               .toList();
+    //       // final filteredNewsfeeds = selectedCategory == 'Tất cả'
+    //       //     ? newsfeeds
+    //       //     : newsfeeds
+    //       //         .where((post) => post.categoryName == selectedCategory)
+    //       //         .toList();
     //       return CustomScrollView(
     //         slivers: [
     //           SliverList(
     //             delegate: SliverChildBuilderDelegate(
     //               (context, index) {
+    //                 final newsfeed = newsfeeds[index];
+    //                 return NewsfeedPostWidget(
+    //                   post: newsfeed,
+    //                   userInfo: userInfo,
+    //                   upVote: upVote,
+    //                   unVote: upVote,
+    //                   downVote: downVote,
+    //                   savePost: savePost,
+    //                 );
+    //               },
+    //               childCount: newsfeeds.length,
+    //             ),
+    //           ),
+    //         ],
+    //       );
+    //     }
+    //     return const SizedBox();
+    //   },
+    // );
+
+    // Todo: Explore
+    // return BlocBuilder<NewsfeedBloc, NewsfeedState>(
+    //   builder: (context, state) {
+    //     if (state is FetchExploreFeedLoadingState) {
+    //       return ListView.builder(
+    //         itemCount: 5,
+    //         itemBuilder: (context, index) => const SkeletonLoading(),
+    //       );
+    //     } else if (state is FetchExploreFeedFailureState) {
+    //       return AppErrorWidget(state.message);
+    //     } else if (state is FetchExploreFeedSuccessState) {
+    //       final newsfeeds = state.data;
+    //       final filteredNewsfeeds = selectedCategory == 'Tất cả'
+    //           ? newsfeeds
+    //           : newsfeeds
+    //           .where((post) => post.categoryName == selectedCategory)
+    //           .toList();
+    //       return CustomScrollView(
+    //         slivers: [
+    //           SliverList(
+    //             delegate: SliverChildBuilderDelegate(
+    //                   (context, index) {
     //                 final newsfeed = filteredNewsfeeds[index];
     //                 return NewsfeedPostWidget(
     //                   post: newsfeed,
-    //                   userId: userId,
+    //                   userInfo: userInfo,
+    //                   upVote: upVote,
+    //                   unVote: upVote,
+    //                   downVote: downVote,
+    //                   savePost: savePost,
     //                 );
     //               },
     //               childCount: filteredNewsfeeds.length,
@@ -66,16 +113,17 @@ class NewsfeedWidget extends StatelessWidget {
     //   },
     // );
 
+    // TODO: Trending
     return BlocBuilder<NewsfeedBloc, NewsfeedState>(
       builder: (context, state) {
-        if (state is FetchExploreFeedLoadingState) {
+        if (state is FetchTrendingFeedLoadingState) {
           return ListView.builder(
             itemCount: 5,
             itemBuilder: (context, index) => const SkeletonLoading(),
           );
-        } else if (state is FetchExploreFeedFailureState) {
+        } else if (state is FetchTrendingFeedFailureState) {
           return AppErrorWidget(state.message);
-        } else if (state is FetchExploreFeedSuccessState) {
+        } else if (state is FetchTrendingFeedSuccessState) {
           final newsfeeds = state.data;
           final filteredNewsfeeds = selectedCategory == 'Tất cả'
               ? newsfeeds

@@ -51,7 +51,7 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
     try {
       await _dioClient.delete('${ApiUrl.deleteGroup}?id=$groupId');
     } on DioException catch(e) {
-      logger.e("Failed to load data: $e");
+      logger.e(e);
       throw ServerException();
     }
   }

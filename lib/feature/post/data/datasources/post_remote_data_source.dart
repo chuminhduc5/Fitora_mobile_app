@@ -78,9 +78,13 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<void> deletePost(String id) async {
     try {
-      await _dioClient.delete('${ApiUrl.deletePost}/id');
+      logger.d('🟡 Calling DELETE: ${ApiUrl.deletePost}/$id');
+      await _dioClient.delete('${ApiUrl.deletePost}/$id');
     } on DioException catch (e) {
-      logger.e(e);
+      logger.e('🔴 Delete post failed:');
+      logger.e('Status code: ${e.response?.statusCode}');
+      logger.e('Message: ${e.message}');
+      logger.e('Response data: ${e.response?.data}');
       throw ServerException();
     }
   }

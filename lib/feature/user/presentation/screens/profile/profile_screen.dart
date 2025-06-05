@@ -129,6 +129,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onSelected: (value) {
                               if (value == 'setting') {
                                 context.pushNamed(AppRoute.setting.name);
+                              } else if (value == 'saved') {
+                                context.pushNamed(AppRoute.savedPost.name);
                               } else if (value == 'logout') {
                                 _logout(context);
                               }
@@ -142,6 +144,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     SizedBox(width: 3),
                                     Text(
                                       'Cài đặt',
+                                      style: TextStyle(fontSize: 13),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: 'saved',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.bookmarks, size: 20),
+                                    SizedBox(width: 3),
+                                    Text(
+                                      'Đã lưu',
                                       style: TextStyle(fontSize: 13),
                                     ),
                                   ],
@@ -212,13 +227,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       constraints: const BoxConstraints(
                                         minHeight: 100,
                                       ),
-                                      child: const UserPostListWidget(),
+                                      child: UserPostListWidget(userInfo: profile),
                                     ),
                                   ),
                                   FTabEntry(
                                     label: const Text("Ảnh"),
                                     content: Container(
                                       width: double.infinity,
+                                      padding: const EdgeInsets.symmetric(horizontal: 15),
                                       constraints: const BoxConstraints(
                                         minHeight: 100,
                                       ),
@@ -229,12 +245,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       label: const Text("Video"),
                                       content: Container(
                                         width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(horizontal: 15),
                                         child: const UserVideoListWidget(),
                                       )),
                                   FTabEntry(
                                       label: const Text("Bạn bè"),
                                       content: Container(
                                         width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(horizontal: 15),
                                         child: const UserFriendListWidget(),
                                       )),
                                 ],
