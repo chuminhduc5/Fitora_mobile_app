@@ -68,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _getUserId();
     _loadUser();
     // _newsfeedBloc = getIt<NewsfeedBloc>()..add(FetchNewsfeedEvent());
-    // _exploreFeedBloc = getIt<NewsfeedBloc>()..add(FetchExploreFeedEvent());
-    _trendingFeedBloc = getIt<NewsfeedBloc>()..add(FetchTrendingFeedEvent());
+    _exploreFeedBloc = getIt<NewsfeedBloc>()..add(FetchExploreFeedEvent());
+    //_trendingFeedBloc = getIt<NewsfeedBloc>()..add(FetchTrendingFeedEvent());
     final network = getIt<NetworkChecker>();
     _timer = Timer.periodic(const Duration(seconds: 30), (_) {
       //_checkInternetConnection(network);
@@ -178,8 +178,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return MultiBlocProvider(
       providers: [
         //BlocProvider(create: (_) => _newsfeedBloc),
-        //BlocProvider(create: (_) => _exploreFeedBloc),
-        BlocProvider(create: (_) => _trendingFeedBloc),
+        BlocProvider(create: (_) => _exploreFeedBloc),
+        //BlocProvider(create: (_) => _trendingFeedBloc),
         BlocProvider(create: (_) => getIt<AuthBloc>()),
       ],
       child: Scaffold(

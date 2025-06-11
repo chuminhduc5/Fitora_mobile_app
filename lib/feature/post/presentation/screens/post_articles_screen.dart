@@ -52,7 +52,7 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
     {"id": "1", "privacy": "Công khai", "icon": Icons.public},
     {"id": "2", "privacy": "Bạn bè", "icon": Icons.people},
     {"id": "3", "privacy": "Chỉ mình tôi", "icon": Icons.lock},
-    {"id": "4", "privacy": "Nhóm", "icon": Icons.groups},
+    // {"id": "4", "privacy": "Nhóm", "icon": Icons.groups},
   ];
 
   @override
