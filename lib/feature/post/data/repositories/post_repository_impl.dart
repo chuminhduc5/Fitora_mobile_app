@@ -102,7 +102,7 @@ class PostRepositoryImpl implements PostRepository {
     try {
       final results = await _postRemoteDataSource.fetchExploreFeed();
       final exploreFeed = results.map((i) => PostMapper.toEntity(i)).toList();
-      //newsfeed.sort((a, b) => b.createAt.compareTo(a.createAt));
+      //exploreFeed.sort((a, b) => b.createAt.compareTo(a.createAt));
 
       final user = await _postRemoteDataSource.fetchProfile();
       await _secureLocalStorage.save(key: "user_id", value: user.userInfo.id);

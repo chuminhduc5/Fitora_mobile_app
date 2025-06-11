@@ -92,7 +92,7 @@ class ProfileInfoWidget extends StatelessWidget {
               children: [
                 _buildInFoItem("Đã follow", profile.followingCount.toString()),
                 _buildInFoItem("Follower", profile.followerCount.toString()),
-                _buildInFoItem("Bạn bè", ""),
+                _buildInFoItem("Bạn bè", "1"),
               ],
             ),
           ),

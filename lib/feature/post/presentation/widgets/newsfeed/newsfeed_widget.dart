@@ -72,58 +72,16 @@ class NewsfeedWidget extends StatelessWidget {
     // );
 
     // Todo: Explore
-    // return BlocBuilder<NewsfeedBloc, NewsfeedState>(
-    //   builder: (context, state) {
-    //     if (state is FetchExploreFeedLoadingState) {
-    //       return ListView.builder(
-    //         itemCount: 5,
-    //         itemBuilder: (context, index) => const SkeletonLoading(),
-    //       );
-    //     } else if (state is FetchExploreFeedFailureState) {
-    //       return AppErrorWidget(state.message);
-    //     } else if (state is FetchExploreFeedSuccessState) {
-    //       final newsfeeds = state.data;
-    //       final filteredNewsfeeds = selectedCategory == 'Tất cả'
-    //           ? newsfeeds
-    //           : newsfeeds
-    //           .where((post) => post.categoryName == selectedCategory)
-    //           .toList();
-    //       return CustomScrollView(
-    //         slivers: [
-    //           SliverList(
-    //             delegate: SliverChildBuilderDelegate(
-    //                   (context, index) {
-    //                 final newsfeed = filteredNewsfeeds[index];
-    //                 return NewsfeedPostWidget(
-    //                   post: newsfeed,
-    //                   userInfo: userInfo,
-    //                   upVote: upVote,
-    //                   unVote: upVote,
-    //                   downVote: downVote,
-    //                   savePost: savePost,
-    //                 );
-    //               },
-    //               childCount: filteredNewsfeeds.length,
-    //             ),
-    //           ),
-    //         ],
-    //       );
-    //     }
-    //     return const SizedBox();
-    //   },
-    // );
-
-    // TODO: Trending
     return BlocBuilder<NewsfeedBloc, NewsfeedState>(
       builder: (context, state) {
-        if (state is FetchTrendingFeedLoadingState) {
+        if (state is FetchExploreFeedLoadingState) {
           return ListView.builder(
             itemCount: 5,
             itemBuilder: (context, index) => const SkeletonLoading(),
           );
-        } else if (state is FetchTrendingFeedFailureState) {
+        } else if (state is FetchExploreFeedFailureState) {
           return AppErrorWidget(state.message);
-        } else if (state is FetchTrendingFeedSuccessState) {
+        } else if (state is FetchExploreFeedSuccessState) {
           final newsfeeds = state.data;
           final filteredNewsfeeds = selectedCategory == 'Tất cả'
               ? newsfeeds
@@ -154,5 +112,47 @@ class NewsfeedWidget extends StatelessWidget {
         return const SizedBox();
       },
     );
+
+    // TODO: Trending
+    // return BlocBuilder<NewsfeedBloc, NewsfeedState>(
+    //   builder: (context, state) {
+    //     if (state is FetchTrendingFeedLoadingState) {
+    //       return ListView.builder(
+    //         itemCount: 5,
+    //         itemBuilder: (context, index) => const SkeletonLoading(),
+    //       );
+    //     } else if (state is FetchTrendingFeedFailureState) {
+    //       return AppErrorWidget(state.message);
+    //     } else if (state is FetchTrendingFeedSuccessState) {
+    //       final newsfeeds = state.data;
+    //       final filteredNewsfeeds = selectedCategory == 'Tất cả'
+    //           ? newsfeeds
+    //           : newsfeeds
+    //           .where((post) => post.categoryName == selectedCategory)
+    //           .toList();
+    //       return CustomScrollView(
+    //         slivers: [
+    //           SliverList(
+    //             delegate: SliverChildBuilderDelegate(
+    //                   (context, index) {
+    //                 final newsfeed = filteredNewsfeeds[index];
+    //                 return NewsfeedPostWidget(
+    //                   post: newsfeed,
+    //                   userInfo: userInfo,
+    //                   upVote: upVote,
+    //                   unVote: upVote,
+    //                   downVote: downVote,
+    //                   savePost: savePost,
+    //                 );
+    //               },
+    //               childCount: filteredNewsfeeds.length,
+    //             ),
+    //           ),
+    //         ],
+    //       );
+    //     }
+    //     return const SizedBox();
+    //   },
+    // );
   }
 }
