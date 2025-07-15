@@ -60,19 +60,19 @@ class PostDependency {
         getIt<GetExploreFeedUseCase>(),
       ),
     );
-    getIt.registerFactory(
-      () => InteractBloc(
-        getIt<VotePostUseCase>(),
-        getIt<VoteCommentUseCase>(),
-      ),
-    );
-    // getIt.registerFactoryParam<InteractBloc, int, int?>(
-    //       (voteCount, userVoteType) => InteractBloc(
-    //     votePostUseCase: getIt<VotePostUseCase>(),
-    //     initialVoteCount: voteCount,
-    //     initialUserVoteType: userVoteType,
+    // getIt.registerFactory(
+    //   () => InteractBloc(
+    //     getIt<VotePostUseCase>(),
+    //     getIt<VoteCommentUseCase>(),
     //   ),
     // );
+    getIt.registerFactoryParam<InteractBloc, int, int?>(
+          (initialVoteCount, initialUserVoteType) => InteractBloc(
+        votePostUseCase: getIt<VotePostUseCase>(),
+        initialVoteCount: initialVoteCount,
+        initialUserVoteType: initialUserVoteType,
+      ),
+    );
 
     getIt.registerFactory(
       () => CommentBloc(

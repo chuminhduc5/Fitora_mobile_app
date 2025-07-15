@@ -36,10 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthCheckSignInStatusEvent>(_checkSignInStatus);
   }
 
-  Future<void> _signIn(
-    AuthSignInEvent event,
-    Emitter emit,
-  ) async {
+  Future<void> _signIn(AuthSignInEvent event, Emitter emit) async {
     emit(AuthSignInLoadingState());
 
     final result = await _signInUseCase.call(
@@ -55,10 +52,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> _signUp(
-    AuthSignUpEvent event,
-    Emitter emit,
-  ) async {
+  Future<void> _signUp(AuthSignUpEvent event, Emitter emit) async {
     emit(AuthSignUpLoadingState());
 
     final result = await _signUpUseCase.call(
@@ -76,10 +70,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> _signOut(
-    AuthSignOutEvent event,
-    Emitter emit,
-  ) async {
+  Future<void> _signOut(AuthSignOutEvent event, Emitter emit) async {
     emit(AuthSignOutLoadingState());
 
     final result = await _signOutUseCase.call(NoParams());

@@ -67,30 +67,16 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-      logg.i("File Image Url: ${File(pickedFile.path)}");
-      logg.i("Image Url: ${pickedFile.path}");
-      logg.i("Url: $_image");
-    }
-  }
-
   Future<void> _uploadImageFile() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final file = File(pickedFile.path);
-      setState(() => _image = file);
-      _uploadFileBloc
-          .add(UploadImageFileEvent(url: file, type: ImageType.Image));
-      logg.i("File Image Url: ${File(pickedFile.path)}");
-      logg.i("Image Url: ${pickedFile.path}");
-      logg.i("Url: $_image");
+      context.read<UploadFileBloc>().add(
+        UploadImageFileEvent(file: file, type: ImageType.Image),
+      );
     }
   }
+
 
   void _createPost(BuildContext context) async {
     primaryFocus?.unfocus();
@@ -104,7 +90,7 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
           CreatePostEvent(
             params: CreatePostFormData(
               content: postForm.data.content,
-              mediaUrl: _image?.path ?? "",
+              mediaUrl: postForm.data.mediaUrl,
               privacy: postForm.data.privacy,
               groupId: postForm.data.groupId,
               categoryId: postForm.data.categoryId,
@@ -229,11 +215,11 @@ class _PostArticlesScreenState extends State<PostArticlesScreen> {
                         logg.i("Current upload file state: $state");
                         if (state is UploadImageFileLoadingState) {
                           return const AppLoadingWidget();
-                        } else if (state is UploadImageFileSuccessState) {
-                          final imageUrl = state.imageUrl;
-                          logg.i("Image Url File: $imageUrl");
-                          return Image.network(
-                            imageUrl.url,
+                        } else if (state is UploadImageFileFailureState) {
+                          return Text("Lỗi: ${state.message}");
+                        } else if (state is UploadImageFilePickedState) {
+                          return Image.file(
+                            state.file,
                             width: double.infinity,
                             height: 500,
                             fit: BoxFit.cover,

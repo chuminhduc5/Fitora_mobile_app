@@ -12,10 +12,13 @@ import 'package:fitora_mobile_app/core/config/assets/app_svg.dart';
 import 'package:fitora_mobile_app/core/config/theme/app_colors.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/feature/post/domain/entities/post_entity.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/interact/interact_bloc.dart';
+import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/screens/comment_screen.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/widgets/post/post_delete_confirm_widget.dart';
 import 'package:fitora_mobile_app/feature/user/domain/entities/user_profile_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,20 +26,12 @@ class NewsfeedPostWidget extends StatefulWidget {
   final PostEntity post;
   final String? category;
   final UserProfileEntity? userInfo;
-  final void Function(String)? upVote;
-  final void Function(String)? unVote;
-  final void Function(String)? downVote;
-  final void Function(String)? savePost;
 
   const NewsfeedPostWidget({
     super.key,
     required this.post,
     this.category,
     this.userInfo,
-    this.upVote,
-    this.unVote,
-    this.downVote,
-    this.savePost,
   });
 
   @override
@@ -47,9 +42,6 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
     with SingleTickerProviderStateMixin {
   late int voteCount = widget.post.votesCount;
   int? userVoteType;
-  Color _upVoteColor = Colors.black;
-  Color _downVoteColor = Colors.black;
-  bool _actionSavedPost = false;
 
   bool isExpanded = false;
 
@@ -66,10 +58,6 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
   @override
   void initState() {
     userVoteType = widget.post.userVoteType;
-    _upVoteColor =
-        widget.post.userVoteType == 1 ? AppColors.bgPink : Colors.black;
-    _downVoteColor =
-        widget.post.userVoteType == 2 ? AppColors.bgPink : Colors.black;
     super.initState();
   }
 
@@ -92,60 +80,42 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
   }
 
   void _handleUpVote() {
-    setState(() {
-      if (userVoteType == 1) {
-        voteCount -= 1;
-        _upVoteColor = Colors.black;
-        userVoteType = null;
-        widget.unVote?.call(widget.post.id);
-      } else {
-        if (userVoteType == 2) voteCount += 2;
-        if (userVoteType == null) voteCount += 1;
-        _upVoteColor = AppColors.bgPink;
-        _downVoteColor = Colors.black;
-        userVoteType = 1;
-        widget.upVote?.call(widget.post.id);
-      }
-    });
+    context.read<InteractBloc>().add(
+          InteractPostEvent(
+            userId: widget.userInfo!.userInfo.userId,
+            postId: widget.post.id,
+            voteType: 1,
+          ),
+        );
   }
 
   void _handleDownVote() {
-    setState(() {
-      if (userVoteType == 2) {
-        voteCount += 1;
-        _downVoteColor = Colors.black;
-        userVoteType = null;
-        widget.unVote?.call(widget.post.id);
-      } else {
-        if (userVoteType == 1) voteCount -= 2;
-        if (userVoteType == null) voteCount -= 1;
-        _downVoteColor = AppColors.bgPink;
-        _upVoteColor = Colors.black;
-        userVoteType = 2;
-        widget.downVote?.call(widget.post.id);
-      }
-    });
+    context.read<InteractBloc>().add(
+          InteractPostEvent(
+            userId: widget.userInfo!.userInfo.userId,
+            postId: widget.post.id,
+            voteType: 2,
+          ),
+        );
   }
 
   void _handleUnVote() {
-    setState(() {
-      if (userVoteType == 1) {
-        voteCount -= 1;
-      } else if (userVoteType == 2) {
-        voteCount += 1;
-      }
-      _upVoteColor = Colors.black;
-      _downVoteColor = Colors.black;
-      userVoteType = null;
-      widget.unVote?.call(widget.post.id);
-    });
+    context.read<InteractBloc>().add(
+          InteractPostEvent(
+            userId: widget.userInfo!.userInfo.userId,
+            postId: widget.post.id,
+            voteType: 3,
+          ),
+        );
   }
 
   void _savedPost() {
-    setState(() {
-      _actionSavedPost = true;
-      widget.savePost?.call(widget.post.id);
-    });
+    context.read<PostBloc>().add(
+          SavePostEvent(
+            userId: widget.userInfo!.userInfo.userId,
+            postId: widget.post.id,
+          ),
+        );
   }
 
   @override
@@ -169,7 +139,9 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
             child: Row(
               children: [
                 AppAvatarWidget(
-                    imagePath: userInfo.profilePictureUrl, size: 35),
+                  imagePath: userInfo.profilePictureUrl,
+                  size: 35,
+                ),
                 const SizedBox(width: 5),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,7 +234,8 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
                           showDialog(
                               context: context,
                               builder: (context) {
-                                return PostDeleteConfirmWidget(postId: widget.post.id);
+                                return PostDeleteConfirmWidget(
+                                    postId: widget.post.id);
                               });
                         } else if (value == 'add-category') {
                         } else if (value == 'save') {
@@ -361,14 +334,9 @@ class _NewsfeedPostWidgetState extends State<NewsfeedPostWidget>
             spacing: 5,
             children: <Widget>[
               FavouriteWidget(
-                postId: post.id,
-                userVoteType: userVoteType,
-                favouriteCount: voteCount,
-                upVoteColor: _upVoteColor,
-                downVoteColor: _downVoteColor,
-                upVote: (_) => _handleUpVote(),
-                downVote: (_) => _handleDownVote(),
-                unVote: (_) => _handleUnVote(),
+                upVote: _handleUpVote,
+                downVote: _handleDownVote,
+                unVote: _handleUnVote,
               ),
               CommentWidget(
                   commentCount: post.commentsCount,

@@ -33,26 +33,21 @@ class _CommentScreenState extends State<CommentScreen> {
   UserProfileEntity? userInfo;
   final _hiveLocalStorage = HiveLocalStorage();
   String? parentCommentId;
-
   late CommentBloc _commentBloc;
-  late CommentBloc _repliesCommentBloc;
 
   @override
   void initState() {
     super.initState();
     _loadUser();
-    // Tự động focus khi widget được mount
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_commentFocusNode);
     });
     _commentBloc = getIt<CommentBloc>()
       ..add(FetchCommentEvent(postId: widget.post.id));
-    //_repliesCommentBloc = getIt<CommentBloc>()..add(FetchRepliesCommentEvent(parentCommentId: parentCommentId))
   }
 
   void _loadUser() async {
-    final userModel =
-        await _hiveLocalStorage.load(key: "user", boxName: "cache");
+    final userModel = await _hiveLocalStorage.load(key: "user", boxName: "cache");
     if (userModel != null) {
       logg.i("Người dùng đã lưu: $userModel");
       final userEntity = UserProfileMapper.toEntity(userModel);

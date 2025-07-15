@@ -14,15 +14,25 @@ import 'package:fitora_mobile_app/feature/user/data/models/responses/received_gr
 
 abstract class GroupRemoteDataSource {
   Future<GroupMemberModel> createGroup(CreateGroupRequest request);
+
   Future<void> updateGroup(UpdateGroupRequest request);
+
   Future<void> deleteGroup(String groupId);
+
   Future<GroupResponseModel> fetchGroupById(String id);
+
   Future<List<GroupMemberModel>> fetchGroupMembers(String groupId);
+
   Future<void> inviteNewMembers(InviteNewMembersRequest request);
+
   Future<List<ReceivedGroupInviteModel>> fetchReceivedGroupInvite();
+
   Future<void> acceptGroupInvite(String id);
+
   Future<void> deleteGroupInvite(String id);
+
   Future<List<ManagedGroupModel>> fetchManagedGroup();
+
   Future<List<ManagedGroupModel>> fetchJoinedGroup();
 }
 
@@ -49,8 +59,11 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   @override
   Future<void> deleteGroup(String groupId) async {
     try {
-      await _dioClient.delete('${ApiUrl.deleteGroup}?id=$groupId');
-    } on DioException catch(e) {
+      await _dioClient.delete(
+        ApiUrl.deleteGroup,
+        queryParameters: {"id": groupId},
+      );
+    } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
     }
@@ -59,7 +72,10 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   @override
   Future<GroupResponseModel> fetchGroupById(String id) async {
     try {
-      final response = await _dioClient.get('${ApiUrl.getGroupById}?id=$id');
+      final response = await _dioClient.get(
+        ApiUrl.getGroupById,
+        queryParameters: {"id": id},
+      );
       return GroupResponseModel.fromJson(response.data['data']);
     } on DioException catch (e) {
       logger.e(e);
@@ -83,8 +99,11 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   @override
   Future<void> acceptGroupInvite(String id) async {
     try {
-      await _dioClient.post('${ApiUrl.acceptGroupInvite}?Id=$id');
-    } on DioException catch(e) {
+      await _dioClient.post(
+        '${ApiUrl.acceptGroupInvite}?Id=$id',
+        queryParameters: {"Id": id},
+      );
+    } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
     }
@@ -93,8 +112,11 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   @override
   Future<void> deleteGroupInvite(String id) async {
     try {
-      await _dioClient.post('${ApiUrl.deleteGroupInvite}?Id=$id');
-    } on DioException catch(e) {
+      await _dioClient.post(
+        ApiUrl.deleteGroupInvite,
+        queryParameters: {"Id": id},
+      );
+    } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
     }
@@ -103,12 +125,16 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   @override
   Future<List<GroupMemberModel>> fetchGroupMembers(String groupId) async {
     try {
-      final response = await _dioClient.get('${ApiUrl.getGroupMember}?GroupId=$groupId');
+      final response = await _dioClient.get(
+        ApiUrl.getGroupMember,
+        queryParameters: {"GroupId": groupId},
+      );
       final data = response.data['data'];
-      final List<GroupMemberModel> members = data.map((json) => GroupMemberModel.fromJson(json));
+      final List<GroupMemberModel> members =
+          data.map((json) => GroupMemberModel.fromJson(json));
       logg.i("Group Members: $members");
       return members;
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
     }
@@ -120,13 +146,15 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
       final response = await _dioClient.get(ApiUrl.getReceivedGroupInvite);
       final data = response.data['data'];
       if (data != null && data['data'] is List) {
-        final List<ReceivedGroupInviteModel> received = (data['data'] as List).map((json) => ReceivedGroupInviteModel.fromJson(json)).toList();
+        final List<ReceivedGroupInviteModel> received = (data['data'] as List)
+            .map((json) => ReceivedGroupInviteModel.fromJson(json))
+            .toList();
         logg.i("ReceivedGroupInviteModel: $received");
         return received;
       } else {
         throw Exception("Invalid response format");
       }
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
     }
@@ -136,8 +164,7 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
   Future<void> inviteNewMembers(InviteNewMembersRequest request) async {
     try {
       await _dioClient.post(ApiUrl.inviteNewMembers, data: request.toJson());
-      print("🔍 Sending data: ${request.toJson()}");
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
     }

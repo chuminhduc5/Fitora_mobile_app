@@ -43,7 +43,6 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<void> updateProfile(UpdateProfileRequest request) async {
     try {
-      print("🔍 Request body: ${jsonEncode(request.toJson())}");
       await _dioClient.put(
         ApiUrl.updateProfile,
         data: request.toJson(),
@@ -57,7 +56,10 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<UserProfileModel> fetchPersonal(String userId) async {
     try {
-      final response = await _dioClient.get('${ApiUrl.getUser}?GetId=$userId');
+      final response = await _dioClient.get(
+        ApiUrl.getUser,
+        queryParameters: {"GetId": userId},
+      );
       final data = response.data["data"];
       final profile = UserProfileModel.fromJson(data);
       return profile;
@@ -70,12 +72,14 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<List<UserModel>> fetchUsers() async {
     try {
-      final response = await _dioClient.get("${ApiUrl.getUsers}?PageSize=30");
+      final response = await _dioClient.get(
+        ApiUrl.getUsers,
+        queryParameters: {"PageSize": 30},
+      );
       final data = response.data['data'];
       if (data != null && data['data'] is List) {
-        final users = (data['data'] as List)
-            .map((i) => UserModel.fromJson(i))
-            .toList();
+        final users =
+            (data['data'] as List).map((i) => UserModel.fromJson(i)).toList();
         logg.i("Danh sách người dùng (RemoteDataSource): $users");
         return users;
       } else {
@@ -90,18 +94,20 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<List<UserModel>> searchUsers(String keySearch) async {
     try {
-      final response = await _dioClient.get("${ApiUrl.getUsers}?KeySearch=$keySearch");
+      final response = await _dioClient.get(
+        ApiUrl.getUsers,
+        queryParameters: {"KeySearch": keySearch},
+      );
       final data = response.data['data'];
       if (data != null && data['data'] is List) {
-        final users = (data['data'] as List)
-            .map((i) => UserModel.fromJson(i))
-            .toList();
+        final users =
+            (data['data'] as List).map((i) => UserModel.fromJson(i)).toList();
         logg.i("Danh sách người dùng (RemoteDataSource): $users");
         return users;
       } else {
         throw Exception("Không tồn tại người dùng nào!");
       }
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       logger.e("DioException: ${e.message}");
       throw ServerException();
     }

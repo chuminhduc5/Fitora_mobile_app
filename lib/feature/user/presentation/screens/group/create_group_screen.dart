@@ -29,9 +29,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final TextEditingController _nameController = TextEditingController();
   late UploadFileBloc _uploadFileBloc;
 
-  File? _image;
   final ImagePicker _picker = ImagePicker();
-  File? _avatarImage;
 
   @override
   void initState() {
@@ -49,9 +47,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final file = File(pickedFile.path);
-      setState(() => _image = file);
       _uploadFileBloc
-          .add(UploadImageFileEvent(url: file, type: ImageType.Background));
+          .add(UploadImageFileEvent(file: file, type: ImageType.Background));
     }
   }
 
@@ -59,9 +56,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final file = File(pickedFile.path);
-      setState(() => _avatarImage = File(pickedFile.path));
       _uploadFileBloc
-          .add(UploadImageFileEvent(url: file, type: ImageType.Avatar));
+          .add(UploadImageFileEvent(file: file, type: ImageType.Avatar));
     }
   }
 

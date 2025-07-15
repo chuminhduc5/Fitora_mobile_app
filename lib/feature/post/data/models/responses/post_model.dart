@@ -43,7 +43,6 @@ class PostModel {
       final utcDateTime = DateTime.parse(dateTimeString).toUtc();
       return utcDateTime.add(const Duration(hours: 7));
     }
-    print('DEBUG createAt: ${json['createdAt']}');
     return PostModel(
       id: json['id'] ?? '',
       groupId: json['groupId'] ?? '',

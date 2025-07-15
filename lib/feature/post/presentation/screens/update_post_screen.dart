@@ -80,9 +80,8 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final file = File(pickedFile.path);
-      setState(() => _image = file);
       _uploadFileBloc
-          .add(UploadImageFileEvent(url: file, type: ImageType.Image));
+          .add(UploadImageFileEvent(file: file, type: ImageType.Image));
       logg.i("File Image Url: ${File(pickedFile.path)}");
       logg.i("Image Url: ${pickedFile.path}");
       logg.i("Url: $_image");

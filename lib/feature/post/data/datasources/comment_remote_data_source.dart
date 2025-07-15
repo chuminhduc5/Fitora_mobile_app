@@ -30,8 +30,10 @@ class CommentRemoteDataSourceImpl implements CommentRemoteDataSource {
     try {
       final SharedPreferences pref = await SharedPreferences.getInstance();
       final userId = pref.getString('userId');
-      final response =
-          await _dioClient.get('${ApiUrl.getCommentByPost}?UserId=$userId&PostId=$postId');
+      final response = await _dioClient.get(
+        ApiUrl.getCommentByPost,
+        queryParameters: {"UserId": userId, "PostId": postId},
+      );
       final List<dynamic> data = response.data['data']['data'];
 
       final comments = data.map((e) => CommentModel.fromJson(e)).toList();
@@ -71,7 +73,10 @@ class CommentRemoteDataSourceImpl implements CommentRemoteDataSource {
   @override
   Future<void> deleteComment(String id) async {
     try {
-      _dioClient.delete('${ApiUrl.deleteComment}?id=$id');
+      _dioClient.delete(
+        ApiUrl.deleteComment,
+        queryParameters: {"id": id},
+      );
     } on DioException catch (e) {
       logger.e(e);
       throw ServerException();
@@ -83,7 +88,10 @@ class CommentRemoteDataSourceImpl implements CommentRemoteDataSource {
     try {
       final SharedPreferences pref = await SharedPreferences.getInstance();
       final userId = pref.getString('userId');
-      final response = await _dioClient.get('${ApiUrl.getCommentReplies}?UserId=$userId&ParentCommentId=$parentCommentId');
+      final response = await _dioClient.get(
+        ApiUrl.getCommentReplies,
+        queryParameters: {"UserId": userId, "ParentCommentId": parentCommentId},
+      );
       final List<dynamic> data = response.data['data']['data'];
 
       final comments = data.map((e) => CommentModel.fromJson(e)).toList();

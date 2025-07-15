@@ -54,7 +54,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       final file = File(pickedFile.path);
       setState(() => _image = file);
       _uploadFileBloc.add(
-        UploadImageFileEvent(url: file, type: ImageType.Avatar),
+        UploadImageFileEvent(file: file, type: ImageType.Avatar),
       );
     }
   }
