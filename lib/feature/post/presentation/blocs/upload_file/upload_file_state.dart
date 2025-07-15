@@ -8,6 +8,16 @@ abstract class UploadFileState extends Equatable {
   List<Object?> get props => [];
 }
 
+class UploadImageFilePickedState extends UploadFileState {
+  final File file;
+  final ImageType type;
+
+  const UploadImageFilePickedState({required this.file, required this.type});
+
+  @override
+  List<Object?> get props => [file, type];
+}
+
 class UploadFileInitialState extends UploadFileState {}
 
 class UploadImageFileLoadingState extends UploadFileState {
@@ -29,7 +39,7 @@ class UploadImageFileSuccessState extends UploadFileState {
   });
 
   @override
-  List<Object?> get props => [imageUrl];
+  List<Object?> get props => [imageUrl, type];
 }
 
 class UploadImageFileFailureState extends UploadFileState {
@@ -42,5 +52,5 @@ class UploadImageFileFailureState extends UploadFileState {
   });
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, type];
 }

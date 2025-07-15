@@ -32,12 +32,7 @@ class UpdateGroupScreen extends StatefulWidget {
 class _UpdateGroupScreenState extends State<UpdateGroupScreen> {
   final TextEditingController _nameController = TextEditingController();
   late UploadFileBloc _uploadFileBloc;
-
-  File? _image;
   final ImagePicker _picker = ImagePicker();
-  late File? _avatar;
-  File? _avatarImage;
-
   String? _backgroundImageUrl;
   String? _avatarImageUrl;
 
@@ -57,9 +52,8 @@ class _UpdateGroupScreenState extends State<UpdateGroupScreen> {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final file = File(pickedFile.path);
-      setState(() => _image = file);
       _uploadFileBloc
-          .add(UploadImageFileEvent(url: file, type: ImageType.Background));
+          .add(UploadImageFileEvent(file: file, type: ImageType.Background));
     }
   }
 
@@ -67,9 +61,8 @@ class _UpdateGroupScreenState extends State<UpdateGroupScreen> {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final file = File(pickedFile.path);
-      setState(() => _avatarImage = File(pickedFile.path));
       _uploadFileBloc
-          .add(UploadImageFileEvent(url: file, type: ImageType.Avatar));
+          .add(UploadImageFileEvent(file: file, type: ImageType.Avatar));
     }
   }
 

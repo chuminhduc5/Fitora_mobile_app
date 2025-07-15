@@ -70,7 +70,6 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         data: request.toJson(),
       );
     } on DioException catch (e) {
-      logger.e('Update Post failed: ${e.message}');
       throw ServerException();
     }
   }
@@ -78,13 +77,8 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<void> deletePost(String id) async {
     try {
-      logger.d('🟡 Calling DELETE: ${ApiUrl.deletePost}/$id');
       await _dioClient.delete('${ApiUrl.deletePost}/$id');
     } on DioException catch (e) {
-      logger.e('🔴 Delete post failed:');
-      logger.e('Status code: ${e.response?.statusCode}');
-      logger.e('Message: ${e.message}');
-      logger.e('Response data: ${e.response?.data}');
       throw ServerException();
     }
   }
@@ -92,7 +86,10 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<List<PostModel>> fetchNewsfeed() async {
     try {
-      var response = await _dioClient.get("${ApiUrl.newsFeed}?FeedType=1&Limit=5");
+      var response = await _dioClient.get(
+        ApiUrl.newsFeed,
+        queryParameters: {"FeedType": 1, "Limit": 5},
+      );
       final data = response.data['data'];
       if (data != null && data['data'] is List) {
         final List<PostModel> newsfeed = (data['data'] as List)
@@ -136,7 +133,6 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         final List<PostModel> newsfeed = (data['data'] as List)
             .map((json) => PostModel.fromJson(json))
             .toList();
-        //logg.i("Newsfeed: $newsfeed");
         return newsfeed;
       } else {
         throw Exception("Invalid response format");
@@ -150,7 +146,10 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
   @override
   Future<List<PostModel>> fetchPersonal(String userId) async {
     try {
-      var response = await _dioClient.get('${ApiUrl.personal}?Id=$userId');
+      var response = await _dioClient.get(
+        ApiUrl.personal,
+        queryParameters: {"Id": userId},
+      );
       final data = response.data['data'];
       if (data != null && data['data'] is List) {
         final List<PostModel> personal = (data['data'] as List)
@@ -175,7 +174,6 @@ class PostRemoteDataSourceImpl implements PostRemoteDataSource {
         final List<PostModel> newsfeed = (data['data'] as List)
             .map((json) => PostModel.fromJson(json))
             .toList();
-        //logg.i("Newsfeed: $newsfeed");
         return newsfeed;
       } else {
         throw Exception("Invalid response format");

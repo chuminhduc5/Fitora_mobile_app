@@ -11,20 +11,12 @@ class NewsfeedWidget extends StatelessWidget {
   final String selectedCategory;
   final int? selectedIndex;
   final UserProfileEntity? userInfo;
-  final void Function(String)? upVote;
-  final void Function(String)? unVote;
-  final void Function(String)? downVote;
-  final void Function(String)? savePost;
 
   const NewsfeedWidget({
     super.key,
     required this.selectedCategory,
     this.selectedIndex,
     this.userInfo,
-    this.upVote,
-    this.unVote,
-    this.downVote,
-    this.savePost,
   });
 
   @override
@@ -86,21 +78,17 @@ class NewsfeedWidget extends StatelessWidget {
           final filteredNewsfeeds = selectedCategory == 'Tất cả'
               ? newsfeeds
               : newsfeeds
-              .where((post) => post.categoryName == selectedCategory)
-              .toList();
+                  .where((post) => post.categoryName == selectedCategory)
+                  .toList();
           return CustomScrollView(
             slivers: [
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     final newsfeed = filteredNewsfeeds[index];
                     return NewsfeedPostWidget(
                       post: newsfeed,
                       userInfo: userInfo,
-                      upVote: upVote,
-                      unVote: upVote,
-                      downVote: downVote,
-                      savePost: savePost,
                     );
                   },
                   childCount: filteredNewsfeeds.length,

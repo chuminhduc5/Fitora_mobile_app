@@ -21,15 +21,24 @@ class UploadFileBloc extends Bloc<UploadFileEvent, UploadFileState> {
   }
 
   Future _uploadImageFile(UploadImageFileEvent event, Emitter emit) async {
+    emit(UploadImageFilePickedState(file: event.file, type: event.type));
     emit(UploadImageFileLoadingState(event.type));
 
-    final result = await _uploadFileUseCase.call(event.url);
+    final result = await _uploadFileUseCase.call(event.file);
 
     result.fold(
-      (failure) => emit(UploadImageFileFailureState(
-          message: mapFailureToMessage(failure), type: event.type)),
+      (failure) => emit(
+        UploadImageFileFailureState(
+          message: mapFailureToMessage(failure),
+          type: event.type,
+        ),
+      ),
       (success) => emit(
-          UploadImageFileSuccessState(imageUrl: success, type: event.type)),
+        UploadImageFileSuccessState(
+          imageUrl: success,
+          type: event.type,
+        ),
+      ),
     );
   }
 }

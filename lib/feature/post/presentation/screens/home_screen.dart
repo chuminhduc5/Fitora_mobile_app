@@ -7,10 +7,8 @@ import 'package:fitora_mobile_app/core/di/injection.dart';
 import 'package:fitora_mobile_app/core/helper/mapper/user/user_profile_mapper.dart';
 import 'package:fitora_mobile_app/core/navigation/routes/app_route_path.dart';
 import 'package:fitora_mobile_app/core/network/network_checker.dart';
-import 'package:fitora_mobile_app/core/utils/logger.dart';
 import 'package:fitora_mobile_app/core/utils/logger_custom.dart';
 import 'package:fitora_mobile_app/feature/auth/presentation/blocs/auth/auth_bloc.dart';
-import 'package:fitora_mobile_app/feature/post/presentation/blocs/interact/interact_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/newsfeed/newsfeed_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/blocs/post/post_bloc.dart';
 import 'package:fitora_mobile_app/feature/post/presentation/widgets/newsfeed/newsfeed_widget.dart';
@@ -48,7 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   final List<Widget> articlesByCategory = [];
-
   late NewsfeedBloc _newsfeedBloc;
   late NewsfeedBloc _exploreFeedBloc;
   late NewsfeedBloc _trendingFeedBloc;
@@ -125,48 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _upVote(String postId) {
-    context.read<InteractBloc>().add(
-          InteractPostEvent(
-            userId: userId,
-            postId: postId,
-            voteType: 1,
-          ),
-        );
-    logg.i('VoteType: 1');
-  }
-
-  void _downVote(String postId) {
-    context.read<InteractBloc>().add(
-          InteractPostEvent(
-            userId: userId,
-            postId: postId,
-            voteType: 2,
-          ),
-        );
-    logg.i('VoteType: 2');
-  }
-
-  void _unVote(String postId) {
-    context.read<InteractBloc>().add(
-          InteractPostEvent(
-            userId: userId,
-            postId: postId,
-            voteType: 3,
-          ),
-        );
-    logg.i('VoteType: 3');
-  }
-
-  void _savePost(String postId) {
-    context.read<PostBloc>().add(
-          SavePostEvent(
-            userId: userId,
-            postId: postId,
-          ),
-        );
-  }
-
   @override
   void dispose() {
     _timer.cancel();
@@ -220,16 +175,6 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               icon: const Icon(Icons.search_outlined),
             ),
-            // IconButton(
-            //   onPressed: () {
-            //     context.goNamed(AppRoute.notification.name);
-            //   },
-            //   // icon: const Icon(Icons.notifications),
-            //   icon: Badge.count(
-            //     count: 1,
-            //     child: const Icon(Icons.notifications),
-            //   ),
-            // ),
           ],
           iconTheme: const IconThemeData(color: Colors.black),
         ),
@@ -290,10 +235,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     selectedCategory: categories[selectedIndex],
                     selectedIndex: selectedIndex,
                     userInfo: userInfo,
-                    upVote: _upVote,
-                    downVote: _downVote,
-                    unVote: _unVote,
-                    savePost: _savePost,
                   ),
                 ),
               ),
